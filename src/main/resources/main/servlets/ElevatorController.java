@@ -2,22 +2,23 @@ package main.servlets;
 
 
 import main.entities.Building;
-import main.entities.Elevator;
+import main.entities.ElevatorCondition;
+import main.entities.ElevatorThread;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServlet;
-import javax.swing.plaf.basic.BasicButtonUI;
 
 @Controller
 public class ElevatorController extends HttpServlet {
     private static Building building = new Building(7,40);
-    private static Elevator elevator = new Elevator(building,1,2);
+    private static ElevatorCondition elevator = new ElevatorCondition(building);
 
     static {
-        elevator.run();
+        ElevatorThread emulation = new ElevatorThread(elevator);
+        emulation.run();
     }
 
     @RequestMapping(value = {"callup"}, method = RequestMethod.POST)
@@ -40,7 +41,11 @@ public class ElevatorController extends HttpServlet {
     @RequestMapping(value = {"send"}, method = RequestMethod.POST)
     public String send(Integer floor,Model model) {
         if (isExist(floor, model)) {
-            elevator.send(floor);
+            if (floor.equals(elevator.getCurrentFloor())) {
+                model.addAttribute("errorMessage", "Error!This is current floor");
+            } else {
+                elevator.send(floor);
+            }
         }
         setModelData(model);
         return "main";
