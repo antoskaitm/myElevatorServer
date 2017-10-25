@@ -4,11 +4,14 @@
 <html>
     <body>
     <div>
-        <h1>текущий этаж</h1>
+        <h2>${errorMessage}</h2>
+    </div>
+    <div>
+        <h1>current floor</h1>
         <h2>${currentFloor}</h2>
     </div>
         <div>
-            <h1>вызвать лифт на этаж</h1>
+            <h1>call up elevator on floor</h1>
             <form action="/callup" method="post">
                 <c:forEach begin="${minFloor}" end="${maxFloor}" step="1"  var="numer">
                     <input type="submit" value="${numer}" name="floor">
@@ -17,7 +20,7 @@
         </div>
 
         <div>
-            <h1>послать лифт на этаж</h1>
+            <h1>send elevator on floor</h1>
             <form action="/send" method="post">
                 <c:forEach begin="${minFloor}" end="${maxFloor}" step="1"  var="numer">
                     <input type="submit" value="${numer}" name="floor">

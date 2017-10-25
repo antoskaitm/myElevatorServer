@@ -1,105 +1,169 @@
 package main.entities;
 
+import java.util.Arrays;
 
 public class Elevator {
-    private Integer lastFloor=null;
-    private Integer currentFloor = 0;
+    private Integer lastFloor = null;
+    private Integer currentFloor = null;
     private final Boolean[] callPoints;
     private final Boolean[] sendPoints;
 
-    private Integer speed=1;
-    private final Integer acceleration=2;
-    private Integer direction = 1;
-
+    private final Integer speed;
+    private final Integer acceleration;
     private final Building building;
 
-    public Elevator(Building building)
-    {
+    private Integer direction = 0;
+
+
+    public Elevator(Building building, int speed, int acceleration) {
         callPoints = new Boolean[building.getLastFloor()];
+        Arrays.fill(callPoints,false);
         sendPoints = new Boolean[building.getLastFloor()];
+        Arrays.fill(sendPoints,false);
         this.building = building;
 
+        this.speed = speed;
+        this.acceleration = acceleration;
+        this.currentFloor = building.getGroundFloor();
     }
 
-    public void callup(Integer floor)
-    {
-        building.checkFloor(floor);
-        callPoints[floor] = true;
-    }
-
-    public void send(Integer floor)
-    {
-        building.checkFloor(floor);
-        sendPoints[floor] = true;
-    }
-
-    public Integer getCurrentFloor()
-    {
+    public Integer getCurrentFloor() {
         return currentFloor;
     }
 
-    private void stop()
-    {
+    public void callup(Integer floor) {
+        callPoints[floor] = true;
+        if (lastFloor == null) {
+            setLastFloor();
+        }
+    }
 
+    public void send(Integer floor) {
+        if (currentFloor.equals(floor)) {
+            throw new IllegalStateException("This is current floor");
+        }
+        sendPoints[floor] = true;
+        if (lastFloor == null) {
+            setLastFloor();
+        }
+    }
+
+    private void stop() {
+        //ожидание//Thread.sleep(500);
         callPoints[currentFloor] = false;
         sendPoints[currentFloor] = false;
-        changeDirection();
-        move();
     }
 
     private void move() {
-        Integer path = building.getFloorHeight();
+        /*Integer path = building.getFloorHeight();
         Integer accelerationTime = speed / acceleration;
         Integer stopTime = accelerationTime;
-        if (path / 2 < acceleration * accelerationTime * accelerationTime) {
+        if (path / 2 < acceleration * accelerationTime * accelerationTime / 2) {
             stopTime = accelerationTime / 2;
         }
         Integer stopPath = stopTime * stopTime * acceleration / 2;
         Integer constantSpeedPath = path - 2 * stopPath;
-        Integer constantSpeedTime = constantSpeedPath / speed;
-        //ускорились
-        //постоянное
+        //ускорились//Thread.sleep(stopTime);
         Boolean isPathLong = true;
-        if (!stopNextFloor() && constantSpeedTime == 0) {
-            //доускорились
+        if (!stopNextFloor() && stopTime != accelerationTime) {
+            //доускорились////Thread.sleep(accelerationTime-stopTime);
             isPathLong = false;
             stopTime = accelerationTime;
             stopPath = stopTime * stopTime * acceleration / 2;
             constantSpeedPath = path - stopPath;
-            constantSpeedTime = constantSpeedPath / speed;
         }
+        Integer constantSpeedTime = constantSpeedPath / speed;
+        //постоянное////Thread.sleep(constantSpeedTime);
         Integer moveTime = stopPath / speed;
         while (!stopNextFloor()) {
-            //движемся с постоянной участок остановки
-            currentFloor += direction;
+            //движемся с постоянной участок остановки//Thread.sleep(moveTime);
+            changeCurrentFloor();
             if (isPathLong) {
-                //движемся с постоянной участок ускорения
+                //движемся с постоянной участок ускорения//Thread.sleep(moveTime);
             }
-            //движемся с постоянной
-            if(currentFloor == 0 || currentFloor == building.getLastFloor())
-            {
+            //движемся с постоянной//Thread.sleep(constantSpeedTime);
+            if (currentFloor == 0 || currentFloor == building.getLastFloor()) {
                 break;
             }
         }
-        //остановка
-        stop();
+        //остановка//Thread.sleep(stopTime);
+        */
+
+        while ((canMoveDown() || canMoveUp()) && !stopNextFloor()) {
+            changeCurrentFloor();
+        }
+        if(canMoveDown() || canMoveUp()) {
+            changeCurrentFloor();
+        }
     }
 
-    private Boolean stopNextFloor()
-    {
-        Integer nextFloor = currentFloor+direction;
+    private void changeCurrentFloor() {
+        // building.checkFloor(currentFloor + direction);
+        if (!direction.equals(0)) {
+            currentFloor += direction;
+        }
+    }
+
+    private Boolean canMoveUp() {
+        return direction > 0 && !currentFloor.equals(building.getLastFloor());
+    }
+
+    private Boolean canMoveDown() {
+        return direction < 0 && !currentFloor.equals(building.getGroundFloor());
+    }
+
+    private Boolean suspend = false;
+
+    public void run() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (!suspend) {
+                        move();
+                        stop();
+                        if (currentFloor.equals(lastFloor) || lastFloor == null || lastFloor == -1) {
+                            setLastFloor();
+                        }
+                    }
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+    }
+
+    private void setLastFloor() {
+        Boolean value = true;
+        if (direction >= 0) {
+            lastFloor = Arrays.asList(sendPoints).lastIndexOf(value);
+            if (lastFloor == -1) {
+                lastFloor = Arrays.asList(callPoints).lastIndexOf(value);
+            }
+        } else {
+            lastFloor = Arrays.asList(sendPoints).indexOf(value);
+            if (lastFloor == -1) {
+                lastFloor = Arrays.asList(callPoints).indexOf(value);
+            }
+        }
+        changeDirection();
+    }
+
+    private Boolean stopNextFloor() {
+        Integer nextFloor = currentFloor + direction;
         return sendPoints[nextFloor] || callPoints[nextFloor];
     }
 
-    private void changeDirection()
-    {
-        for (int floor = currentFloor;floor>0 && floor < sendPoints.length;floor += direction)
-        {
-            if(sendPoints[floor])
-            {
-                return;
-            }
+    private void changeDirection() {
+        if (currentFloor.equals(lastFloor) || lastFloor == null || lastFloor == -1) {
+            lastFloor = null;
+            direction = 0;
+        } else if (lastFloor - currentFloor < 0) {
+            direction = -1;
+        } else {
+            direction = 1;
         }
-        direction *= -1;
     }
 }

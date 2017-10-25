@@ -1,49 +1,42 @@
 package main.entities;
 
 public class Building {
-    private final Integer lastFloor;
-    private final Integer groundFloor;
-    private final Integer buildingHeight;
+    private final Integer floorCount;
     private final Integer floorHeight;
 
-    public Building(int lastFloor,int groundFloor, int buildingHeight)
-    {
-        Integer minGroundFloor = 0;
-        if(groundFloor < minGroundFloor)
-        {
-            throw new IllegalArgumentException("Value of ground floor must be "+minGroundFloor+" or more");
-        }
-        if ( lastFloor <= groundFloor)
-        {
-            throw new IllegalArgumentException("Value of ground floor must be less than value of last floor");
+    public Building(int floorCount, int buildingHeight) {
+        if (floorCount < 3) {
+            throw new IllegalArgumentException("Floor count must be " + floorCount + " or more");
         }
         Integer minFloorHeight = 3;
-        if(buildingHeight < lastFloor*minFloorHeight )
-        {
+        if (buildingHeight < floorCount * minFloorHeight) {
             throw new IllegalArgumentException("Value of building height for lastFloor must be more than "
-                    + (lastFloor*minFloorHeight));
+                    + (floorCount * minFloorHeight));
         }
-        this.lastFloor = lastFloor;
-        this.buildingHeight = buildingHeight;
-        this.groundFloor = groundFloor;
-        floorHeight =  this.buildingHeight/lastFloor;
+        this.floorCount = floorCount;
+        floorHeight = buildingHeight / floorCount;
     }
 
-    public void checkFloor(int floor)
-    {
-        if(floor>groundFloor && floor< getLastFloor())
-        {
+    public void checkFloor(int floor) {
+        if (floor < 0  || floor >= floorCount) {
             throw new NullPointerException("Floor does not exist");
         }
     }
 
-    public Integer getLastFloor() {
-        return lastFloor;
+    public Boolean hasFloor(int floor)
+    {
+        return floor>=0 && floor< floorCount;
     }
 
+    public Integer getLastFloor() {
+        return floorCount-1;
+    }
 
-    public Integer getFloorHeight()
-    {
+    public Integer getFloorHeight() {
         return floorHeight;
+    }
+
+    public Integer getGroundFloor() {
+        return 0;
     }
 }
