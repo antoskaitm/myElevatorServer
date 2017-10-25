@@ -32,6 +32,11 @@ public class Building {
         return floorCount-1;
     }
 
+    public Integer getFloorCount()
+    {
+        return floorCount;
+    }
+
     public Integer getFloorHeight() {
         return floorHeight;
     }

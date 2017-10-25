@@ -16,9 +16,9 @@ public class Elevator {
 
 
     public Elevator(Building building, int speed, int acceleration) {
-        callPoints = new Boolean[building.getLastFloor()];
+        callPoints = new Boolean[building. getFloorCount()];
         Arrays.fill(callPoints,false);
-        sendPoints = new Boolean[building.getLastFloor()];
+        sendPoints = new Boolean[building.getFloorCount()];
         Arrays.fill(sendPoints,false);
         this.building = building;
 
@@ -40,7 +40,8 @@ public class Elevator {
 
     public void send(Integer floor) {
         if (currentFloor.equals(floor)) {
-            throw new IllegalStateException("This is current floor");
+            return;
+            //throw new IllegalStateException("This is current floor");
         }
         sendPoints[floor] = true;
         if (lastFloor == null) {
@@ -48,8 +49,8 @@ public class Elevator {
         }
     }
 
-    private void stop() {
-        //ожидание//Thread.sleep(500);
+    private void stop() throws InterruptedException {
+        Thread.sleep(100);
         callPoints[currentFloor] = false;
         sendPoints[currentFloor] = false;
     }
