@@ -1,5 +1,10 @@
 package main.entities;
 
+import main.entities.interfaces.IElevatorAutomate;
+import main.entities.interfaces.IElevatorAutomateble;
+import main.entities.interfaces.IElevatorRoom;
+import main.entities.interfaces.IElevatorUi;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,7 +16,7 @@ import java.util.*;
  * this class also keep information about people
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi&Serializable> implements IElevatorRoom, IElevatorAutomateble , Serializable {
+public class ElevatorRoom<T extends IElevatorAutomateble &IElevatorUi &Serializable> implements IElevatorRoom, IElevatorAutomateble , Serializable {
 
     static final long serialVersionUID = -1000000000000L;
 

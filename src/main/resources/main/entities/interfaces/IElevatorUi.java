@@ -1,6 +1,6 @@
-package main.entities;
+package main.entities.interfaces;
 
-interface IElevatorUi {
+public interface IElevatorUi {
     Integer getCurrentFloor();
 
     Boolean callup(Integer floor);

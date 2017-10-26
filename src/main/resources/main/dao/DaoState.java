@@ -1,11 +1,10 @@
 package main.dao;
 
-import main.entities.IBuilding;
-import main.entities.IElevatorRoom;
+import main.entities.interfaces.IBuilding;
+import main.entities.interfaces.IElevatorRoom;
 import java.io.File;
 
 import java.io.*;
-import java.lang.instrument.IllegalClassFormatException;
 import java.nio.file.Paths;
 
 /**

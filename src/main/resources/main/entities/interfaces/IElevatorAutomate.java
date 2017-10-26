@@ -1,8 +1,8 @@
-package main.entities;
+package main.entities.interfaces;
 
 import main.entities.events.Action;
 
-interface IElevatorAutomate {
+public interface IElevatorAutomate {
     void stop();
 
     Boolean stopNextFloor();

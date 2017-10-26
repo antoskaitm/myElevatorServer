@@ -1,11 +1,15 @@
 package main.entities;
 
+import main.entities.interfaces.IElevatorAutomate;
+import main.entities.interfaces.IElevatorAutomateble;
+import main.entities.interfaces.IElevatorRoom;
+
 import java.io.Serializable;
 
 /**view for synchronization IElevatorRoom
  *
  */
-public class ElevatorRoomSynchronyzed implements IElevatorRoom, IElevatorAutomateble , Serializable {
+public class ElevatorRoomSynchronyzed implements IElevatorRoom, IElevatorAutomateble, Serializable {
 
     private IElevatorRoom elevatorRoom;
 

@@ -2,10 +2,13 @@ package main.entities;
 
 import main.dao.DaoState;
 import main.dao.IDaoStaitabel;
+import main.entities.interfaces.IElevatorAutomate;
+import main.entities.interfaces.IElevatorAutomateble;
+import main.entities.interfaces.IElevatorRoom;
 
 import java.io.Serializable;
 
-public class ElevatorThread<T extends IElevatorRoom&IElevatorAutomateble&Serializable> {
+public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Serializable> {
     private boolean suspend = false;
     private IElevatorAutomate automate;
     private T elevator;

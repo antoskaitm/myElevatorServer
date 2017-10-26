@@ -1,5 +1,7 @@
 package main.entities;
 
+import main.entities.interfaces.IBuilding;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

@@ -1,6 +1,9 @@
 package main.entities;
 
 import main.entities.events.Action;
+import main.entities.interfaces.IElevatorAutomate;
+import main.entities.interfaces.IElevatorAutomateble;
+import main.entities.interfaces.IElevatorUi;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

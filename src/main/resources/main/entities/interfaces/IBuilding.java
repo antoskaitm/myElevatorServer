@@ -1,4 +1,4 @@
-package main.entities;
+package main.entities.interfaces;
 
 public interface IBuilding {
 
