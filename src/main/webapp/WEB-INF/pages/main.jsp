@@ -1,1 +1,1 @@
-<%@ include file="/WEB-INF/pages/callupPanel.jsp"%>
+<%@ include file="/WEB-INF/pages/callPanel.jsp"%>

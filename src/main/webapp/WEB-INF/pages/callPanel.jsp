@@ -14,7 +14,7 @@
 </div>
 <div>
     <h1>call up elevator on floor</h1>
-    <form action="/callup" method="post">
+    <form action="call" method="post">
         <%@ include file="/WEB-INF/pages/buttons.jsp"%>
     </form>
 </div>
