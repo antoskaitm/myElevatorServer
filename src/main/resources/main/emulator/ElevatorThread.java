@@ -81,18 +81,6 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
           if (automate.canMove()) {
               automate.changeCurrentFloor();
           }
-/*
-        //более удобный аналог
-        while (automate.canMove() && !automate.stopNextFloor()) {
-            moveLift(1);
-            automate.changeCurrentFloor();
-
-        }
-        moveLift(1);
-        if (automate.canMove()) {
-            automate.changeCurrentFloor();
-        }
-*/
     }
 
     private void moveLift(double seconds) throws InterruptedException {

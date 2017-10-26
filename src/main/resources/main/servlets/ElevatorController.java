@@ -23,9 +23,6 @@ public class ElevatorController {
         try {
             building = new Building(7, 40);
             DaoState dao = new DaoState();
-            //ElevatorCondition condition = new ElevatorCondition(building.getFloorCount());
-            //room = new ElevatorRoom(condition);
-            //dao.saveElevator(room);
             room = dao.getElevatorRoom();
             ElevatorThread emulation = new ElevatorThread(room, building);
             emulation.run();
