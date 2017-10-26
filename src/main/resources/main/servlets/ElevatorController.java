@@ -15,9 +15,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ElevatorController {
-
     private static Building building;
-
     private static ElevatorRoom<ElevatorCondition> room;
 
     static {
@@ -31,6 +29,7 @@ public class ElevatorController {
     @RequestMapping(value = {"call"}, method = RequestMethod.POST)
     public String callupElevator(Integer floor, Model model, HttpSession session) {
         SessionHelper helper = new SessionHelper(session);
+        String resultPage = null;
         if (!building.hasFloor(floor)) {
             model.addAttribute("errorMessage", "Error!This floor doesn't exist");
         } else {
@@ -43,24 +42,19 @@ public class ElevatorController {
             } else if (room.isCallElevator(id)) {
                 model.addAttribute("errorMessage", "Error!You are wait elevator");
             } else {
-                setPersonCondition(model, id);
-                helper.setPage("callPanel");
-                setModelData(model);
-                return "callPanel";
+                resultPage = "callPanel";
             }
         }
-        setPersonCondition(model, helper.getPersonId());
-        helper.setPage("sendPanel");
-        setModelData(model);
-        return "sendPanel";
+        setModelData(model, helper.getPersonId());
+        resultPage = (resultPage == null) ? "sendPanel" : resultPage;
+        helper.setPage(resultPage);
+        return resultPage;
     }
 
     @RequestMapping(value = {"getInfo"}, method = RequestMethod.POST)
     public String getInfo(Model model, HttpSession session) {
-
         SessionHelper helper = new SessionHelper(session);
-        setModelData(model);
-        setPersonCondition(model, helper.getPersonId());
+        setModelData(model, helper.getPersonId());
         return helper.getPage();
     }
 
@@ -68,43 +62,38 @@ public class ElevatorController {
     public String begin(Model model, HttpSession session) {
         SessionHelper helper = new SessionHelper(session);
         helper.setPage("main");
-        setModelData(model);
-        setPersonCondition(model, helper.getPersonId());
+        setModelData(model,helper.getPersonId());
         return "main";
     }
 
     @RequestMapping(value = {"send"}, method = RequestMethod.POST)
     public String send(int floor, Model model, HttpSession session) {
         SessionHelper helper = new SessionHelper(session);
+        String resultPage = null;
         if (!building.hasFloor(floor)) {
             model.addAttribute("errorMessage", "Error!This floor doesn't exist");
         } else if (room.getCurrentFloor().equals(floor)) {
             model.addAttribute("errorMessage", "Error!This is current floor");
         } else {
             Integer id = helper.getPersonId();
-            setPersonCondition(model, id);
             if (room.isInElevator(id)) {
                 room.sendElevator(floor, id);
                 helper.setPersonId(null);
             } else if (room.isCallElevator(id)) {
                 model.addAttribute("errorMessage", "Error!You are not in elevator");
-                setModelData(model);
-                helper.setPage("sendPanel");
-                return "sendPanel";
+                resultPage = "sendPanel";
             }
         }
-        helper.setPage("callPanel");
-        setModelData(model);
-        return "callPanel";
+        resultPage = (resultPage == null) ? "callPanel" : resultPage;
+        helper.setPage(resultPage);
+        setModelData(model,helper.getPersonId());
+        return resultPage;
     }
 
-    private void setModelData(Model model) {
+    private void setModelData(Model model,Integer id) {
         model.addAttribute("currentFloor", room.getCurrentFloor());
         model.addAttribute("lastFloor", building.getLastFloor());
         model.addAttribute("groundFloor", building.getGroundFloor());
-    }
-
-    private void setPersonCondition(Model model, Integer id) {
         model.addAttribute("personCondition", room.getPersonCondition(id));
         model.addAttribute("id", id);
     }
