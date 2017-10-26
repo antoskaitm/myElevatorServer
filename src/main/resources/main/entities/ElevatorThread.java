@@ -5,10 +5,10 @@ public class ElevatorThread {
     private IElevatorAutomate elevator;
     private Building building;
 
-    private final Integer speed = 1;
-    private final Integer acceleration = 2;
+    private final Double speed = 1.;
+    private final Double acceleration = 2.;
 
-    public ElevatorThread(IElevatorAutomate elevator,Building building) {
+    public ElevatorThread(IElevatorAutomate elevator, Building building) {
         this.building = building;
         this.elevator = elevator;
     }
@@ -34,47 +34,54 @@ public class ElevatorThread {
     }
 
     private void move() throws InterruptedException {
-       //расчет движения лифта с учетом физики
+        //расчет движения лифта с учетом физики
         /*
-        Integer path = building.getFloorHeight();
-        Integer accelerationTime = speed / acceleration;
-        Integer stopTime = accelerationTime;
+        double path = building.getFloorHeight().doubleValue();
+        double accelerationTime = speed / acceleration;
+        double stopTime = accelerationTime;
         if (path / 2 < acceleration * accelerationTime * accelerationTime / 2) {
             stopTime = accelerationTime / 2;
         }
-        Integer stopPath = stopTime * stopTime * acceleration / 2;
-        Integer constantSpeedPath = path - 2 * stopPath;
-        Thread.sleep(stopTime);
+        double stopPath = stopTime * stopTime * acceleration / 2;
+        double constantSpeedPath = path - 2 * stopPath;
+        moveLift(stopTime);
         Boolean isPathLong = true;
         if (!elevator.stopNextFloor() && stopTime != accelerationTime) {
-            Thread.sleep(accelerationTime - stopTime);
+            moveLift(accelerationTime - stopTime);
             isPathLong = false;
             stopTime = accelerationTime;
             stopPath = stopTime * stopTime * acceleration / 2;
             constantSpeedPath = path - stopPath;
         }
-        Integer constantSpeedTime = constantSpeedPath / speed;
-        Thread.sleep(constantSpeedTime);
-        Integer moveTime = stopPath / speed;
+        double constantSpeedTime = constantSpeedPath / speed;
+        moveLift(constantSpeedTime);
+        double moveTime = stopPath / speed;
         while (elevator.canMove() && !elevator.stopNextFloor()) {
-            Thread.sleep(moveTime);
+            moveLift(moveTime);
             elevator.changeCurrentFloor();
             if (isPathLong) {
-                Thread.sleep(moveTime);
+                moveLift(moveTime);
             }
-            Thread.sleep(constantSpeedTime);
+            moveLift(constantSpeedTime);
         }
-        Thread.sleep(stopTime);
-*/
+        moveLift(stopTime);
+          if (elevator.canMove()) {
+            elevator.changeCurrentFloor();
 
+        */
+        //более удобный аналог
         while (elevator.canMove() && !elevator.stopNextFloor()) {
-            Thread.sleep(1000);
+            moveLift(1);
             elevator.changeCurrentFloor();
 
         }
-        Thread.sleep(1000);
+        moveLift(1);
         if (elevator.canMove()) {
             elevator.changeCurrentFloor();
         }
+    }
+
+    private void moveLift(double seconds) throws InterruptedException {
+        Thread.sleep((int) seconds * 1000);
     }
 }
