@@ -1,7 +1,9 @@
-package main.entities;
+package main.emulator;
 
 import main.dao.DaoState;
 import main.dao.IDaoStaitabel;
+import main.entities.Building;
+import main.entities.interfaces.IBuilding;
 import main.entities.interfaces.IElevatorAutomate;
 import main.entities.interfaces.IElevatorAutomateble;
 import main.entities.interfaces.IElevatorRoom;
@@ -12,13 +14,13 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
     private boolean suspend = false;
     private IElevatorAutomate automate;
     private T elevator;
-    private Building building;
+    private IBuilding building;
     private IDaoStaitabel dao;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
-    public ElevatorThread(T elevator, Building building) {
+    public ElevatorThread(T elevator, IBuilding building) {
         this.building = building;
         this.automate = elevator.getElevatorAutomate();
         this.elevator = elevator;
@@ -48,7 +50,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
 
     private void move() throws InterruptedException {
         //расчет движения лифта с учетом физики
-        /*
+
         double path = building.getFloorHeight().doubleValue();
         double accelerationTime = speed / acceleration;
         double stopTime = accelerationTime;
@@ -79,9 +81,10 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
         }
         moveLift(stopTime);
           if (automate.canMove()) {
-            automate.changeCurrentFloor();
-*/
-        
+              automate.changeCurrentFloor();
+          }
+
+        /*
         //более удобный аналог
         while (automate.canMove() && !automate.stopNextFloor()) {
             moveLift(1);
@@ -92,6 +95,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
         if (automate.canMove()) {
             automate.changeCurrentFloor();
         }
+        */
     }
 
     private void moveLift(double seconds) throws InterruptedException {

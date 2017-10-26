@@ -9,11 +9,11 @@ import java.io.Serializable;
 /**view for synchronization IElevatorRoom
  *
  */
-public class ElevatorRoomSynchronyzed implements IElevatorRoom, IElevatorAutomateble, Serializable {
+public class SynchronizedElevatorRoom implements IElevatorRoom, IElevatorAutomateble, Serializable {
 
     private IElevatorRoom elevatorRoom;
 
-    public <T extends IElevatorRoom& IElevatorAutomateble & Serializable> ElevatorRoomSynchronyzed(T elevatorRoom) {
+    public <T extends IElevatorRoom& IElevatorAutomateble & Serializable> SynchronizedElevatorRoom(T elevatorRoom) {
         this.elevatorRoom = elevatorRoom;
     }
 

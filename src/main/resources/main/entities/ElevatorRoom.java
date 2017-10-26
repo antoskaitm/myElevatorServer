@@ -16,7 +16,7 @@ import java.util.*;
  * this class also keep information about people
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorAutomateble &IElevatorUi &Serializable> implements IElevatorRoom, IElevatorAutomateble , Serializable {
+public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializable> implements IElevatorRoom, IElevatorAutomateble , Serializable {
 
     static final long serialVersionUID = -1000000000000L;
 
