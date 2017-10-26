@@ -1,4 +1,4 @@
-package main.entities.interfaces;
+package main.entities;
 
 public interface IElevaterRoom {
     Integer callElevator(int floor);

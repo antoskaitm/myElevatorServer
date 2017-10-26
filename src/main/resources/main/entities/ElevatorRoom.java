@@ -1,10 +1,6 @@
 package main.entities;
 
 import main.entities.events.Action;
-import main.entities.interfaces.IElevaterRoom;
-import main.entities.interfaces.IElevatorAutomate;
-import main.entities.interfaces.IElevatorAutomateble;
-import main.entities.interfaces.IElevatorUi;
 
 import java.util.*;
 
@@ -12,7 +8,7 @@ import java.util.*;
  * this class keep information about people
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorAutomateble &IElevatorUi> implements IElevaterRoom, IElevatorAutomateble {
+public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements IElevaterRoom, IElevatorAutomateble {
     private Integer counterPeopleId = 0;
     private final T elevatorCondition;
     private final Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<Integer, List<Integer>>();

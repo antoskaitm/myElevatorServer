@@ -1,4 +1,4 @@
-package main.entities.interfaces;
+package main.entities;
 
 import main.entities.events.Action;
 

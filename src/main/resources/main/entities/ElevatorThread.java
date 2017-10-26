@@ -1,7 +1,5 @@
 package main.entities;
 
-import main.entities.interfaces.IElevatorAutomate;
-
 public class ElevatorThread {
     private boolean suspend = false;
     private IElevatorAutomate elevator;
