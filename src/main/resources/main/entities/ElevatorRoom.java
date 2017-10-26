@@ -2,13 +2,20 @@ package main.entities;
 
 import main.entities.events.Action;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.*;
 
 /**view for object implementing IElevatorAutomateble,IElevatorUi
  * this class keep information about people
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements IElevaterRoom, IElevatorAutomateble {
+public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements IElevaterRoom, IElevatorAutomateble , Serializable {
+
+    static final long serialVersionUID = -1000000000000L;
+
     private Integer counterPeopleId = 0;
     private final T elevatorCondition;
     private final Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<Integer, List<Integer>>();
@@ -113,5 +120,13 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
             return "wait to out";
         }
         return "stand to call up lift";
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 }

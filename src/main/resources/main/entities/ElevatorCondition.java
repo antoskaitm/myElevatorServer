@@ -2,6 +2,10 @@ package main.entities;
 
 import main.entities.events.Action;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +13,9 @@ import java.util.List;
 /**numbers of floors begin from 0
  *
  */
-public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble {
+public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
+    static final long serialVersionUID = -2000000000000L;
+
     private Integer lastStopFloor = null;
     private Integer currentFloor = null;
     private final Boolean[] callPoints;
@@ -118,5 +124,13 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble {
         } else {
             direction = 1;
         }
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 }

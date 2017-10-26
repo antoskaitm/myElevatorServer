@@ -1,9 +1,15 @@
 package main.entities;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 /**numbers of floors begin from 0
  *
  */
-public class Building {
+public class Building implements Serializable {
+    static final long serialVersionUID = -3000000000000L;
     private final Integer floorCount;
     private final Integer floorHeight;
 
@@ -45,5 +51,14 @@ public class Building {
 
     public Integer getGroundFloor() {
         return 0;
+    }
+
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+    }
+
+    private void writeObject(ObjectOutputStream stream) throws IOException {
+        stream.defaultWriteObject();
     }
 }
