@@ -55,14 +55,12 @@ public class Building implements Serializable {
 
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
         long serialVersionUID = stream.readLong();
         floorHeight = (Integer) stream.readObject();
         floorCount = (Integer) stream.readObject();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
         stream.writeLong(serialVersionUID);
         stream.writeObject(floorHeight);
         stream.writeObject(floorCount);

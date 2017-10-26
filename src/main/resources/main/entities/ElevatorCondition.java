@@ -127,7 +127,6 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
         long serialVersionUID = stream.readLong();
         lastFloorNumber = (Integer) stream.readObject();
         currentFloor = (Integer) stream.readObject();
@@ -137,7 +136,6 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
         stream.writeLong(serialVersionUID);
         stream.writeObject(lastFloorNumber);
         stream.writeObject(currentFloor);
