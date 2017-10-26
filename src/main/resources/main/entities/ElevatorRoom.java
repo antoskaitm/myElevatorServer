@@ -129,6 +129,11 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         sendElevatorPersons = (Map<Integer, List<Integer>>) stream.readObject();
         callElevatorPersons = new HashMap<Integer, List<Integer>>();
         personsInLift = new HashSet<>();
+        elevatorCondition.getElevatorAutomate().onStop(new Action() {
+            public void execute() {
+                stop();
+            }
+        });
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
