@@ -52,10 +52,10 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         if (elevatorCondition.getCurrentFloor().equals(floor)) {
             return false;
         }
-        if (getList(callElevatorPersons, floor).contains(personId)) {
+        if (personsInLift.contains(personId)) {
             if (elevatorCondition.callup(floor)) {
                 getList(sendElevatorPersons, floor).add(personId);
-                getList(callElevatorPersons, floor).remove(personId);
+                personsInLift.remove(personId);
                 return true;
             }
         }
@@ -63,7 +63,10 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     }
 
     private void stop() {
-        getList(sendElevatorPersons, elevatorCondition.getCurrentFloor()).clear();
+        Integer floor =  elevatorCondition.getCurrentFloor();
+        this.personsInLift.addAll(getList(callElevatorPersons, floor));
+        getList(callElevatorPersons, floor).clear();
+        getList(sendElevatorPersons, floor).clear();
     }
 
     @Override
@@ -71,7 +74,27 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         return elevatorCondition.getElevatorAutomate();
     }
 
-    public String checkCondition(int personId) {
-        return null;
+    public String getPersonCondition(Integer personId) {
+        if(personId == null)
+        {
+            return "call lift";
+        }
+        if(personsInLift.contains(personId))
+        {
+            return "in lift";
+        }
+        for (List<Integer> waits: callElevatorPersons.values())
+        {
+            if(waits.contains(personId)) {
+                return "wait to in";
+            }
+        }
+        for (List<Integer> waits: sendElevatorPersons.values())
+        {
+            if(waits.contains(personId)) {
+                return "wait to out";
+            }
+        }
+        return "call lift";
     }
 }

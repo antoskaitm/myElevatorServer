@@ -10,10 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 
 @Controller
-public class ElevatorController extends HttpServlet {
+public class ElevatorController  {
     private static Building building;
     private static ElevatorRoom<ElevatorCondition> queue;
 
@@ -26,36 +26,42 @@ public class ElevatorController extends HttpServlet {
     }
 
     @RequestMapping(value = {"callup"}, method = RequestMethod.POST)
-    public String callupElevator(Integer floor, Model model) {
+    public String callupElevator(Integer floor, Model model,HttpSession session) {
         if (!building.hasFloor(floor)) {
             model.addAttribute("errorMessage", "Error!This floor doesn't exist");
         } else {
-            queue.callElevator(floor);
+            Integer id =queue.callElevator(floor);
+            setId(session,id);
+            setPersonCondition(model,session);
         }
         setModelData(model, "main");
         return "main";
     }
 
     @RequestMapping(value = {"getCurrentFloor"}, method = RequestMethod.POST)
-    public String getCurrentFloor(Model model,String page) {
+    public String getCurrentFloor(Model model,String page,HttpSession session) {
         setModelData(model, page);
+        setPersonCondition(model,session);
         return page;
     }
 
     @RequestMapping(value = {"main"}, method = RequestMethod.GET)
-    public String begin(Model model) {
+    public String begin(Model model,HttpSession session) {
+        setPersonCondition(model,session);
         setModelData(model, "main");
         return "main";
     }
 
     @RequestMapping(value = {"send"}, method = RequestMethod.POST)
-    public String send(int floor, Model model) {
+    public String send(int floor, Model model,HttpSession session)  {
         if (!building.hasFloor(floor)) {
             model.addAttribute("errorMessage", "Error!This floor doesn't exist");
         } else if (queue.getCurrentFloor().equals(floor)) {
             model.addAttribute("errorMessage", "Error!This is current floor");
         } else {
-            queue.SendElevator(floor,0);
+            Integer id = getId(session);
+            queue.SendElevator(floor,id);
+            setPersonCondition(model,session);
         }
         setModelData(model, "main");
         return "main";
@@ -66,5 +72,22 @@ public class ElevatorController extends HttpServlet {
         model.addAttribute("currentFloor", queue.getCurrentFloor());
         model.addAttribute("lastFloor", building.getLastFloor());
         model.addAttribute("groundFloor", building.getGroundFloor());
+    }
+
+    private void setId(HttpSession session, Integer id)
+    {
+        session.setAttribute("id",id);
+    }
+
+    private Integer getId(HttpSession session)
+    {
+        return (Integer)session.getAttribute("id");
+    }
+
+    private void setPersonCondition(Model model,HttpSession session)
+    {
+        Integer id = getId(session);
+        model.addAttribute("personCondition", queue.getPersonCondition(id));
+        model.addAttribute("id", id);
     }
 }
