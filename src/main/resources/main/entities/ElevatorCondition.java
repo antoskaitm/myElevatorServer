@@ -1,8 +1,10 @@
 package main.entities;
 
 import main.entities.events.Action;
+import main.entities.interfaces.IElevatorAutomate;
+import main.entities.interfaces.IElevatorAutomateble;
+import main.entities.interfaces.IElevatorUi;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

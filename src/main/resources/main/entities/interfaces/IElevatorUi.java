@@ -1,4 +1,4 @@
-package main.entities;
+package main.entities.interfaces;
 
 interface IElevatorUi {
     Integer getCurrentFloor();
