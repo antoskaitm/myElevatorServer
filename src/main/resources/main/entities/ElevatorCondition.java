@@ -2,7 +2,6 @@ package main.entities;
 
 import main.entities.events.Action;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -60,7 +59,7 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble {
                 public void stop() {
                     callPoints[currentFloor] = false;
                     for (Action action : actions) {
-                        action.execut();
+                        action.execute();
                     }
                     if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
                         setLastFloor();

@@ -30,8 +30,11 @@ public class ElevatorController  {
         if (!building.hasFloor(floor)) {
             model.addAttribute("errorMessage", "Error!This floor doesn't exist");
         } else {
-            Integer id =queue.callElevator(floor);
-            setId(session,id);
+            Integer id = getId(session);
+            if(!(queue.isInElevator(id)||queue.isCallElevator(id))) {
+                id = queue.callElevator(floor);
+                setId(session, id);
+            }
             setPersonCondition(model,session);
         }
         setModelData(model, "main");
@@ -60,7 +63,7 @@ public class ElevatorController  {
             model.addAttribute("errorMessage", "Error!This is current floor");
         } else {
             Integer id = getId(session);
-            queue.SendElevator(floor,id);
+            queue.sendElevator(floor,id);
             setPersonCondition(model,session);
         }
         setModelData(model, "main");

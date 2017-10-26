@@ -5,5 +5,11 @@ public interface IElevaterRoom {
 
     Integer getCurrentFloor();
 
-    Boolean SendElevator(int floor, int personId);
+    Boolean sendElevator(int floor, int personId);
+
+    boolean isInElevator(Integer id);
+
+    boolean isCallElevator(Integer id);
+
+    String getPersonCondition(Integer personId);
 }

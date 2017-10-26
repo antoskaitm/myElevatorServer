@@ -9,7 +9,7 @@
         <h1>current floor</h1>
         <h2>${currentFloor}</h2>
         <h2>person condition ${personCondition}</h2>
-        <h2>person condition ${id}</h2>
+        <h2>person id ${id}</h2>
         <form action="/getCurrentFloor" method="post">
                 <input type="hidden" name="page" value="${page}">
                 <input type="submit" value="currentFloor">

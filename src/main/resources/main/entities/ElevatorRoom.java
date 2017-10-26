@@ -4,7 +4,7 @@ import main.entities.events.Action;
 
 import java.util.*;
 
-/**view for IElevatorAutomateble,IElevatorUi
+/**view for object implementing IElevatorAutomateble,IElevatorUi
  * this class keep information about people
  * @param <T>
  */
@@ -18,8 +18,7 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     public ElevatorRoom(T elevatorCondition) {
         this.elevatorCondition = elevatorCondition;
         this.elevatorCondition.getElevatorAutomate().onStop(new Action() {
-            @Override
-            public void execut() {
+            public void execute() {
                 stop();
             }
         });
@@ -27,6 +26,7 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
 
     @Override
     public Integer callElevator(int floor) {
+
         if (elevatorCondition.callup(floor)) {
             Integer personId = counterPeopleId++;
             getList(callElevatorPersons, floor).add(personId);
@@ -48,7 +48,7 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     }
 
     @Override
-    public Boolean SendElevator(int floor, int personId) {
+    public Boolean sendElevator(int floor, int personId) {
         if (elevatorCondition.getCurrentFloor().equals(floor)) {
             return false;
         }
@@ -62,8 +62,27 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         return false;
     }
 
+    @Override
+    public boolean isInElevator(Integer personId) {
+        return personsInLift.contains(personId);
+    }
+
+    private boolean continsIn(Map<Integer, List<Integer>> map, Integer personId) {
+        for (List<Integer> waits : map.values()) {
+            if (waits.contains(personId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isCallElevator(Integer personId) {
+        return continsIn(callElevatorPersons, personId);
+    }
+
     private void stop() {
-        Integer floor =  elevatorCondition.getCurrentFloor();
+        Integer floor = elevatorCondition.getCurrentFloor();
         this.personsInLift.addAll(getList(callElevatorPersons, floor));
         getList(callElevatorPersons, floor).clear();
         getList(sendElevatorPersons, floor).clear();
@@ -74,26 +93,20 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         return elevatorCondition.getElevatorAutomate();
     }
 
+    @Override
     public String getPersonCondition(Integer personId) {
-        if(personId == null)
-        {
+        if (personId == null) {
             return "call lift";
         }
-        if(personsInLift.contains(personId))
-        {
+        if (personsInLift.contains(personId)) {
             return "in lift";
         }
-        for (List<Integer> waits: callElevatorPersons.values())
-        {
-            if(waits.contains(personId)) {
-                return "wait to in";
-            }
+        if (continsIn(callElevatorPersons, personId)) {
+            return "wait to in";
         }
-        for (List<Integer> waits: sendElevatorPersons.values())
-        {
-            if(waits.contains(personId)) {
-                return "wait to out";
-            }
+
+        if (continsIn(sendElevatorPersons, personId)) {
+            return "wait to out";
         }
         return "call lift";
     }
