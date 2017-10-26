@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**view for object implementing IElevatorAutomateble,IElevatorUi
+ * can work with basement floors
  * this class also keep information about people
  * @param <T>
  */

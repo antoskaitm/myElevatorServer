@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 @Controller
 public class ElevatorController {
@@ -18,13 +17,9 @@ public class ElevatorController {
     private static IElevatorRoom room;
 
     static {
-        building = new Building(7, 40);
-        //ElevatorCondition elevator = new ElevatorCondition(building.getFloorCount());
-        //room = new ElevatorRoom<>(elevator);
-
         try {
+            building = new Building(7, 40);
             DaoElevatorState dao = new DaoElevatorState();
-            //dao.saveElevator(room);
             room = dao.getElevator();
             ElevatorThread emulation = new ElevatorThread(room, building);
             emulation.run();

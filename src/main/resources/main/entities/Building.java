@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**numbers of floors begin from 0
  *
  */
-public class Building implements Serializable {
+public class Building implements IBuilding, Serializable {
     static final long serialVersionUID = -3000000000000L;
     private Integer floorCount;
     private Integer floorHeight;
@@ -52,7 +52,6 @@ public class Building implements Serializable {
     public Integer getGroundFloor() {
         return 0;
     }
-
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         long serialVersionUID = stream.readLong();
