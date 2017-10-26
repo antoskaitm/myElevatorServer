@@ -7,7 +7,7 @@ import main.entities.interfaces.IElevatorRoom;
 import java.io.Serializable;
 
 /**view for synchronization IElevatorRoom
- *
+ *(it is don't work)
  */
 public class SynchronizedElevatorRoom implements IElevatorRoom, IElevatorAutomateble, Serializable {
 
