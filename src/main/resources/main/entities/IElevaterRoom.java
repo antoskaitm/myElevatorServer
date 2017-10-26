@@ -11,5 +11,7 @@ public interface IElevaterRoom {
 
     boolean isCallElevator(Integer id);
 
+    boolean isSendElevator(Integer id);
+
     String getPersonCondition(Integer personId);
 }
