@@ -2,7 +2,6 @@ package main.emulator;
 
 import main.dao.DaoState;
 import main.dao.IDaoStaitabel;
-import main.entities.Building;
 import main.entities.interfaces.IBuilding;
 import main.entities.interfaces.IElevatorAutomate;
 import main.entities.interfaces.IElevatorAutomateble;
@@ -36,7 +35,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
                         move();
                         Thread.sleep(100);
                         automate.stop();
-                        dao.saveElevator(elevator);
+                        dao.save(elevator,building);
                     }
                 } catch (Throwable ex) {
                     //сделать нормальное логирование
@@ -50,7 +49,6 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
 
     private void move() throws InterruptedException {
         //расчет движения лифта с учетом физики
-
         double path = building.getFloorHeight().doubleValue();
         double accelerationTime = speed / acceleration;
         double stopTime = accelerationTime;
@@ -83,8 +81,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
           if (automate.canMove()) {
               automate.changeCurrentFloor();
           }
-
-        /*
+/*
         //более удобный аналог
         while (automate.canMove() && !automate.stopNextFloor()) {
             moveLift(1);
@@ -95,7 +92,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
         if (automate.canMove()) {
             automate.changeCurrentFloor();
         }
-        */
+*/
     }
 
     private void moveLift(double seconds) throws InterruptedException {

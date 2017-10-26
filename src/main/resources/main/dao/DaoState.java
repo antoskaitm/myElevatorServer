@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 /**
  *
  */
-public class DaoState implements  IDaoStaitabel {
+public class DaoState implements IDaoStaitabel {
     private File file;
 
     public DaoState() throws IOException {
@@ -18,7 +18,7 @@ public class DaoState implements  IDaoStaitabel {
     }
 
     @Override
-    public IElevatorRoom getElevator() throws IOException {
+    public IElevatorRoom getElevatorRoom() throws IOException {
         try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
             try {
                 return (IElevatorRoom) stream.readObject();
@@ -31,15 +31,10 @@ public class DaoState implements  IDaoStaitabel {
     }
 
     @Override
-    public void saveElevator(IElevatorRoom room) throws IOException {
+    public void save(IElevatorRoom room,IBuilding building) throws IOException {
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
             stream.writeObject(room);
         }
-    }
-
-    @Override
-    public void saveBuilding(IBuilding room) throws IOException {
-       throw new UnsupportedOperationException();
     }
 
     @Override

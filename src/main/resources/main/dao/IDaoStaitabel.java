@@ -7,11 +7,9 @@ import java.io.*;
 
 public interface IDaoStaitabel {
 
-    IElevatorRoom getElevator() throws IOException;
+    IElevatorRoom getElevatorRoom() throws IOException;
 
-    void saveElevator(IElevatorRoom room) throws IOException;
-
-    void saveBuilding(IBuilding room) throws IOException;
+    void save(IElevatorRoom room,IBuilding building) throws IOException;
 
     IBuilding getBuilding() throws IOException;
 }
