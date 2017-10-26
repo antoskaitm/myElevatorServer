@@ -7,11 +7,11 @@ public interface IElevatorRoom {
 
     Boolean sendElevator(int floor, int personId);
 
-    boolean isInElevator(Integer id);
+    boolean isInElevator(Integer personId);
 
-    boolean isCallElevator(Integer id);
+    boolean isCallElevator(Integer personId);
 
-    boolean isSendElevator(Integer id);
+    boolean isSendElevator(Integer personId);
 
     String getPersonCondition(Integer personId);
 }
