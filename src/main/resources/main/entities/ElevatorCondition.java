@@ -18,9 +18,9 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
 
     private Integer lastStopFloor = null;
     private Integer currentFloor = null;
-    private final Boolean[] callPoints;
+    private Boolean[] callPoints;
     private Integer direction = 0;
-    private final Integer lastFloorNumber;
+    private Integer lastFloorNumber;
     private IElevatorAutomate automate;
 
     public ElevatorCondition(Integer floorCount) {
@@ -128,9 +128,19 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
+        lastFloorNumber = (Integer) stream.readObject();
+        currentFloor = (Integer) stream.readObject();
+        callPoints = (Boolean[]) stream.readObject();
+        direction = (Integer) stream.readObject();
+        lastFloorNumber = (Integer) stream.readObject();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
+        stream.writeObject(lastFloorNumber);
+        stream.writeObject(currentFloor);
+        stream.writeObject(callPoints);
+        stream.writeObject(direction);
+        stream.writeObject(lastFloorNumber);
     }
 }
