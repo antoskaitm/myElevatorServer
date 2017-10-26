@@ -1,10 +1,8 @@
 package main.servlets;
 
 
-import main.entities.Building;
-import main.entities.ElevatorCondition;
-import main.entities.ElevatorRoom;
-import main.entities.ElevatorThread;
+import main.dao.DaoElevatorState;
+import main.entities.*;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 @Controller
 public class ElevatorController {
     private static Building building;
-    private static ElevatorRoom<ElevatorCondition> room;
+    private static IElevatorRoom room;
 
     static {
         building = new Building(7, 40);

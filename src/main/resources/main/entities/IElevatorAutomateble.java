@@ -1,5 +1,5 @@
 package main.entities;
 
-interface IElevatorAutomateble {
+public interface IElevatorAutomateble {
     public IElevatorAutomate getElevatorAutomate();
 }

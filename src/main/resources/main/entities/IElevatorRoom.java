@@ -1,6 +1,6 @@
 package main.entities;
 
-public interface IElevaterRoom {
+public interface IElevatorRoom {
     Integer callElevator(int floor);
 
     Integer getCurrentFloor();

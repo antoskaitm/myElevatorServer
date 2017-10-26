@@ -12,15 +12,15 @@ import java.util.*;
  * this class keep information about people
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements IElevaterRoom, IElevatorAutomateble , Serializable {
+public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements IElevatorRoom, IElevatorAutomateble , Serializable {
 
     static final long serialVersionUID = -1000000000000L;
 
     private Integer counterPeopleId = 0;
     private T elevatorCondition;
     private Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<Integer, List<Integer>>();
-    private final Map<Integer, List<Integer>> callElevatorPersons = new HashMap<Integer, List<Integer>>();
-    private final Set<Integer> personsInLift = new HashSet<Integer>();
+    private Map<Integer, List<Integer>> callElevatorPersons = new HashMap<Integer, List<Integer>>();
+    private Set<Integer> personsInLift = new HashSet<>();
 
     public ElevatorRoom(T elevatorCondition) {
         this.elevatorCondition = elevatorCondition;
@@ -123,19 +123,18 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
         long serialVersionUID = stream.readLong();
-        counterPeopleId=(Integer) stream.readObject();
+        counterPeopleId = (Integer) stream.readObject();
         elevatorCondition = (T) stream.readObject();
         sendElevatorPersons = (Map<Integer, List<Integer>>) stream.readObject();
+        callElevatorPersons = new HashMap<Integer, List<Integer>>();
+        personsInLift = new HashSet<>();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.defaultWriteObject();
         stream.writeLong(serialVersionUID);
         stream.writeObject(counterPeopleId);
         stream.writeObject(elevatorCondition);
         stream.writeObject(sendElevatorPersons);
-
     }
 }
