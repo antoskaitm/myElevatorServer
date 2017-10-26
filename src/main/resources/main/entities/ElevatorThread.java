@@ -1,15 +1,21 @@
 package main.entities;
 
-public class ElevatorThread {
+import main.dao.DaoElevatorState;
+
+import java.io.Serializable;
+
+public class ElevatorThread<T extends IElevatorRoom&IElevatorAutomateble&Serializable> {
     private boolean suspend = false;
-    private IElevatorAutomate elevator;
+    private IElevatorAutomate automate;
+    private T elevator;
     private Building building;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
-    public ElevatorThread(IElevatorAutomate elevator, Building building) {
+    public ElevatorThread(T elevator, Building building) {
         this.building = building;
+        this.automate = elevator.getElevatorAutomate();
         this.elevator = elevator;
     }
 
@@ -18,10 +24,12 @@ public class ElevatorThread {
             @Override
             public void run() {
                 try {
+                    DaoElevatorState dao = new DaoElevatorState();
                     while (!suspend) {
                         move();
                         Thread.sleep(100);
-                        elevator.stop();
+                        automate.stop();
+                        dao.saveElevator(elevator);
                     }
                 } catch (Throwable ex) {
                     //сделать нормальное логирование
@@ -46,7 +54,7 @@ public class ElevatorThread {
         double constantSpeedPath = path - 2 * stopPath;
         moveLift(stopTime);
         Boolean isPathLong = true;
-        if (!elevator.stopNextFloor() && stopTime != accelerationTime) {
+        if (!automate.stopNextFloor() && stopTime != accelerationTime) {
             moveLift(accelerationTime - stopTime);
             isPathLong = false;
             stopTime = accelerationTime;
@@ -56,28 +64,28 @@ public class ElevatorThread {
         double constantSpeedTime = constantSpeedPath / speed;
         moveLift(constantSpeedTime);
         double moveTime = stopPath / speed;
-        while (elevator.canMove() && !elevator.stopNextFloor()) {
+        while (automate.canMove() && !automate.stopNextFloor()) {
             moveLift(moveTime);
-            elevator.changeCurrentFloor();
+            automate.changeCurrentFloor();
             if (isPathLong) {
                 moveLift(moveTime);
             }
             moveLift(constantSpeedTime);
         }
         moveLift(stopTime);
-          if (elevator.canMove()) {
-            elevator.changeCurrentFloor();
-
-        */
+          if (automate.canMove()) {
+            automate.changeCurrentFloor();
+*/
+        
         //более удобный аналог
-        while (elevator.canMove() && !elevator.stopNextFloor()) {
+        while (automate.canMove() && !automate.stopNextFloor()) {
             moveLift(1);
-            elevator.changeCurrentFloor();
+            automate.changeCurrentFloor();
 
         }
         moveLift(1);
-        if (elevator.canMove()) {
-            elevator.changeCurrentFloor();
+        if (automate.canMove()) {
+            automate.changeCurrentFloor();
         }
     }
 

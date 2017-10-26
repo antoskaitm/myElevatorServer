@@ -19,10 +19,18 @@ public class ElevatorController {
 
     static {
         building = new Building(7, 40);
-        ElevatorCondition elevator = new ElevatorCondition(building.getFloorCount());
-        room = new ElevatorRoom<ElevatorCondition>(elevator);
-        ElevatorThread emulation = new ElevatorThread(room.getElevatorAutomate(), building);
-        emulation.run();
+        //ElevatorCondition elevator = new ElevatorCondition(building.getFloorCount());
+        //room = new ElevatorRoom<>(elevator);
+
+        try {
+            DaoElevatorState dao = new DaoElevatorState();
+            //dao.saveElevator(room);
+            room = dao.getElevator();
+            ElevatorThread emulation = new ElevatorThread(room, building);
+            emulation.run();
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @RequestMapping(value = {"call"}, method = RequestMethod.POST)
