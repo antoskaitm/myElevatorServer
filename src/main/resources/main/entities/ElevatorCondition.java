@@ -1,94 +1,117 @@
 package main.entities;
 
-import java.util.Arrays;
+import main.entities.events.Action;
 
-public class ElevatorCondition {
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**numbers of floors begin from 0
+ *
+ */
+public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble {
     private Integer lastStopFloor = null;
     private Integer currentFloor = null;
     private final Boolean[] callPoints;
-    private final Boolean[] sendPoints;
     private Integer direction = 0;
     private final Integer lastFloorNumber;
+    private IElevatorAutomate automate;
 
-    public ElevatorCondition(Building building) {
-        lastFloorNumber = building.getLastFloor();
-        callPoints = new Boolean[building.getFloorCount()];
+    public ElevatorCondition(Integer floorCount) {
+        Integer minFloorCount = 3;
+        if (floorCount < minFloorCount) {
+            throw new IllegalArgumentException("Floor count must be " + minFloorCount + " or more");
+        }
+        lastFloorNumber = floorCount - 1;
+        callPoints = new Boolean[floorCount];
         Arrays.fill(callPoints, false);
-        sendPoints = new Boolean[building.getFloorCount()];
-        Arrays.fill(sendPoints, false);
-        this.currentFloor = building.getGroundFloor();
+        this.currentFloor = 0;
     }
 
+    @Override
     public Integer getCurrentFloor() {
         return currentFloor;
     }
 
-    public void callup(Integer floor) {
+    @Override
+    public Boolean callup(Integer floor) {
+        if (!hasFloor(floor)) {
+            return false;
+        }
         callPoints[floor] = true;
         if (lastStopFloor == null) {
             setLastFloor();
         }
+        return callPoints[floor];
     }
 
-    public void send(Integer floor) {
-        if (currentFloor.equals(floor)) {
-            return;
+    public IElevatorAutomate getElevatorAutomate() {
+        if (automate == null) {
+            automate = new IElevatorAutomate() {
+                private List<Action> actions = new ArrayList<Action>();
+
+                @Override
+                public Boolean stopNextFloor() {
+                    return callPoints[currentFloor + direction];
+                }
+
+                @Override
+                public void stop() {
+                    callPoints[currentFloor] = false;
+                    for (Action action : actions) {
+                        action.execut();
+                    }
+                    if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
+                        setLastFloor();
+                    }
+                }
+
+                @Override
+                public void changeCurrentFloor() {
+                    currentFloor += direction;
+                }
+
+                @Override
+                public Boolean canMove() {
+                    return canMoveUp() || canMoveDown();
+                }
+
+                @Override
+                public void onStop(Action action) {
+                    this.actions.add(action);
+                }
+
+                private Boolean canMoveUp() {
+                    return direction > 0 && !currentFloor.equals(lastFloorNumber);
+                }
+
+                private Boolean canMoveDown() {
+                    return direction < 0 && !currentFloor.equals(0);
+                }
+            };
         }
-        sendPoints[floor] = true;
-        if (lastStopFloor == null) {
-            setLastFloor();
-        }
+        return automate;
     }
 
-    Boolean stopNextFloor() {
-        Integer nextFloor = currentFloor + direction;
-        return sendPoints[nextFloor] || callPoints[nextFloor];
-    }
-
-    void stop() throws InterruptedException {
-        callPoints[currentFloor] = false;
-        sendPoints[currentFloor] = false;
-        if (currentFloor.equals(lastStopFloor) || lastStopFloor == null || lastStopFloor == -1) {
-            setLastFloor();
-        }
-    }
-
-    void changeCurrentFloor() {
-        if (!direction.equals(0)) {
-            currentFloor += direction;
-        }
-    }
-
-    Boolean canMove() {
-        return canMoveUp() || canMoveDown();
-    }
-
-    private Boolean canMoveUp() {
-        return direction > 0 && !currentFloor.equals(lastFloorNumber);
-    }
-
-    private Boolean canMoveDown() {
-        return direction < 0 && !currentFloor.equals(0);
+    private Boolean hasFloor(Integer floor) {
+        return floor >= 0 && floor <= lastFloorNumber;
     }
 
     private void setLastFloor() {
-        Boolean value = true;
+        Integer lastStopFloor;
         if (direction >= 0) {
-            lastStopFloor = Arrays.asList(sendPoints).lastIndexOf(value);
-            if (lastStopFloor == -1) {
-                lastStopFloor = Arrays.asList(callPoints).lastIndexOf(value);
-            }
+
+            lastStopFloor = Arrays.asList(callPoints).lastIndexOf(true);
         } else {
-            lastStopFloor = Arrays.asList(sendPoints).indexOf(value);
-            if (lastStopFloor == -1) {
-                lastStopFloor = Arrays.asList(callPoints).indexOf(value);
-            }
+            lastStopFloor = Arrays.asList(callPoints).indexOf(true);
         }
+        this.lastStopFloor = lastStopFloor == -1 ? null : lastStopFloor;
         changeDirection();
     }
 
     private void changeDirection() {
-        if (currentFloor.equals(lastStopFloor) || lastStopFloor == null || lastStopFloor == -1) {
+        if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
             lastStopFloor = null;
             direction = 0;
         } else if (lastStopFloor - currentFloor < 0) {

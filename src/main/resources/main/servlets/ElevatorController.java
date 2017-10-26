@@ -3,6 +3,7 @@ package main.servlets;
 
 import main.entities.Building;
 import main.entities.ElevatorCondition;
+import main.entities.ElevatorRoom;
 import main.entities.ElevatorThread;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,57 +14,57 @@ import javax.servlet.http.HttpServlet;
 
 @Controller
 public class ElevatorController extends HttpServlet {
-    private static Building building = new Building(7,40);
-    private static ElevatorCondition elevator = new ElevatorCondition(building);
+    private static Building building;
+    private static ElevatorRoom<ElevatorCondition> queue;
 
     static {
-        ElevatorThread emulation = new ElevatorThread(elevator);
+        building = new Building(7, 40);
+        ElevatorCondition elevator = new ElevatorCondition(building.getFloorCount());
+        queue = new ElevatorRoom<ElevatorCondition>(elevator);
+        ElevatorThread emulation = new ElevatorThread(queue.getElevatorAutomate(),building);
         emulation.run();
     }
 
     @RequestMapping(value = {"callup"}, method = RequestMethod.POST)
-    public String callupElevator(Integer floor,Model model)
-    {
-        if (isExist(floor, model)) {
-            elevator.callup(floor);
+    public String callupElevator(Integer floor, Model model) {
+        if (!building.hasFloor(floor)) {
+            model.addAttribute("errorMessage", "Error!This floor doesn't exist");
+        } else {
+            queue.callElevator(floor);
         }
-        setModelData(model);
+        setModelData(model, "main");
         return "main";
     }
 
+    @RequestMapping(value = {"getCurrentFloor"}, method = RequestMethod.POST)
+    public String getCurrentFloor(Model model,String page) {
+        setModelData(model, page);
+        return page;
+    }
+
     @RequestMapping(value = {"main"}, method = RequestMethod.GET)
-    public String begin(Model model)
-    {
-        setModelData(model);
+    public String begin(Model model) {
+        setModelData(model, "main");
         return "main";
     }
 
     @RequestMapping(value = {"send"}, method = RequestMethod.POST)
-    public String send(Integer floor,Model model) {
-        if (isExist(floor, model)) {
-            if (floor.equals(elevator.getCurrentFloor())) {
-                model.addAttribute("errorMessage", "Error!This is current floor");
-            } else {
-                elevator.send(floor);
-            }
+    public String send(int floor, Model model) {
+        if (!building.hasFloor(floor)) {
+            model.addAttribute("errorMessage", "Error!This floor doesn't exist");
+        } else if (queue.getCurrentFloor().equals(floor)) {
+            model.addAttribute("errorMessage", "Error!This is current floor");
+        } else {
+            queue.SendElevator(floor,0);
         }
-        setModelData(model);
+        setModelData(model, "main");
         return "main";
     }
 
-    private Boolean isExist(Integer floor,Model model)
-    {
-        Boolean isExist = building.hasFloor(floor);
-        if(!isExist) {
-            model.addAttribute("errorMessage","Error!This floor doesn't exist");
-        }
-        return isExist;
-    }
-
-    private void setModelData(Model model)
-    {
-        model.addAttribute("currentFloor", elevator.getCurrentFloor());
-        model.addAttribute("maxFloor", building.getLastFloor());
-        model.addAttribute("minFloor", building.getGroundFloor());
+    private void setModelData(Model model, String page) {
+        model.addAttribute("page", page);
+        model.addAttribute("currentFloor", queue.getCurrentFloor());
+        model.addAttribute("lastFloor", building.getLastFloor());
+        model.addAttribute("groundFloor", building.getGroundFloor());
     }
 }

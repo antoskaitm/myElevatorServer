@@ -2,14 +2,14 @@ package main.entities;
 
 public class ElevatorThread {
     private boolean suspend = false;
-    private ElevatorCondition elevator;
+    private IElevatorAutomate elevator;
     private Building building;
 
-    private final Integer speed=1;
-    private final Integer acceleration=2;
+    private final Integer speed = 1;
+    private final Integer acceleration = 2;
 
-    public ElevatorThread(ElevatorCondition elevator)
-    {
+    public ElevatorThread(IElevatorAutomate elevator,Building building) {
+        this.building = building;
         this.elevator = elevator;
     }
 
@@ -24,7 +24,7 @@ public class ElevatorThread {
                         elevator.stop();
                     }
                 } catch (Throwable ex) {
-                    //куданибудь логировать
+                    //сделать нормальное логирование
                     ex.printStackTrace();
                 }
             }
@@ -33,8 +33,10 @@ public class ElevatorThread {
         thread.start();
     }
 
-    private void move() {
-        /*Integer path = building.getFloorHeight();
+    private void move() throws InterruptedException {
+       //расчет движения лифта с учетом физики
+        /*
+        Integer path = building.getFloorHeight();
         Integer accelerationTime = speed / acceleration;
         Integer stopTime = accelerationTime;
         if (path / 2 < acceleration * accelerationTime * accelerationTime / 2) {
@@ -42,36 +44,36 @@ public class ElevatorThread {
         }
         Integer stopPath = stopTime * stopTime * acceleration / 2;
         Integer constantSpeedPath = path - 2 * stopPath;
-        //ускорились//Thread.sleep(stopTime);
+        Thread.sleep(stopTime);
         Boolean isPathLong = true;
-        if (!stopNextFloor() && stopTime != accelerationTime) {
-            //доускорились////Thread.sleep(accelerationTime-stopTime);
+        if (!elevator.stopNextFloor() && stopTime != accelerationTime) {
+            Thread.sleep(accelerationTime - stopTime);
             isPathLong = false;
             stopTime = accelerationTime;
             stopPath = stopTime * stopTime * acceleration / 2;
             constantSpeedPath = path - stopPath;
         }
         Integer constantSpeedTime = constantSpeedPath / speed;
-        //постоянное////Thread.sleep(constantSpeedTime);
+        Thread.sleep(constantSpeedTime);
         Integer moveTime = stopPath / speed;
-        while (!stopNextFloor()) {
-            //движемся с постоянной участок остановки//Thread.sleep(moveTime);
-            changeCurrentFloor();
+        while (elevator.canMove() && !elevator.stopNextFloor()) {
+            Thread.sleep(moveTime);
+            elevator.changeCurrentFloor();
             if (isPathLong) {
-                //движемся с постоянной участок ускорения//Thread.sleep(moveTime);
+                Thread.sleep(moveTime);
             }
-            //движемся с постоянной//Thread.sleep(constantSpeedTime);
-            if (currentFloor == 0 || currentFloor == building.getLastFloor()) {
-                break;
-            }
+            Thread.sleep(constantSpeedTime);
         }
-        //остановка//Thread.sleep(stopTime);
-        */
+        Thread.sleep(stopTime);
+*/
 
         while (elevator.canMove() && !elevator.stopNextFloor()) {
+            Thread.sleep(1000);
             elevator.changeCurrentFloor();
+
         }
-        if(elevator.canMove()) {
+        Thread.sleep(1000);
+        if (elevator.canMove()) {
             elevator.changeCurrentFloor();
         }
     }
