@@ -81,6 +81,11 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
         return continsIn(callElevatorPersons, personId);
     }
 
+    @Override
+    public boolean isSendElevator(Integer personId) {
+        return continsIn(sendElevatorPersons, personId);
+    }
+
     private void stop() {
         Integer floor = elevatorCondition.getCurrentFloor();
         this.personsInLift.addAll(getList(callElevatorPersons, floor));
@@ -96,18 +101,17 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     @Override
     public String getPersonCondition(Integer personId) {
         if (personId == null) {
-            return "call lift";
+            return "stand to call up lift";
         }
         if (personsInLift.contains(personId)) {
-            return "in lift";
+            return "stand in lift";
         }
         if (continsIn(callElevatorPersons, personId)) {
             return "wait to in";
         }
-
         if (continsIn(sendElevatorPersons, personId)) {
             return "wait to out";
         }
-        return "call lift";
+        return "stand to call up lift";
     }
 }
