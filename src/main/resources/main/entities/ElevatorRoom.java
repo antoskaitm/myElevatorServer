@@ -17,8 +17,8 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
     static final long serialVersionUID = -1000000000000L;
 
     private Integer counterPeopleId = 0;
-    private final T elevatorCondition;
-    private final Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<Integer, List<Integer>>();
+    private T elevatorCondition;
+    private Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<Integer, List<Integer>>();
     private final Map<Integer, List<Integer>> callElevatorPersons = new HashMap<Integer, List<Integer>>();
     private final Set<Integer> personsInLift = new HashSet<Integer>();
 
@@ -124,9 +124,18 @@ public class ElevatorRoom<T extends IElevatorAutomateble&IElevatorUi> implements
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
+        long serialVersionUID = stream.readLong();
+        counterPeopleId=(Integer) stream.readObject();
+        elevatorCondition = (T) stream.readObject();
+        sendElevatorPersons = (Map<Integer, List<Integer>>) stream.readObject();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
+        stream.writeLong(serialVersionUID);
+        stream.writeObject(counterPeopleId);
+        stream.writeObject(elevatorCondition);
+        stream.writeObject(sendElevatorPersons);
+
     }
 }
