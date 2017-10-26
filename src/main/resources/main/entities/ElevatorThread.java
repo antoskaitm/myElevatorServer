@@ -1,6 +1,7 @@
 package main.entities;
 
-import main.dao.DaoElevatorState;
+import main.dao.DaoState;
+import main.dao.IDaoStaitabel;
 
 import java.io.Serializable;
 
@@ -9,6 +10,7 @@ public class ElevatorThread<T extends IElevatorRoom&IElevatorAutomateble&Seriali
     private IElevatorAutomate automate;
     private T elevator;
     private Building building;
+    private IDaoStaitabel dao;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
@@ -24,7 +26,7 @@ public class ElevatorThread<T extends IElevatorRoom&IElevatorAutomateble&Seriali
             @Override
             public void run() {
                 try {
-                    DaoElevatorState dao = new DaoElevatorState();
+                    dao = new DaoState();
                     while (!suspend) {
                         move();
                         Thread.sleep(100);

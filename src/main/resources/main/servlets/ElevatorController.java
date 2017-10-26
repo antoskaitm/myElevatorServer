@@ -1,7 +1,7 @@
 package main.servlets;
 
 
-import main.dao.DaoElevatorState;
+import main.dao.DaoState;
 import main.entities.*;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ public class ElevatorController {
     static {
         try {
             building = new Building(7, 40);
-            DaoElevatorState dao = new DaoElevatorState();
+            DaoState dao = new DaoState();
             room = dao.getElevator();
             ElevatorThread emulation = new ElevatorThread(room, building);
             emulation.run();
