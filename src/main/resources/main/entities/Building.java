@@ -10,8 +10,8 @@ import java.io.Serializable;
  */
 public class Building implements Serializable {
     static final long serialVersionUID = -3000000000000L;
-    private final Integer floorCount;
-    private final Integer floorHeight;
+    private Integer floorCount;
+    private Integer floorHeight;
 
     public Building(int floorCount, int buildingHeight) {
         Integer minFloorCount = 3;
@@ -56,9 +56,15 @@ public class Building implements Serializable {
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
+        long serialVersionUID = stream.readLong();
+        floorHeight = (Integer) stream.readObject();
+        floorCount = (Integer) stream.readObject();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.defaultWriteObject();
+        stream.writeLong(serialVersionUID);
+        stream.writeObject(floorHeight);
+        stream.writeObject(floorCount);
     }
 }
