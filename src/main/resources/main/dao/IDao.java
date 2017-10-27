@@ -1,7 +1,7 @@
 package main.dao;
 
-import main.entities.interfaces.IBuilding;
-import main.entities.interfaces.IElevatorRoom;
+import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IElevatorRoom;
 
 import java.io.*;
 

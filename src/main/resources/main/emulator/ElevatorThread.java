@@ -3,6 +3,8 @@ package main.emulator;
 import main.dao.DaoState;
 import main.dao.IDao;
 import main.entities.interfaces.*;
+import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IElevatorAutomate;
 
 import java.io.Serializable;
 
@@ -79,7 +81,7 @@ public class ElevatorThread<T extends IAutomobileElevatorRoom &Serializable> {
     }
 
     private void moveLift(double seconds) throws InterruptedException {
-        Thread.sleep((int) seconds * 1000);
+        Thread.sleep((int) seconds * 500);
     }
 
     private IElevatorAutomate getAutomate() {

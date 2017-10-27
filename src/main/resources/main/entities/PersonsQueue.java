@@ -1,6 +1,12 @@
 package main.entities;
 
+import main.entities.constants.PersonCondition;
 import main.entities.interfaces.*;
+import main.entities.interfaces.primitive.IElevatorAutomate;
+import main.entities.interfaces.primitive.IElevatorAutomateble;
+import main.entities.interfaces.primitive.IElevatorUi;
+import main.entities.interfaces.primitive.IPersonCondition;
+import main.entities.primitive.Person;
 
 import java.io.Serializable;
 import java.util.Map;

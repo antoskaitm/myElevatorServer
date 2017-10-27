@@ -1,6 +1,7 @@
-package main.entities;
+package main.entities.primitive;
 
-import main.entities.interfaces.IPersonCondition;
+import main.entities.constants.PersonCondition;
+import main.entities.interfaces.primitive.IPersonCondition;
 
 public class Person {
     private Integer id;

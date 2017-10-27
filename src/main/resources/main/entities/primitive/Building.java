@@ -1,6 +1,6 @@
-package main.entities;
+package main.entities.primitive;
 
-import main.entities.interfaces.IBuilding;
+import main.entities.interfaces.primitive.IBuilding;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

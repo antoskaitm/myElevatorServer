@@ -1,6 +1,6 @@
-package main.entities;
+package main.entities.constants;
 
-import main.entities.interfaces.IPersonCondition;
+import main.entities.interfaces.primitive.IPersonCondition;
 
 public class PersonCondition implements IPersonCondition {
     private final String message;

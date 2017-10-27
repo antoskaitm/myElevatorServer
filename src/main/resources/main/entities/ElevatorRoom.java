@@ -1,6 +1,11 @@
 package main.entities;
 
+import main.entities.constants.PersonCondition;
 import main.entities.interfaces.*;
+import main.entities.interfaces.primitive.IElevatorAutomate;
+import main.entities.interfaces.primitive.IElevatorAutomateble;
+import main.entities.interfaces.primitive.IElevatorUi;
+import main.entities.interfaces.primitive.IPersonCondition;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,7 +22,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * all methods which change room state is synchronized
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializable> implements IAutomobileElevatorRoom, Serializable {
+public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializable> implements IAutomobileElevatorRoom, Serializable {
 
     static final long serialVersionUID = -1000000000000L;
 
