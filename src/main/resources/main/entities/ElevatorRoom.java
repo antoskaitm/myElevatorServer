@@ -10,10 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**view for object implementing IElevatorAutomateble,IElevatorUi
  * can work with basement floors
  * this class also keep information about people
+ * all methods which change room state is synchronized
  * @param <T>
  */
 public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializable> implements IElevatorRoom, IElevatorAutomateble , Serializable {
@@ -22,9 +26,9 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
 
     private Integer counterPeopleId = 0;
     private T elevatorCondition;
-    private Map<Integer, List<Integer>> sendElevatorPersons = new HashMap<>();
-    private Map<Integer, List<Integer>> callElevatorPersons = new HashMap<>();
-    private Set<Integer> personsInLift = new HashSet<>();
+    private Map<Integer, Queue<Integer>> sendElevatorPersons = new ConcurrentHashMap<>();
+    private Map<Integer, Queue<Integer>> callElevatorPersons = new ConcurrentHashMap<>();
+    private Set<Integer> personsInLift = new ConcurrentSkipListSet<>();
 
     public ElevatorRoom(T elevatorCondition) {
         this.elevatorCondition = elevatorCondition;
@@ -32,10 +36,10 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
     }
 
     @Override
-    public Integer callElevator(int floor) {
-        if (elevatorCondition.callup(floor)) {
+    public synchronized Integer callElevator(int floor) {
+        if (!getQueue(callElevatorPersons, floor).isEmpty() || elevatorCondition.callup(floor)) {
             Integer personId = counterPeopleId++;
-            getList(callElevatorPersons, floor).add(personId);
+            getQueue(callElevatorPersons, floor).add(personId);
             return personId;
         }
         return null;
@@ -46,21 +50,14 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
         return elevatorCondition.getCurrentFloor();
     }
 
-    private List<Integer> getList(Map<Integer, List<Integer>> map, int floor) {
-        if (!map.containsKey(floor)) {
-            map.put(floor, new LinkedList<>());
-        }
-        return map.get(floor);
-    }
-
     @Override
-    public Boolean sendElevator(int floor, int personId) {
+    public synchronized Boolean sendElevator(int floor, int personId) {
         if (elevatorCondition.getCurrentFloor().equals(floor)) {
             return false;
         }
         if (personsInLift.contains(personId)) {
             if (elevatorCondition.callup(floor)) {
-                getList(sendElevatorPersons, floor).add(personId);
+                getQueue(sendElevatorPersons, floor).add(personId);
                 personsInLift.remove(personId);
                 return true;
             }
@@ -73,8 +70,8 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
         return personsInLift.contains(personId);
     }
 
-    private boolean contains(Map<Integer, List<Integer>> map, Integer personId) {
-        for (List<Integer> waits : map.values()) {
+    private boolean contains(Map<Integer, Queue<Integer>> map, Integer personId) {
+        for (Queue<Integer> waits : map.values()) {
             if (waits.contains(personId)) {
                 return true;
             }
@@ -90,13 +87,6 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
     @Override
     public boolean isSendElevator(Integer personId) {
         return contains(sendElevatorPersons, personId);
-    }
-
-    private void stop() {
-        Integer floor = elevatorCondition.getCurrentFloor();
-        this.personsInLift.addAll(getList(callElevatorPersons, floor));
-        getList(callElevatorPersons, floor).clear();
-        getList(sendElevatorPersons, floor).clear();
     }
 
     @Override
@@ -121,13 +111,27 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
         return "stand to call up lift";
     }
 
+    private Queue<Integer> getQueue(Map<Integer, Queue<Integer>> map, int floor) {
+        if (!map.containsKey(floor)) {
+            map.put(floor, new ConcurrentLinkedQueue<>());
+        }
+        return map.get(floor);
+    }
+
+    private synchronized void stop() {
+        Integer floor = elevatorCondition.getCurrentFloor();
+        this.personsInLift.addAll(getQueue(callElevatorPersons, floor));
+        getQueue(callElevatorPersons, floor).clear();
+        getQueue(sendElevatorPersons, floor).clear();
+    }
+
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         long serialVersionUID = stream.readLong();
         counterPeopleId = (Integer) stream.readObject();
         elevatorCondition = (T) stream.readObject();
-        sendElevatorPersons = (Map<Integer, List<Integer>>) stream.readObject();
-        callElevatorPersons = new HashMap<>();
-        personsInLift = new HashSet<>();
+        sendElevatorPersons = (Map<Integer, Queue<Integer>>) stream.readObject();
+        callElevatorPersons = new ConcurrentHashMap<>();
+        personsInLift = new ConcurrentSkipListSet<>();
         elevatorCondition.getElevatorAutomate().onStop(this::stop);
     }
 
