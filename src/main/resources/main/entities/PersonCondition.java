@@ -9,10 +9,10 @@ public class PersonCondition implements IPersonCondition {
         this.message = message;
     }
 
-    public static final PersonCondition DIDNOT_CALL_ELEVATOR = new PersonCondition("Person didn't call elevator room");
-    public static final PersonCondition CALLED_ELEVATOR = new PersonCondition("Person wait to into elevator room");
-    public static final PersonCondition STAND_IN_ELEVATOR = new PersonCondition("Person stand in elevator room");
-    public static final PersonCondition SENDED_ELEVATOR = new PersonCondition("Person wait to out from elevator room");
+    public static final IPersonCondition DIDNOT_CALL_ELEVATOR = new PersonCondition("Person didn't call elevator room");
+    public static final IPersonCondition CALLED_ELEVATOR = new PersonCondition("Person wait to into elevator room");
+    public static final IPersonCondition STAND_IN_ELEVATOR = new PersonCondition("Person stand in elevator room");
+    public static final IPersonCondition SENDED_ELEVATOR = new PersonCondition("Person wait to out from elevator room");
 
     public String getMessage() {
         return message;
