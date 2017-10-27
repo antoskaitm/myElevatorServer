@@ -16,7 +16,7 @@ import java.util.List;
 /**numbers of floors begin from 0
  *
  */
-public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
+class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
     static final long serialVersionUID = -2000000000000L;
 
     private Integer lastStopFloor = null;
