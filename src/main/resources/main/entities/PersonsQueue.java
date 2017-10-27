@@ -65,12 +65,12 @@ public class PersonsQueue <T extends IElevatorUi &IElevatorAutomateble &Serializ
     }
 
     private boolean isCondition(Integer personId, IPersonCondition condition) {
-        return persons.containsKey(personId) && persons.get(personId).getCondition() == condition;
+        return personId != null && persons.containsKey(personId) && persons.get(personId).getCondition() == condition;
     }
 
     @Override
     public IPersonCondition getPersonCondition(Integer personId) {
-        if (persons.containsKey(personId)) {
+        if (personId != null && persons.containsKey(personId)) {
             return persons.get(personId).getCondition();
         }
         return PersonCondition.DIDNOT_CALL_ELEVATOR;

@@ -41,22 +41,23 @@ public class Person {
     }
 
     public void setCondition(IPersonCondition newCondition) {
-        if(condition == newCondition)
-        {
+        if (condition == newCondition) {
             return;
         }
-        if (condition == PersonCondition.DIDNOT_CALL_ELEVATOR) {
-            condition = PersonCondition.CALLED_ELEVATOR;
+        if (condition == PersonCondition.DIDNOT_CALL_ELEVATOR
+                && newCondition == PersonCondition.CALLED_ELEVATOR) {
+            condition = newCondition;
         } else if (condition == PersonCondition.CALLED_ELEVATOR
                 && newCondition == PersonCondition.STAND_IN_ELEVATOR) {
-            condition = PersonCondition.STAND_IN_ELEVATOR;
+            condition = newCondition;
         } else if (condition == PersonCondition.STAND_IN_ELEVATOR
                 && newCondition == PersonCondition.SENDED_ELEVATOR) {
-            condition = PersonCondition.SENDED_ELEVATOR;
+            condition =newCondition;
         } else if (condition == PersonCondition.SENDED_ELEVATOR
                 && newCondition == PersonCondition.DIDNOT_CALL_ELEVATOR) {
-            condition = PersonCondition.DIDNOT_CALL_ELEVATOR;
+            condition = newCondition;
+        } else {
+            throw new IllegalStateException("Incorrect new state, current state: " + condition.getMessage());
         }
-        throw new IllegalStateException("Incorrect new state, current state: "+condition.getMessage());
     }
 }
