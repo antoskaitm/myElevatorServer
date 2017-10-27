@@ -1,13 +1,10 @@
 package main.servlets;
 
 
-import main.dao.DaoState;
 import main.emulator.ElevatorThread;
-import main.entities.*;
 import main.entities.interfaces.IBuilding;
 import main.entities.interfaces.IElevatorRoom;
 import main.helpers.SessionHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,7 +99,7 @@ public class ElevatorController {
         model.addAttribute("currentFloor", room.getCurrentFloor());
         model.addAttribute("lastFloor", building.getLastFloor());
         model.addAttribute("groundFloor", building.getGroundFloor());
-        model.addAttribute("personCondition", room.getPersonCondition(id));
+        model.addAttribute("personConditionMessage", room.getPersonCondition(id).getMessage());
         model.addAttribute("id", id);
     }
 }

@@ -95,20 +95,20 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
     }
 
     @Override
-    public String getPersonCondition(Integer personId) {
+    public PersonCondition getPersonCondition(Integer personId) {
         if (personId == null) {
-            return "stand to call up lift";
+            return PersonCondition.DIDNOT_CALL_ELEVATOR;
         }
         if (personsInLift.contains(personId)) {
-            return "stand in lift";
+            return PersonCondition.STAND_IN_ELEVATOR;
         }
         if (contains(callElevatorPersons, personId)) {
-            return "wait to in";
+            return PersonCondition.CALLED_ELEVATOR;
         }
         if (contains(sendElevatorPersons, personId)) {
-            return "wait to out";
+            return PersonCondition.SENDED_ELEVATOR;
         }
-        return "stand to call up lift";
+        return PersonCondition.DIDNOT_CALL_ELEVATOR;
     }
 
     private Queue<Integer> getQueue(Map<Integer, Queue<Integer>> map, int floor) {

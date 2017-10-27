@@ -1,5 +1,7 @@
 package main.entities.interfaces;
 
+import main.entities.PersonCondition;
+
 public interface IElevatorRoom {
     Integer callElevator(int floor);
 
@@ -13,5 +15,5 @@ public interface IElevatorRoom {
 
     boolean isSendElevator(Integer personId);
 
-    String getPersonCondition(Integer personId);
+    PersonCondition getPersonCondition(Integer personId);
 }
