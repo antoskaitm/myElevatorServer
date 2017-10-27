@@ -26,7 +26,7 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
     private Integer lastFloorNumber;
     private IElevatorAutomate automate;
 
-    public ElevatorCondition(Integer floorCount) {
+    public ElevatorCondition(int floorCount) {
         Integer minFloorCount = 3;
         if (floorCount < minFloorCount) {
             throw new IllegalArgumentException("Floor count must be " + minFloorCount + " or more");

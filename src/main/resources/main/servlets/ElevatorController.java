@@ -7,6 +7,7 @@ import main.entities.*;
 import main.entities.interfaces.IBuilding;
 import main.entities.interfaces.IElevatorRoom;
 import main.helpers.SessionHelper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,19 +17,21 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ElevatorController {
-    private static IBuilding building;
+    private IBuilding building;
     private static IElevatorRoom room;
 
-    static {
-        try {
-            building = new Building(7, 40);
-            DaoState dao = new DaoState();
-            room = dao.getElevatorRoom();
-            ElevatorThread emulation = new ElevatorThread(room, building);
-            emulation.run();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+    public ElevatorController(IBuilding building, IElevatorRoom room) {
+        this.building = building;
+        if (this.room == null)
+            try {
+                this.room = room;
+                //DaoState dao = new DaoState();
+                //room = dao.getElevatorRoom();
+                ElevatorThread emulation = new ElevatorThread(room, building);
+                emulation.run();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
     }
 
     @RequestMapping(value = {"call"}, method = RequestMethod.POST)
@@ -67,7 +70,7 @@ public class ElevatorController {
     public String begin(Model model, HttpSession session) {
         SessionHelper helper = new SessionHelper(session);
         helper.setPage("main");
-        setModelData(model,helper.getPersonId());
+        setModelData(model, helper.getPersonId());
         return "main";
     }
 
@@ -91,11 +94,11 @@ public class ElevatorController {
         }
         resultPage = (resultPage == null) ? "callPanel" : resultPage;
         helper.setPage(resultPage);
-        setModelData(model,helper.getPersonId());
+        setModelData(model, helper.getPersonId());
         return resultPage;
     }
 
-    private void setModelData(Model model,Integer id) {
+    private void setModelData(Model model, Integer id) {
         model.addAttribute("currentFloor", room.getCurrentFloor());
         model.addAttribute("lastFloor", building.getLastFloor());
         model.addAttribute("groundFloor", building.getGroundFloor());

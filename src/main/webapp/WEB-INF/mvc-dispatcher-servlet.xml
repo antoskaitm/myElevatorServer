@@ -7,12 +7,32 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan base-package="main.*"/>
+    <context:property-placeholder location="classpath:properties.properties"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean id="building" class="main.entities.Building" scope="singleton">
+        <constructor-arg name="floorCount" value="${floorCount}"/>
+        <constructor-arg name="buildingHeight">
+            <value>40</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="elevatorCondition" class="main.entities.ElevatorCondition" scope="singleton">
+        <constructor-arg name="floorCount" value="${floorCount}"/>
+    </bean>
+
+    <bean id="elevatorRoom" class="main.entities.ElevatorRoom" scope="singleton">
+        <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
+    </bean>
+
+    <bean id="elevatorController" class="main.servlets.ElevatorController">
+        <constructor-arg name="building" ref="building"/>
+        <constructor-arg name="room" ref="elevatorRoom"/>
+    </bean>
 
     <mvc:default-servlet-handler/>
     <mvc:annotation-driven/>
