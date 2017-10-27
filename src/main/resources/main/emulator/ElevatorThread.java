@@ -1,27 +1,22 @@
 package main.emulator;
 
 import main.dao.DaoState;
-import main.dao.IDaoStaitabel;
-import main.entities.interfaces.IBuilding;
-import main.entities.interfaces.IElevatorAutomate;
-import main.entities.interfaces.IElevatorAutomateble;
-import main.entities.interfaces.IElevatorRoom;
+import main.dao.IDao;
+import main.entities.interfaces.*;
 
 import java.io.Serializable;
 
-public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Serializable> {
+public class ElevatorThread<T extends IAutomobileElevatorRoom &Serializable> {
     private boolean suspend = false;
-    private IElevatorAutomate automate;
     private T elevator;
     private IBuilding building;
-    private IDaoStaitabel dao;
+    private IDao dao;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
     public ElevatorThread(T elevator, IBuilding building) {
         this.building = building;
-        this.automate = elevator.getElevatorAutomate();
         this.elevator = elevator;
     }
 
@@ -34,7 +29,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
                     while (!suspend) {
                         move();
                         Thread.sleep(100);
-                        automate.stop();
+                        getAutomate().stop();
                         dao.save(elevator,building);
                     }
                 } catch (Throwable ex) {
@@ -59,7 +54,7 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
         double constantSpeedPath = path - 2 * stopPath;
         moveLift(stopTime);
         Boolean isPathLong = true;
-        if (!automate.stopNextFloor() && stopTime != accelerationTime) {
+        if (!getAutomate().stopNextFloor() && stopTime != accelerationTime) {
             moveLift(accelerationTime - stopTime);
             isPathLong = false;
             stopTime = accelerationTime;
@@ -69,21 +64,25 @@ public class ElevatorThread<T extends IElevatorRoom &IElevatorAutomateble &Seria
         double constantSpeedTime = constantSpeedPath / speed;
         moveLift(constantSpeedTime);
         double moveTime = stopPath / speed;
-        while (automate.canMove() && !automate.stopNextFloor()) {
+        while (getAutomate().canMove() && !getAutomate().stopNextFloor()) {
             moveLift(moveTime);
-            automate.changeCurrentFloor();
+            getAutomate().changeCurrentFloor();
             if (isPathLong) {
                 moveLift(moveTime);
             }
             moveLift(constantSpeedTime);
         }
         moveLift(stopTime);
-          if (automate.canMove()) {
-              automate.changeCurrentFloor();
+          if (getAutomate().canMove()) {
+              getAutomate().changeCurrentFloor();
           }
     }
 
     private void moveLift(double seconds) throws InterruptedException {
         Thread.sleep((int) seconds * 1000);
+    }
+
+    private IElevatorAutomate getAutomate() {
+        return elevator.getElevatorAutomate();
     }
 }

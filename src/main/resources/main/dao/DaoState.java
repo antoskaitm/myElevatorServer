@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 /**
  *
  */
-public class DaoState implements IDaoStaitabel {
+public class DaoState implements IDao {
     private File file;
 
     public DaoState() throws IOException {

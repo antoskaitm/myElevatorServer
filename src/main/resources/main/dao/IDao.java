@@ -5,7 +5,7 @@ import main.entities.interfaces.IElevatorRoom;
 
 import java.io.*;
 
-public interface IDaoStaitabel {
+public interface IDao {
 
     IElevatorRoom getElevatorRoom() throws IOException;
 

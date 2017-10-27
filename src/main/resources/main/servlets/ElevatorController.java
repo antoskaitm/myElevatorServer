@@ -2,6 +2,7 @@ package main.servlets;
 
 
 import main.emulator.ElevatorThread;
+import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.IBuilding;
 import main.entities.interfaces.IElevatorRoom;
 import main.helpers.SessionHelper;
@@ -14,10 +15,10 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ElevatorController {
-    private IBuilding building;
+    private static IBuilding building;
     private static IElevatorRoom room;
 
-    public ElevatorController(IBuilding building, IElevatorRoom room) {
+    public ElevatorController(IBuilding building, IAutomobileElevatorRoom room) {
         this.building = building;
         if (this.room == null)
             try {
