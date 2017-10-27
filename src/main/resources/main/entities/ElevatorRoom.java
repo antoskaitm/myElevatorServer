@@ -1,9 +1,6 @@
 package main.entities;
 
-import main.entities.interfaces.IElevatorAutomate;
-import main.entities.interfaces.IElevatorAutomateble;
-import main.entities.interfaces.IElevatorRoom;
-import main.entities.interfaces.IElevatorUi;
+import main.entities.interfaces.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -95,7 +92,7 @@ public class ElevatorRoom<T extends IElevatorUi&IElevatorAutomateble&Serializabl
     }
 
     @Override
-    public PersonCondition getPersonCondition(Integer personId) {
+    public IPersonCondition getPersonCondition(Integer personId) {
         if (personId == null) {
             return PersonCondition.DIDNOT_CALL_ELEVATOR;
         }
