@@ -7,7 +7,7 @@ import main.entities.interfaces.IElevatorRoom;
 import java.io.Serializable;
 
 /**view for synchronization IElevatorRoom
- *(it is don't work)
+ *
  */
 public class SynchronizedElevatorRoom implements IElevatorRoom, IElevatorAutomateble, Serializable {
 
@@ -28,7 +28,7 @@ public class SynchronizedElevatorRoom implements IElevatorRoom, IElevatorAutomat
     }
 
     @Override
-    public Integer getCurrentFloor() {
+    public synchronized Integer getCurrentFloor() {
         return elevatorRoom.getCurrentFloor();
     }
 
@@ -38,22 +38,22 @@ public class SynchronizedElevatorRoom implements IElevatorRoom, IElevatorAutomat
     }
 
     @Override
-    public boolean isInElevator(Integer personId) {
-        return elevatorRoom.isSendElevator(personId);
+    public synchronized boolean isInElevator(Integer personId) {
+        return elevatorRoom.isInElevator(personId);
     }
 
     @Override
-    public boolean isCallElevator(Integer personId) {
+    public synchronized boolean isCallElevator(Integer personId) {
         return elevatorRoom.isCallElevator(personId);
     }
 
     @Override
-    public boolean isSendElevator(Integer personId) {
+    public synchronized boolean isSendElevator(Integer personId) {
         return elevatorRoom.isSendElevator(personId);
     }
 
     @Override
-    public String getPersonCondition(Integer personId) {
+    public synchronized String getPersonCondition(Integer personId) {
         return elevatorRoom.getPersonCondition(personId);
     }
 }
