@@ -2,10 +2,7 @@ package main.entities;
 
 import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.*;
-import main.entities.interfaces.primitive.IElevatorAutomate;
-import main.entities.interfaces.primitive.IElevatorAutomateble;
-import main.entities.interfaces.primitive.IElevatorUi;
-import main.entities.interfaces.primitive.IConditionable;
+import main.entities.interfaces.primitive.*;
 import main.entities.primitive.Person;
 
 import java.io.Serializable;
@@ -25,11 +22,11 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
     private Integer counterPeopleId = 0;
     private T elevatorCondition;
     private Map<Integer, Person> persons;
-    private Integer roomSize = 1;
-    private Integer personsCountInRoom = 0;
+    private IRoom room;
 
-    public ElevatorRoom(T elevatorCondition) {
+    public ElevatorRoom(T elevatorCondition,IRoom room) {
         persons = new ConcurrentHashMap<>();
+        this.room = room;
         this.elevatorCondition = elevatorCondition;
         this.elevatorCondition.getElevatorAutomate().onStop(this::stop);
     }
@@ -100,11 +97,10 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
             Integer personId = person.getId();
             if (person.getSendFloor() == currentFloor) {
                 persons.remove(personId);
-                --personsCountInRoom;
+                room.release(person);
                 person.setCondition(PersonsConditions.DIDNOT_CALL_ELEVATOR);
             } else if (person.getCallFloor() == currentFloor && person.getCondition() == PersonsConditions.CALLED_ELEVATOR) {
-                if (personsCountInRoom < roomSize) {
-                    ++personsCountInRoom;
+                if (room.admit(person)) {
                     person.setCondition(PersonsConditions.STAND_IN_ELEVATOR);
                 } else {
                     person.setCondition(PersonsConditions.TRY_CALL_AGAIN_ELEVATOR);
