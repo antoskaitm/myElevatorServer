@@ -11,9 +11,9 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 public class ElevatorController {
-    private GeneralServicePanel panel;
+    private ElevatorGeneralController panel;
 
-    public ElevatorController(GeneralServicePanel panel) {
+    public ElevatorController(ElevatorGeneralController panel) {
         this.panel = panel;
     }
 

@@ -44,7 +44,7 @@
         <constructor-arg name="object" ref="building"/>
     </bean>
 
-    <bean class="main.servlets.GeneralServicePanel" id="generalServicePanel" >
+    <bean class="main.servlets.ElevatorGeneralController" id="generalServicePanel" >
         <constructor-arg name="dao" ref="dao"/>
     </bean>
 

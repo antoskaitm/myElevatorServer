@@ -1,6 +1,6 @@
 package main.entities.interfaces.primitive;
 
-import main.entities.events.Action;
+import main.entities.interfaces.events.Action;
 
 public interface IElevatorAutomate {
     void stop();

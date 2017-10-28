@@ -7,12 +7,14 @@ import main.entities.interfaces.primitive.IElevatorRoom;
 import main.entities.primitive.Building;
 import main.helpers.ISessionHelper;
 
-
-public class GeneralServicePanel {
+/** all information for user send into ServerCondition
+ *
+ */
+public class ElevatorGeneralController {
     private IBuilding building;
     private IElevatorRoom room;
 
-    public GeneralServicePanel(IDaoObject<Building> dao) {
+    public ElevatorGeneralController(IDaoObject<Building> dao) {
         try {
             this.building = dao.load();
             this.room = building.getElevator(0);

@@ -1,6 +1,6 @@
 package main.entities.primitive;
 
-import main.entities.events.Action;
+import main.entities.interfaces.events.Action;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
 import main.entities.interfaces.primitive.IElevatorUi;
@@ -11,7 +11,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**numbers of floors begin from 0
