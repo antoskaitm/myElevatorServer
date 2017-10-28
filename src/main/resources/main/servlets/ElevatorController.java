@@ -1,10 +1,11 @@
 package main.servlets;
 
 
-import main.dao.IDao;
+import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorRoom;
+import main.entities.primitive.Building;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +20,9 @@ public class ElevatorController {
     private IBuilding building;
     private IElevatorRoom room;
 
-    public ElevatorController(IDao dao) {
+    public ElevatorController(IDaoObject<Building> dao) {
         try {
-            this.building = dao.getBuilding();
+            this.building = dao.load();
             this.room = building.getElevator(0);
             ElevatorThread emulation = new ElevatorThread(dao, 0);
             emulation.run();

@@ -1,10 +1,10 @@
 package main.emulator;
 
-import main.dao.DaoState;
-import main.dao.IDao;
+import main.dao.IDaoObject;
 import main.entities.interfaces.*;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorAutomate;
+import main.entities.primitive.Building;
 
 import java.io.IOException;
 
@@ -12,14 +12,14 @@ public class ElevatorThread {
     private boolean suspend = false;
     private final IAutomobileElevatorRoom elevator;
     private final IBuilding building;
-    private IDao dao;
+    private IDaoObject<Building> dao;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
-    public ElevatorThread(IDao dao,Integer elevatorNumber) throws IOException {
+    public ElevatorThread(IDaoObject<Building> dao, Integer elevatorNumber) throws IOException {
         this.dao = dao;
-        building = dao.getBuilding();
+        building = dao.load();
         elevator = building.getElevator(elevatorNumber);
     }
 

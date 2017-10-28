@@ -1,7 +1,7 @@
 package main.dao;
 
 import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IElevatorRoom;
+
 import java.io.File;
 
 import java.io.*;
@@ -10,17 +10,17 @@ import java.nio.file.Paths;
 /**
  *
  */
-public class DaoState implements IDao {
+public class DaoObject<T extends Serializable> implements IDaoObject<T> {
     private File file;
-    private IBuilding building;
+    private T object;
 
-    public DaoState(IBuilding building) throws IOException {
-        this.building = building;
+    public DaoObject(T object) throws IOException {
+        this.object = object;
         file = CurrentDir();
     }
 
     @Override
-    public void save(IBuilding building) throws IOException {
+    public void save(T object) throws IOException {
        /*
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
             stream.writeObject(building);
@@ -29,8 +29,8 @@ public class DaoState implements IDao {
     }
 
     @Override
-    public IBuilding getBuilding() throws IOException {
-        return this.building;
+    public T load() throws IOException {
+        return this.object;
         /*
         try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
             try {
@@ -44,7 +44,7 @@ public class DaoState implements IDao {
     }
 
     private static File CurrentDir() throws IOException {
-        String path = DaoState.class.getProtectionDomain().getCodeSource().getLocation().getFile().substring(1);
+        String path = DaoObject.class.getProtectionDomain().getCodeSource().getLocation().getFile().substring(1);
         Integer index = path.lastIndexOf("classes");
         path = path.subSequence(0, index).toString();
         File file = Paths.get(path, "building").toFile();

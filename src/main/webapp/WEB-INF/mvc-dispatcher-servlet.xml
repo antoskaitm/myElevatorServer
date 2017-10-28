@@ -14,7 +14,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean id="building" class="main.entities.primitive.Building" scope="singleton">
+    <bean id="building" class="main.entities.primitive.Building" >
         <constructor-arg name="floorCount" value="${floorCount}"/>
         <constructor-arg name="lowerBorder" value="${groundFloor}"/>
         <constructor-arg name="buildingHeight">
@@ -23,25 +23,25 @@
         <constructor-arg name="elevators" ref="elevatorRoom"/>
     </bean>
 
-    <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls">
+    <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls" >
         <constructor-arg name="lowerBound" value="${groundFloor}"/>
         <constructor-arg name="length" value="${floorCount}"/>
     </bean>
 
-    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" scope="singleton">
+    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" >
         <constructor-arg name="callPoints" ref="elevatorCalls"/>
     </bean>
 
-    <bean class="main.entities.primitive.Room" name="room" scope="singleton">
+    <bean class="main.entities.primitive.Room" name="room" >
         <constructor-arg name="size" value="3"/>
     </bean>
-    <bean id="elevatorRoom" class="main.entities.ElevatorRoom" scope="singleton">
+    <bean id="elevatorRoom" class="main.entities.ElevatorRoom" >
         <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
         <constructor-arg name="room" ref="room"/>
     </bean>
 
-    <bean id="dao" class="main.dao.DaoState" scope="singleton">
-        <constructor-arg name="building" ref="building"/>
+    <bean id="dao" class="main.dao.DaoObject">
+        <constructor-arg name="object" ref="building"/>
     </bean>
 
     <bean id="elevatorController" class="main.servlets.ElevatorController" scope="singleton">

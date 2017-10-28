@@ -5,9 +5,9 @@ import main.entities.interfaces.primitive.IElevatorRoom;
 
 import java.io.*;
 
-public interface IDao {
+public interface IDaoObject<T extends Serializable> {
 
-    void save(IBuilding building) throws IOException;
+    void save(T building) throws IOException;
 
-    IBuilding getBuilding() throws IOException;
+    T load() throws IOException;
 }
