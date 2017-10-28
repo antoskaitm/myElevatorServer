@@ -1,4 +1,4 @@
-package main.entities.primitive;
+package main.entities.view;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IConditionable;

@@ -2,7 +2,7 @@ package main.entities.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IElevatorRoom;
+import main.entities.view.AbstractElevatorRoomView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

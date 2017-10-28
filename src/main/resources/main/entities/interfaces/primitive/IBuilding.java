@@ -1,7 +1,6 @@
 package main.entities.interfaces.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
-import main.entities.primitive.AbstractElevatorRoomView;
 
 public interface IBuilding {
 
