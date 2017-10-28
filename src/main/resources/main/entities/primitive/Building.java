@@ -2,12 +2,15 @@ package main.entities.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IConditionable;
+import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.view.AbstractElevatorRoomView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**numbers of floors begin from 0
  *
@@ -21,7 +24,7 @@ public class Building implements IBuilding, Serializable {
 
     private IAutomobileElevatorRoom[] elevators;
 
-    public Building(int lowerBorder,int floorCount, int buildingHeight,IAutomobileElevatorRoom... elevators) {
+    public Building(int lowerBorder, int floorCount, int buildingHeight, IAutomobileElevatorRoom... elevators) {
         this.elevators = elevators;
         Integer minFloorCount = 3;
         if (floorCount < minFloorCount) {
@@ -35,7 +38,8 @@ public class Building implements IBuilding, Serializable {
         this.lowerBorder = lowerBorder;
         this.floorCount = floorCount;
         this.upperBorder = floorCount - 1 + lowerBorder;
-        floorHeight = buildingHeight / floorCount;
+        this.floorHeight = buildingHeight / floorCount;
+        this.elevators = envelop(elevators);
     }
 
     private void checkFloor(int floor) {
@@ -45,7 +49,7 @@ public class Building implements IBuilding, Serializable {
     }
 
     public Boolean hasFloor(int floor) {
-        return floor >= lowerBorder && floor <=upperBorder;
+        return floor >= lowerBorder && floor <= upperBorder;
     }
 
     public Integer getLastFloor() {
@@ -65,25 +69,26 @@ public class Building implements IBuilding, Serializable {
     }
 
     @Override
-    public IAutomobileElevatorRoom getElevator(Integer elevatorNumber)
-    {
-        if(elevators.length>elevatorNumber && elevatorNumber>=0)
-        {
-            return  new AbstractElevatorRoomView(elevators[elevatorNumber]){
-                @Override
-                public Integer callElevator(int floor) {
-                    checkFloor(floor);
-                    return super.callElevator(floor);
-                }
+    public IAutomobileElevatorRoom getElevator(Integer elevatorNumber) {
+        return elevators[elevatorNumber];
+    }
 
-                @Override
-                public Boolean sendElevator(int floor, int personId) {
-                    checkFloor(floor);
-                    return super.sendElevator(floor,personId);
-                }
-            };
-        }
-        throw new IllegalStateException("Elevator isn't founded");
+    private IAutomobileElevatorRoom[] envelop(IAutomobileElevatorRoom[] elevators) {
+        IAutomobileElevatorRoom[] elevatorsCopy = Arrays.copyOf(elevators, elevators.length);
+        Arrays.setAll(elevatorsCopy, value -> new AbstractElevatorRoomView(elevators[value]) {
+            @Override
+            public Integer callElevator(int floor) {
+                checkFloor(floor);
+                return super.callElevator(floor);
+            }
+
+            @Override
+            public Boolean sendElevator(int floor, int personId) {
+                checkFloor(floor);
+                return super.sendElevator(floor, personId);
+            }
+        });
+        return elevatorsCopy;
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
