@@ -12,41 +12,42 @@ import java.nio.file.Paths;
  */
 public class DaoState implements IDao {
     private File file;
+    private IBuilding building;
 
-    public DaoState() throws IOException {
+    public DaoState(IBuilding building) throws IOException {
+        this.building = building;
         file = CurrentDir();
     }
 
     @Override
-    public IElevatorRoom getElevatorRoom() throws IOException {
-        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
-            try {
-                return (IElevatorRoom) stream.readObject();
-            }
-           catch (ClassNotFoundException e) {
-                e.printStackTrace();
-               throw new IllegalStateException(e);
-            }
-        }
-    }
-
-    @Override
-    public void save(IElevatorRoom room,IBuilding building) throws IOException {
+    public void save(IBuilding building) throws IOException {
+       /*
         try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
-            stream.writeObject(room);
+            stream.writeObject(building);
         }
+        */
     }
 
     @Override
     public IBuilding getBuilding() throws IOException {
-        throw new UnsupportedOperationException();
+        return this.building;
+        /*
+        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
+            try {
+                return (IBuilding) stream.readObject();
+            }
+            catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                throw new IllegalStateException(e);
+            }
+        }*/
     }
 
     private static File CurrentDir() throws IOException {
         String path = DaoState.class.getProtectionDomain().getCodeSource().getLocation().getFile().substring(1);
         Integer index = path.lastIndexOf("classes");
         path = path.subSequence(0, index).toString();
-        File file = Paths.get(path, "lift").toFile();
+        File file = Paths.get(path, "building").toFile();
         return file;
     }
 

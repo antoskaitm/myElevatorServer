@@ -4,6 +4,7 @@ import main.entities.events.Action;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
 import main.entities.interfaces.primitive.IElevatorUi;
+import main.entities.primitive.general.BitSet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,24 +17,21 @@ import java.util.List;
 /**numbers of floors begin from 0
  *
  */
-public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
+class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
     static final long serialVersionUID = -2000000000000L;
 
     private Integer moveToFloor = null;
     private Integer currentFloor = null;
-    private Boolean[] callPoints;
+    private BitSet callPoints;
     private Integer direction = 0;
-    private Integer lastFloorNumber;
     private IElevatorAutomate automate;
 
-    public ElevatorCondition(int floorCount) {
-        Integer minFloorCount = 3;
-        if (floorCount < minFloorCount) {
+    public ElevatorCondition(BitSet callPoints) {
+        Integer minFloorCount = 2;
+        if (callPoints.getSize() < minFloorCount) {
             throw new IllegalArgumentException("Floor count must be " + minFloorCount + " or more");
         }
-        lastFloorNumber = floorCount - 1;
-        callPoints = new Boolean[floorCount];
-        Arrays.fill(callPoints, false);
+        this.callPoints = callPoints;
         this.currentFloor = 0;
     }
 
@@ -47,26 +45,26 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
         if (!hasFloor(floor)) {
             return false;
         }
-        callPoints[floor] = true;
+        callPoints.set(floor);
         if (moveToFloor == null || direction == 0) {
             setLastFloor();
         }
-        return callPoints[floor];
+        return callPoints.get(floor);
     }
 
     public IElevatorAutomate getElevatorAutomate() {
         if (automate == null) {
             automate = new IElevatorAutomate() {
-                private List<Action> actions = new ArrayList<Action>();
+                private List<Action> actions = new ArrayList<>();
 
                 @Override
                 public Boolean stopNextFloor() {
-                    return callPoints[currentFloor + direction];
+                    return callPoints.get(currentFloor + direction);
                 }
 
                 @Override
                 public void stop() {
-                    callPoints[currentFloor] = false;
+                    callPoints.clear(currentFloor);
                     if (currentFloor.equals(moveToFloor) || moveToFloor == null) {
                         setLastFloor();
                     }
@@ -91,11 +89,11 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
                 }
 
                 private Boolean canMoveUp() {
-                    return direction > 0 && !currentFloor.equals(lastFloorNumber);
+                    return direction > 0 && !currentFloor.equals(callPoints.getUpperBorder());
                 }
 
                 private Boolean canMoveDown() {
-                    return direction < 0 && !currentFloor.equals(0);
+                    return direction < 0 && !currentFloor.equals(callPoints.getLowerBorder());
                 }
             };
         }
@@ -103,17 +101,11 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
     }
 
     private Boolean hasFloor(Integer floor) {
-        return floor >= 0 && floor <= lastFloorNumber;
+        return floor >= callPoints.getLowerBorder() && floor <= callPoints.getUpperBorder();
     }
 
     private void setLastFloor() {
-        Integer lastStopFloor;
-        if (direction >= 0) {
-            lastStopFloor = Arrays.asList(callPoints).lastIndexOf(true);
-        } else {
-            lastStopFloor = Arrays.asList(callPoints).indexOf(true);
-        }
-        this.moveToFloor = lastStopFloor == -1 ? null : lastStopFloor;
+        this.moveToFloor =  callPoints.findIndex(direction >= 0);
         changeDirection();
     }
 
@@ -130,19 +122,17 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
         long serialVersionUID = stream.readLong();
-        lastFloorNumber = (Integer) stream.readObject();
+        moveToFloor = (Integer) stream.readObject();
         currentFloor = (Integer) stream.readObject();
-        callPoints = (Boolean[]) stream.readObject();
+        callPoints = (BitSet) stream.readObject();
         direction = (Integer) stream.readObject();
-        lastFloorNumber = (Integer) stream.readObject();
     }
 
     private void writeObject(ObjectOutputStream stream) throws IOException {
         stream.writeLong(serialVersionUID);
-        stream.writeObject(lastFloorNumber);
+        stream.writeObject(moveToFloor);
         stream.writeObject(currentFloor);
         stream.writeObject(callPoints);
         stream.writeObject(direction);
-        stream.writeObject(lastFloorNumber);
     }
 }

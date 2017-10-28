@@ -7,9 +7,7 @@ import java.io.*;
 
 public interface IDao {
 
-    IElevatorRoom getElevatorRoom() throws IOException;
-
-    void save(IElevatorRoom room,IBuilding building) throws IOException;
+    void save(IBuilding building) throws IOException;
 
     IBuilding getBuilding() throws IOException;
 }

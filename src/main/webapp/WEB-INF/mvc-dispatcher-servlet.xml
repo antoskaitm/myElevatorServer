@@ -16,17 +16,23 @@
 
     <bean id="building" class="main.entities.primitive.Building" scope="singleton">
         <constructor-arg name="floorCount" value="${floorCount}"/>
+        <constructor-arg name="lowerBorder" value="${groundFloor}"/>
         <constructor-arg name="buildingHeight">
             <value>40</value>
         </constructor-arg>
         <constructor-arg name="elevators" ref="elevatorRoom"/>
     </bean>
 
-    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" scope="singleton">
-        <constructor-arg name="floorCount" value="${floorCount}"/>
+    <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls">
+        <constructor-arg name="lowerBound" value="${groundFloor}"/>
+        <constructor-arg name="length" value="${floorCount}"/>
     </bean>
 
-    <bean class="main.entities.primitive.Room" name="room">
+    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" scope="singleton">
+        <constructor-arg name="callPoints" ref="elevatorCalls"/>
+    </bean>
+
+    <bean class="main.entities.primitive.Room" name="room" scope="singleton">
         <constructor-arg name="size" value="3"/>
     </bean>
     <bean id="elevatorRoom" class="main.entities.ElevatorRoom" scope="singleton">
@@ -34,8 +40,12 @@
         <constructor-arg name="room" ref="room"/>
     </bean>
 
-    <bean id="elevatorController" class="main.servlets.ElevatorController">
+    <bean id="dao" class="main.dao.DaoState" scope="singleton">
         <constructor-arg name="building" ref="building"/>
+    </bean>
+
+    <bean id="elevatorController" class="main.servlets.ElevatorController" scope="singleton">
+        <constructor-arg name="dao" ref="dao"/>
     </bean>
 
     <mvc:default-servlet-handler/>

@@ -1,8 +1,8 @@
 package main.servlets;
 
 
+import main.dao.IDao;
 import main.emulator.ElevatorThread;
-import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorRoom;
 import main.helpers.SessionHelper;
@@ -12,31 +12,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
 
 @Controller
 public class ElevatorController {
-    private static IBuilding building;
-    private static IElevatorRoom room;
-    private static Boolean liftStarted = false;
-    private static Object look = new Object();
+    private IBuilding building;
+    private IElevatorRoom room;
 
-    public ElevatorController(IBuilding building) {
-        if (!liftStarted) {
-            synchronized (look) {
-                if(!liftStarted) {
-                    try {
-                        this.building = building;
-                        this.room = building.getElevator(0);
-                        //DaoState dao = new DaoState();
-                        //room = dao.getElevatorRoom();
-                        ElevatorThread emulation = new ElevatorThread(building,0);
-                        emulation.run();
-                        liftStarted = true;
-                    } catch (Throwable e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+    public ElevatorController(IDao dao) {
+        try {
+            this.building = dao.getBuilding();
+            this.room = building.getElevator(0);
+            ElevatorThread emulation = new ElevatorThread(dao, 0);
+            emulation.run();
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 

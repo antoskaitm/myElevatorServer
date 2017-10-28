@@ -14,38 +14,42 @@ import java.io.Serializable;
  */
 public class Building implements IBuilding, Serializable {
     static final long serialVersionUID = -3000000000000L;
+    private Integer lowerBorder;
+    private Integer upperBorder;
     private Integer floorCount;
     private Integer floorHeight;
 
     private IAutomobileElevatorRoom[] elevators;
 
-    public Building(int floorCount, int buildingHeight,IAutomobileElevatorRoom... elevators) {
-       this.elevators = elevators;
+    public Building(int lowerBorder,int floorCount, int buildingHeight,IAutomobileElevatorRoom... elevators) {
+        this.elevators = elevators;
         Integer minFloorCount = 3;
         if (floorCount < minFloorCount) {
-            throw new IllegalArgumentException("Floor count must be "+minFloorCount+" or more");
+            throw new IllegalArgumentException("Floor count must be " + minFloorCount + " or more");
         }
         Integer minFloorHeight = 3;
         if (buildingHeight < floorCount * minFloorHeight) {
             throw new IllegalArgumentException("Value of building height for lastFloor must be more than "
                     + (floorCount * minFloorHeight));
         }
+        this.lowerBorder = lowerBorder;
         this.floorCount = floorCount;
+        this.upperBorder = floorCount - 1 + lowerBorder;
         floorHeight = buildingHeight / floorCount;
     }
 
     private void checkFloor(int floor) {
-        if (floor < 0 || floor >= floorCount) {
+        if (floor < lowerBorder || floor > upperBorder) {
             throw new NullPointerException("Floor does not exist");
         }
     }
 
     public Boolean hasFloor(int floor) {
-        return floor >= 0 && floor < floorCount;
+        return floor >= lowerBorder && floor <=upperBorder;
     }
 
     public Integer getLastFloor() {
-        return floorCount - 1;
+        return upperBorder;
     }
 
     public Integer getFloorCount() {
@@ -57,7 +61,7 @@ public class Building implements IBuilding, Serializable {
     }
 
     public Integer getGroundFloor() {
-        return 0;
+        return lowerBorder;
     }
 
     @Override

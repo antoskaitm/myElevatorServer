@@ -6,6 +6,8 @@ import main.entities.interfaces.*;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 
+import java.io.IOException;
+
 public class ElevatorThread {
     private boolean suspend = false;
     private final IAutomobileElevatorRoom elevator;
@@ -15,9 +17,10 @@ public class ElevatorThread {
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
-    public ElevatorThread(IBuilding building,Integer elevatorNumber) {
+    public ElevatorThread(IDao dao,Integer elevatorNumber) throws IOException {
+        this.dao = dao;
+        building = dao.getBuilding();
         elevator = building.getElevator(elevatorNumber);
-        this.building = building;
     }
 
     public void run() {
@@ -25,7 +28,6 @@ public class ElevatorThread {
             @Override
             public void run() {
                 try {
-                    dao = new DaoState();
                     while (!suspend) {
                         move();
                         Thread.sleep(100);
