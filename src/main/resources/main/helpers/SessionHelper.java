@@ -2,7 +2,7 @@ package main.helpers;
 
 import javax.servlet.http.HttpSession;
 
-public class SessionHelper {
+public class SessionHelper implements ISessionHelper {
     public final  HttpSession session;
     public  SessionHelper(HttpSession session)
     {
