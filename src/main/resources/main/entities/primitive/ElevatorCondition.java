@@ -19,7 +19,7 @@ import java.util.List;
 public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Serializable {
     static final long serialVersionUID = -2000000000000L;
 
-    private Integer lastStopFloor = null;
+    private Integer moveToFloor = null;
     private Integer currentFloor = null;
     private Boolean[] callPoints;
     private Integer direction = 0;
@@ -48,7 +48,7 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
             return false;
         }
         callPoints[floor] = true;
-        if (lastStopFloor == null || direction == 0) {
+        if (moveToFloor == null || direction == 0) {
             setLastFloor();
         }
         return callPoints[floor];
@@ -67,7 +67,7 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
                 @Override
                 public void stop() {
                     callPoints[currentFloor] = false;
-                    if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
+                    if (currentFloor.equals(moveToFloor) || moveToFloor == null) {
                         setLastFloor();
                     }
                     for (Action action : actions) {
@@ -113,15 +113,15 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
         } else {
             lastStopFloor = Arrays.asList(callPoints).indexOf(true);
         }
-        this.lastStopFloor = lastStopFloor == -1 ? null : lastStopFloor;
+        this.moveToFloor = lastStopFloor == -1 ? null : lastStopFloor;
         changeDirection();
     }
 
     private void changeDirection() {
-        if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
-            lastStopFloor = null;
+        if (currentFloor.equals(moveToFloor) || moveToFloor == null) {
+            moveToFloor = null;
             direction = 0;
-        } else if (lastStopFloor - currentFloor < 0) {
+        } else if (moveToFloor - currentFloor < 0) {
             direction = -1;
         } else {
             direction = 1;
