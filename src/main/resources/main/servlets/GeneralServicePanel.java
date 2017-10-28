@@ -26,16 +26,16 @@ public class GeneralServicePanel {
     public String callupElevator(Integer floor, ServerCondition condition, ISessionHelper helper) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            condition.errorMessage="Error!This floor doesn't exist";
+            condition.setErrorMessage("Error!This floor doesn't exist");
         } else {
             Integer id = helper.getPersonId();
             if (room.isSendElevator(id) || id == null) {
                 id = room.callElevator(floor);
                 helper.setPersonId(id);
             } else if (room.isInElevator(id)) {
-                condition.errorMessage="Error!You are in elevator";
+                condition.setErrorMessage("Error!You are in elevator");
             } else if (room.isCallElevator(id)) {
-                condition.errorMessage="Error!You are wait elevator";
+                condition.setErrorMessage("Error!You are wait elevator");
             } else {
                 resultPage = "callPanel";
             }
@@ -60,16 +60,16 @@ public class GeneralServicePanel {
     public String send(int floor, ServerCondition condition, ISessionHelper session) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            condition.errorMessage= "Error!This floor doesn't exist";
+            condition.setErrorMessage("Error!This floor doesn't exist");
         } else if (room.getCurrentFloor().equals(floor)) {
-            condition.errorMessage= "Error!This is current floor";
+            condition.setErrorMessage("Error!This is current floor");
         } else {
             Integer id = session.getPersonId();
             if (room.isInElevator(id)) {
                 room.sendElevator(floor, id);
                 session.setPersonId(null);
             } else if (room.isCallElevator(id)) {
-                condition.errorMessage= "Error!You are not in elevator";
+                condition.setErrorMessage("Error!You are not in elevator");
                 resultPage = "sendPanel";
             }
         }
@@ -80,10 +80,10 @@ public class GeneralServicePanel {
     }
 
     private void flushServerCondition(ServerCondition condition, Integer personId) {
-        condition.currentFloor=room.getCurrentFloor();
-        condition.lastFloor=building.getLastFloor();
-        condition.groundFloor=building.getGroundFloor();
-        condition.personConditionMessage=room.getPersonCondition(personId).getMessage();
-        condition.personId = personId;
+        condition.setCurrentFloor(room.getCurrentFloor());
+        condition.setLastFloor(building.getLastFloor());
+        condition.setGroundFloor(building.getGroundFloor());
+        condition.setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
+        condition.setPersonId(personId);
     }
 }
