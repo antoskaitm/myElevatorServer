@@ -3,8 +3,8 @@ package main.servlets;
 
 import main.emulator.ElevatorThread;
 import main.entities.interfaces.IAutomobileElevatorRoom;
-import main.entities.interfaces.IBuilding;
-import main.entities.interfaces.IElevatorRoom;
+import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IElevatorRoom;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,19 +17,27 @@ import javax.servlet.http.HttpSession;
 public class ElevatorController {
     private static IBuilding building;
     private static IElevatorRoom room;
+    private static Boolean liftStarted = false;
+    private static Object look = new Object();
 
     public ElevatorController(IBuilding building, IAutomobileElevatorRoom room) {
-        this.building = building;
-        if (this.room == null)
-            try {
-                this.room = room;
-                //DaoState dao = new DaoState();
-                //room = dao.getElevatorRoom();
-                ElevatorThread emulation = new ElevatorThread(room, building);
-                emulation.run();
-            } catch (Throwable e) {
-                e.printStackTrace();
+        if (!liftStarted) {
+            synchronized (look) {
+                if(!liftStarted) {
+                    try {
+                        this.building = building;
+                        this.room = room;
+                        //DaoState dao = new DaoState();
+                        //room = dao.getElevatorRoom();
+                        ElevatorThread emulation = new ElevatorThread(room, building);
+                        emulation.run();
+                        liftStarted = true;
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+        }
     }
 
     @RequestMapping(value = {"call"}, method = RequestMethod.POST)

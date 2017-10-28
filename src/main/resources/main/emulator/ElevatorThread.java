@@ -32,7 +32,7 @@ public class ElevatorThread<T extends IAutomobileElevatorRoom &Serializable> {
                         move();
                         Thread.sleep(100);
                         getAutomate().stop();
-                        dao.save(elevator,building);
+//                        dao.save(elevator,building);
                     }
                 } catch (Throwable ex) {
                     //сделать нормальное логирование
