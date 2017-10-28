@@ -8,14 +8,9 @@ import main.entities.interfaces.primitive.IElevatorUi;
 import main.entities.interfaces.primitive.IPersonCondition;
 import main.entities.primitive.Person;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 /**view for object implementing IElevatorAutomateble,IElevatorUi
  * can work with basement floors
@@ -30,6 +25,8 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
     private Integer counterPeopleId = 0;
     private T elevatorCondition;
     private Map<Integer, Person> persons;
+    private Integer roomSize = 1;
+    private Integer personsCountInRoom = 0;
 
     public ElevatorRoom(T elevatorCondition) {
         persons = new ConcurrentHashMap<>();
@@ -103,9 +100,18 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
             Integer personId = person.getId();
             if (person.getSendFloor() == currentFloor) {
                 persons.remove(personId);
+                --personsCountInRoom;
                 person.setCondition(PersonCondition.DIDNOT_CALL_ELEVATOR);
-            } else if (person.getCallFloor() == currentFloor) {
-                person.setCondition(PersonCondition.STAND_IN_ELEVATOR);
+            } else if (person.getCallFloor() == currentFloor && person.getCondition() == PersonCondition.CALLED_ELEVATOR) {
+                if (personsCountInRoom < roomSize) {
+                    ++personsCountInRoom;
+                    person.setCondition(PersonCondition.STAND_IN_ELEVATOR);
+                } else {
+                    person.setCondition(PersonCondition.TRY_CALL_AGAIN_ELEVATOR);
+                    if (elevatorCondition.callup(person.getCallFloor())) {
+                        person.setCondition(PersonCondition.CALLED_ELEVATOR);
+                    }
+                }
             }
         }
     }
