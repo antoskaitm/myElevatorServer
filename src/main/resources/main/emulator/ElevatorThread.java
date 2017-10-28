@@ -75,9 +75,9 @@ public class ElevatorThread<T extends IAutomobileElevatorRoom &Serializable> {
             moveLift(constantSpeedTime);
         }
         moveLift(stopTime);
-          if (getAutomate().canMove()) {
-              getAutomate().changeCurrentFloor();
-          }
+        if (getAutomate().canMove()) {
+            getAutomate().changeCurrentFloor();
+        }
     }
 
     private void moveLift(double seconds) throws InterruptedException {

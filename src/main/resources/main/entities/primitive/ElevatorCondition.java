@@ -48,7 +48,7 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
             return false;
         }
         callPoints[floor] = true;
-        if (lastStopFloor == null) {
+        if (lastStopFloor == null || direction == 0) {
             setLastFloor();
         }
         return callPoints[floor];
@@ -67,11 +67,11 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
                 @Override
                 public void stop() {
                     callPoints[currentFloor] = false;
-                    for (Action action : actions) {
-                        action.execute();
-                    }
                     if (currentFloor.equals(lastStopFloor) || lastStopFloor == null) {
                         setLastFloor();
+                    }
+                    for (Action action : actions) {
+                        action.execute();
                     }
                 }
 
@@ -109,7 +109,6 @@ public class ElevatorCondition implements IElevatorUi,IElevatorAutomateble,Seria
     private void setLastFloor() {
         Integer lastStopFloor;
         if (direction >= 0) {
-
             lastStopFloor = Arrays.asList(callPoints).lastIndexOf(true);
         } else {
             lastStopFloor = Arrays.asList(callPoints).indexOf(true);
