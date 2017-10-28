@@ -34,7 +34,7 @@ public class Building implements IBuilding, Serializable {
         floorHeight = buildingHeight / floorCount;
     }
 
-    public void checkFloor(int floor) {
+    private void checkFloor(int floor) {
         if (floor < 0 || floor >= floorCount) {
             throw new NullPointerException("Floor does not exist");
         }

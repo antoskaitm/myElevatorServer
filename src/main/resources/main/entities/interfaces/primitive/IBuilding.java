@@ -4,8 +4,6 @@ import main.entities.interfaces.IAutomobileElevatorRoom;
 
 public interface IBuilding {
 
-    void checkFloor(int floor);
-
     Boolean hasFloor(int floor);
 
     Integer getLastFloor();
