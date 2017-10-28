@@ -43,11 +43,14 @@ public class Person {
         if (condition == newCondition) {
             return;
         }
-        if (condition == PersonCondition.DIDNOT_CALL_ELEVATOR
+        if ((condition == PersonCondition.DIDNOT_CALL_ELEVATOR || condition == PersonCondition.TRY_CALL_AGAIN_ELEVATOR)
                 && newCondition == PersonCondition.CALLED_ELEVATOR) {
             condition = newCondition;
         } else if (condition == PersonCondition.CALLED_ELEVATOR
                 && newCondition == PersonCondition.STAND_IN_ELEVATOR) {
+            condition = newCondition;
+        }else if (condition == PersonCondition.CALLED_ELEVATOR
+                && newCondition == PersonCondition.TRY_CALL_AGAIN_ELEVATOR) {
             condition = newCondition;
         } else if (condition == PersonCondition.STAND_IN_ELEVATOR
                 && newCondition == PersonCondition.SENDED_ELEVATOR) {
@@ -56,7 +59,7 @@ public class Person {
                 && newCondition == PersonCondition.DIDNOT_CALL_ELEVATOR) {
             condition = newCondition;
         } else {
-            throw new IllegalStateException("Incorrect new state, current state: " + condition.getMessage());
+            throw new IllegalStateException("Incorrect new state:"+newCondition.getMessage()+". Current state: " + condition.getMessage());
         }
     }
 }
