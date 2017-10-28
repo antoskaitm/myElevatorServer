@@ -20,16 +20,16 @@ public class ElevatorController {
     private static Boolean liftStarted = false;
     private static Object look = new Object();
 
-    public ElevatorController(IBuilding building, IAutomobileElevatorRoom room) {
+    public ElevatorController(IBuilding building) {
         if (!liftStarted) {
             synchronized (look) {
                 if(!liftStarted) {
                     try {
                         this.building = building;
-                        this.room = room;
+                        this.room = building.getElevator(0);
                         //DaoState dao = new DaoState();
                         //room = dao.getElevatorRoom();
-                        ElevatorThread emulation = new ElevatorThread(room, building);
+                        ElevatorThread emulation = new ElevatorThread(building,0);
                         emulation.run();
                         liftStarted = true;
                     } catch (Throwable e) {

@@ -19,19 +19,23 @@
         <constructor-arg name="buildingHeight">
             <value>40</value>
         </constructor-arg>
+        <constructor-arg name="elevators" ref="elevatorRoom"/>
     </bean>
 
     <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" scope="singleton">
         <constructor-arg name="floorCount" value="${floorCount}"/>
     </bean>
 
+    <bean class="main.entities.primitive.Room" name="room">
+        <constructor-arg name="size" value="3"/>
+    </bean>
     <bean id="elevatorRoom" class="main.entities.ElevatorRoom" scope="singleton">
         <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
+        <constructor-arg name="room" ref="room"/>
     </bean>
 
     <bean id="elevatorController" class="main.servlets.ElevatorController">
         <constructor-arg name="building" ref="building"/>
-        <constructor-arg name="room" ref="elevatorRoom"/>
     </bean>
 
     <mvc:default-servlet-handler/>

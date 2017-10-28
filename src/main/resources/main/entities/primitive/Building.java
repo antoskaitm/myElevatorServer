@@ -1,6 +1,8 @@
 package main.entities.primitive;
 
+import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IElevatorRoom;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,7 +17,10 @@ public class Building implements IBuilding, Serializable {
     private Integer floorCount;
     private Integer floorHeight;
 
-    public Building(int floorCount, int buildingHeight) {
+    private IAutomobileElevatorRoom[] elevators;
+
+    public Building(int floorCount, int buildingHeight,IAutomobileElevatorRoom... elevators) {
+       this.elevators = elevators;
         Integer minFloorCount = 3;
         if (floorCount < minFloorCount) {
             throw new IllegalArgumentException("Floor count must be "+minFloorCount+" or more");
@@ -53,6 +58,28 @@ public class Building implements IBuilding, Serializable {
 
     public Integer getGroundFloor() {
         return 0;
+    }
+
+    @Override
+    public IAutomobileElevatorRoom getElevator(Integer elevatorNumber)
+    {
+        if(elevators.length>elevatorNumber && elevatorNumber>=0)
+        {
+            return  new AbstractElevatorRoomView(elevators[elevatorNumber]){
+                @Override
+                public Integer callElevator(int floor) {
+                    checkFloor(floor);
+                    return super.callElevator(floor);
+                }
+
+                @Override
+                public Boolean sendElevator(int floor, int personId) {
+                    checkFloor(floor);
+                    return super.sendElevator(floor,personId);
+                }
+            };
+        }
+        throw new IllegalStateException("Elevator isn't founded");
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {

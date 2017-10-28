@@ -6,20 +6,18 @@ import main.entities.interfaces.*;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 
-import java.io.Serializable;
-
-public class ElevatorThread<T extends IAutomobileElevatorRoom &Serializable> {
+public class ElevatorThread {
     private boolean suspend = false;
-    private T elevator;
-    private IBuilding building;
+    private final IAutomobileElevatorRoom elevator;
+    private final IBuilding building;
     private IDao dao;
 
     private final Double speed = 1.;
     private final Double acceleration = 2.;
 
-    public ElevatorThread(T elevator, IBuilding building) {
+    public ElevatorThread(IBuilding building,Integer elevatorNumber) {
+        elevator = building.getElevator(elevatorNumber);
         this.building = building;
-        this.elevator = elevator;
     }
 
     public void run() {
