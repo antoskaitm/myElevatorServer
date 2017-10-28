@@ -24,20 +24,17 @@ public class ElevatorThread {
     }
 
     public void run() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    while (!suspend) {
-                        move();
-                        Thread.sleep(100);
-                        getAutomate().stop();
+        Thread thread = new Thread(() -> {
+            try {
+                while (!suspend) {
+                    move();
+                    Thread.sleep(100);
+                    getAutomate().stop();
 //                        dao.save(elevator,building);
-                    }
-                } catch (Throwable ex) {
-                    //сделать нормальное логирование
-                    ex.printStackTrace();
                 }
+            } catch (Throwable ex) {
+                //сделать нормальное логирование
+                ex.printStackTrace();
             }
         });
         thread.setDaemon(true);

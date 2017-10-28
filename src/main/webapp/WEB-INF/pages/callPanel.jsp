@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<% try { %>
 <html>
 <body>
 <div>
@@ -20,4 +21,7 @@
 </div>
 </body>
 </html>
+<% }catch(Throwable ex){ex.printStackTrace();
+    out.println("Error.Sorry!!");
+} %>
 
