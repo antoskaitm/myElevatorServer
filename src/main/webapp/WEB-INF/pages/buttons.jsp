@@ -7,6 +7,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<c:forEach begin="${groundFloor}" end="${lastFloor}" step="1" var="numer">
-    <input type="submit" value="${numer}" name="floor">
-</c:forEach>
+<%
+    {
+        Integer lastFloor = (Integer) request.getAttribute("lastFloor");
+        Integer groundFloor = (Integer) request.getAttribute("groundFloor");
+        for (int start = groundFloor; start <= lastFloor; start++) {
+            out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
+        }
+    }
+%>
