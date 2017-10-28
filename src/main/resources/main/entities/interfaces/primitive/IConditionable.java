@@ -1,5 +1,5 @@
 package main.entities.interfaces.primitive;
 
-public interface IPersonCondition {
+public interface IConditionable {
     String getMessage();
 }

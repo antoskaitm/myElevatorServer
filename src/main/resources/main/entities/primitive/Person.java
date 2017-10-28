@@ -1,11 +1,11 @@
 package main.entities.primitive;
 
 import main.entities.constants.PersonsConditions;
-import main.entities.interfaces.primitive.IPersonCondition;
+import main.entities.interfaces.primitive.IConditionable;
 
 public class Person {
     private Integer id;
-    private IPersonCondition condition;
+    private IConditionable condition;
     private Integer callFloor;
     private Integer sendFloor;
 
@@ -34,12 +34,12 @@ public class Person {
         return sendFloor;
     }
 
-    public IPersonCondition getCondition()
+    public IConditionable getCondition()
     {
         return condition;
     }
 
-    public void setCondition(IPersonCondition newCondition) {
+    public void setCondition(IConditionable newCondition) {
         if (condition == newCondition) {
             return;
         }

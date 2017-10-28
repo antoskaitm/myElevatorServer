@@ -5,7 +5,7 @@ import main.entities.interfaces.*;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
 import main.entities.interfaces.primitive.IElevatorUi;
-import main.entities.interfaces.primitive.IPersonCondition;
+import main.entities.interfaces.primitive.IConditionable;
 import main.entities.primitive.Person;
 
 import java.io.Serializable;
@@ -82,12 +82,12 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
         return isCondition(personId, PersonsConditions.SENDED_ELEVATOR);
     }
 
-    private boolean isCondition(Integer personId, IPersonCondition condition) {
+    private boolean isCondition(Integer personId, IConditionable condition) {
         return personId != null && persons.containsKey(personId) && persons.get(personId).getCondition() == condition;
     }
 
     @Override
-    public IPersonCondition getPersonCondition(Integer personId) {
+    public IConditionable getPersonCondition(Integer personId) {
         if (personId != null && persons.containsKey(personId)) {
             return persons.get(personId).getCondition();
         }
