@@ -1,6 +1,6 @@
 package main.entities.primitive;
 
-import main.entities.constants.PersonCondition;
+import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.primitive.IPersonCondition;
 
 public class Person {
@@ -13,7 +13,7 @@ public class Person {
     {
         this.id = id;
         this.callFloor = callFloor;
-        condition = PersonCondition.CALLED_ELEVATOR;
+        condition = PersonsConditions.CALLED_ELEVATOR;
     }
 
     public void setSendFloor(Integer sendFloor)
@@ -43,20 +43,20 @@ public class Person {
         if (condition == newCondition) {
             return;
         }
-        if ((condition == PersonCondition.DIDNOT_CALL_ELEVATOR || condition == PersonCondition.TRY_CALL_AGAIN_ELEVATOR)
-                && newCondition == PersonCondition.CALLED_ELEVATOR) {
+        if ((condition == PersonsConditions.DIDNOT_CALL_ELEVATOR || condition == PersonsConditions.TRY_CALL_AGAIN_ELEVATOR)
+                && newCondition == PersonsConditions.CALLED_ELEVATOR) {
             condition = newCondition;
-        } else if (condition == PersonCondition.CALLED_ELEVATOR
-                && newCondition == PersonCondition.STAND_IN_ELEVATOR) {
+        } else if (condition == PersonsConditions.CALLED_ELEVATOR
+                && newCondition == PersonsConditions.STAND_IN_ELEVATOR) {
             condition = newCondition;
-        }else if (condition == PersonCondition.CALLED_ELEVATOR
-                && newCondition == PersonCondition.TRY_CALL_AGAIN_ELEVATOR) {
+        }else if (condition == PersonsConditions.CALLED_ELEVATOR
+                && newCondition == PersonsConditions.TRY_CALL_AGAIN_ELEVATOR) {
             condition = newCondition;
-        } else if (condition == PersonCondition.STAND_IN_ELEVATOR
-                && newCondition == PersonCondition.SENDED_ELEVATOR) {
+        } else if (condition == PersonsConditions.STAND_IN_ELEVATOR
+                && newCondition == PersonsConditions.SENDED_ELEVATOR) {
             condition =newCondition;
-        } else if (condition == PersonCondition.SENDED_ELEVATOR
-                && newCondition == PersonCondition.DIDNOT_CALL_ELEVATOR) {
+        } else if (condition == PersonsConditions.SENDED_ELEVATOR
+                && newCondition == PersonsConditions.DIDNOT_CALL_ELEVATOR) {
             condition = newCondition;
         } else {
             throw new IllegalStateException("Incorrect new state:"+newCondition.getMessage()+". Current state: " + condition.getMessage());

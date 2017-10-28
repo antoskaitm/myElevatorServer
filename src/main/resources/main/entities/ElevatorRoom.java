@@ -1,6 +1,6 @@
 package main.entities;
 
-import main.entities.constants.PersonCondition;
+import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.*;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
@@ -39,7 +39,7 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
         if (elevatorCondition.callup(floor)) {
             Integer personId = counterPeopleId++;
             Person person = new Person(personId, floor);
-            person.setCondition(PersonCondition.CALLED_ELEVATOR);
+            person.setCondition(PersonsConditions.CALLED_ELEVATOR);
             persons.put(personId, person);
             return  personId;
         }
@@ -56,11 +56,11 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
         if (elevatorCondition.getCurrentFloor().equals(floor)) {
             return false;
         }
-        if (isCondition(personId, PersonCondition.STAND_IN_ELEVATOR)
+        if (isCondition(personId, PersonsConditions.STAND_IN_ELEVATOR)
                 && elevatorCondition.callup(floor)) {
             Person person = persons.get(personId);
             person.setSendFloor(floor);
-            person.setCondition(PersonCondition.SENDED_ELEVATOR);
+            person.setCondition(PersonsConditions.SENDED_ELEVATOR);
             return true;
         }
         return false;
@@ -68,18 +68,18 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
 
     @Override
     public boolean isInElevator(Integer personId) {
-        return isCondition(personId, PersonCondition.STAND_IN_ELEVATOR);
+        return isCondition(personId, PersonsConditions.STAND_IN_ELEVATOR);
     }
 
     @Override
     public boolean isCallElevator(Integer personId) {
 
-        return isCondition(personId, PersonCondition.CALLED_ELEVATOR);
+        return isCondition(personId, PersonsConditions.CALLED_ELEVATOR);
     }
 
     @Override
     public boolean isSendElevator(Integer personId) {
-        return isCondition(personId, PersonCondition.SENDED_ELEVATOR);
+        return isCondition(personId, PersonsConditions.SENDED_ELEVATOR);
     }
 
     private boolean isCondition(Integer personId, IPersonCondition condition) {
@@ -91,7 +91,7 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
         if (personId != null && persons.containsKey(personId)) {
             return persons.get(personId).getCondition();
         }
-        return PersonCondition.DIDNOT_CALL_ELEVATOR;
+        return PersonsConditions.DIDNOT_CALL_ELEVATOR;
     }
 
     private synchronized void stop() {
@@ -101,15 +101,15 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
             if (person.getSendFloor() == currentFloor) {
                 persons.remove(personId);
                 --personsCountInRoom;
-                person.setCondition(PersonCondition.DIDNOT_CALL_ELEVATOR);
-            } else if (person.getCallFloor() == currentFloor && person.getCondition() == PersonCondition.CALLED_ELEVATOR) {
+                person.setCondition(PersonsConditions.DIDNOT_CALL_ELEVATOR);
+            } else if (person.getCallFloor() == currentFloor && person.getCondition() == PersonsConditions.CALLED_ELEVATOR) {
                 if (personsCountInRoom < roomSize) {
                     ++personsCountInRoom;
-                    person.setCondition(PersonCondition.STAND_IN_ELEVATOR);
+                    person.setCondition(PersonsConditions.STAND_IN_ELEVATOR);
                 } else {
-                    person.setCondition(PersonCondition.TRY_CALL_AGAIN_ELEVATOR);
+                    person.setCondition(PersonsConditions.TRY_CALL_AGAIN_ELEVATOR);
                     if (elevatorCondition.callup(person.getCallFloor())) {
-                        person.setCondition(PersonCondition.CALLED_ELEVATOR);
+                        person.setCondition(PersonsConditions.CALLED_ELEVATOR);
                     }
                 }
             }
