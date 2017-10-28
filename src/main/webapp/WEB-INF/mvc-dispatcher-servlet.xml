@@ -29,13 +29,9 @@
         <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
     </bean>
 
-    <bean class="main.entities.PersonsQueue" id="personsQueue">
-        <constructor-arg name="room" ref="elevatorRoom"/>
-    </bean>
-
     <bean id="elevatorController" class="main.servlets.ElevatorController">
         <constructor-arg name="building" ref="building"/>
-        <constructor-arg name="room" ref="personsQueue"/>
+        <constructor-arg name="room" ref="elevatorRoom"/>
     </bean>
 
     <mvc:default-servlet-handler/>

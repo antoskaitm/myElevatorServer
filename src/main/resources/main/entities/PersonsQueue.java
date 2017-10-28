@@ -61,7 +61,6 @@ public class PersonsQueue <T extends IElevatorUi &IElevatorAutomateble &Serializ
 
     @Override
     public boolean isCallElevator(Integer personId) {
-
         return isCondition(personId, PersonCondition.CALLED_ELEVATOR);
     }
 

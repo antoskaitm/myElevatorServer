@@ -6,6 +6,7 @@ import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
 import main.entities.interfaces.primitive.IElevatorUi;
 import main.entities.interfaces.primitive.IPersonCondition;
+import main.entities.primitive.Person;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,21 +29,22 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
 
     private Integer counterPeopleId = 0;
     private T elevatorCondition;
-    private Map<Integer, Queue<Integer>> sendElevatorPersons = new ConcurrentHashMap<>();
-    private Map<Integer, Queue<Integer>> callElevatorPersons = new ConcurrentHashMap<>();
-    private Set<Integer> personsInLift = new ConcurrentSkipListSet<>();
+    private Map<Integer, Person> persons;
 
     public ElevatorRoom(T elevatorCondition) {
+        persons = new ConcurrentHashMap<>();
         this.elevatorCondition = elevatorCondition;
         this.elevatorCondition.getElevatorAutomate().onStop(this::stop);
     }
 
     @Override
     public synchronized Integer callElevator(int floor) {
-        if (!getQueue(callElevatorPersons, floor).isEmpty() || elevatorCondition.callup(floor)) {
+        if (elevatorCondition.callup(floor)) {
             Integer personId = counterPeopleId++;
-            getQueue(callElevatorPersons, floor).add(personId);
-            return personId;
+            Person person = new Person(personId, floor);
+            person.setCondition(PersonCondition.CALLED_ELEVATOR);
+            persons.put(personId, person);
+            return  personId;
         }
         return null;
     }
@@ -57,90 +59,59 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
         if (elevatorCondition.getCurrentFloor().equals(floor)) {
             return false;
         }
-        if (personsInLift.contains(personId)) {
-            if (elevatorCondition.callup(floor)) {
-                getQueue(sendElevatorPersons, floor).add(personId);
-                personsInLift.remove(personId);
-                return true;
-            }
+        if (isCondition(personId, PersonCondition.STAND_IN_ELEVATOR)
+                && elevatorCondition.callup(floor)) {
+            Person person = persons.get(personId);
+            person.setSendFloor(floor);
+            person.setCondition(PersonCondition.SENDED_ELEVATOR);
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean isInElevator(Integer personId) {
-        return personsInLift.contains(personId);
-    }
-
-    private boolean contains(Map<Integer, Queue<Integer>> map, Integer personId) {
-        for (Queue<Integer> waits : map.values()) {
-            if (waits.contains(personId)) {
-                return true;
-            }
-        }
-        return false;
+        return isCondition(personId, PersonCondition.STAND_IN_ELEVATOR);
     }
 
     @Override
     public boolean isCallElevator(Integer personId) {
-        return contains(callElevatorPersons, personId);
+
+        return isCondition(personId, PersonCondition.CALLED_ELEVATOR);
     }
 
     @Override
     public boolean isSendElevator(Integer personId) {
-        return contains(sendElevatorPersons, personId);
+        return isCondition(personId, PersonCondition.SENDED_ELEVATOR);
+    }
+
+    private boolean isCondition(Integer personId, IPersonCondition condition) {
+        return personId != null && persons.containsKey(personId) && persons.get(personId).getCondition() == condition;
+    }
+
+    @Override
+    public IPersonCondition getPersonCondition(Integer personId) {
+        if (personId != null && persons.containsKey(personId)) {
+            return persons.get(personId).getCondition();
+        }
+        return PersonCondition.DIDNOT_CALL_ELEVATOR;
+    }
+
+    private synchronized void stop() {
+        Integer currentFloor = elevatorCondition.getCurrentFloor();
+        for (Person person : persons.values()) {
+            Integer personId = person.getId();
+            if (person.getSendFloor() == currentFloor) {
+                persons.remove(personId);
+                person.setCondition(PersonCondition.DIDNOT_CALL_ELEVATOR);
+            } else if (person.getCallFloor() == currentFloor) {
+                person.setCondition(PersonCondition.STAND_IN_ELEVATOR);
+            }
+        }
     }
 
     @Override
     public IElevatorAutomate getElevatorAutomate() {
         return elevatorCondition.getElevatorAutomate();
-    }
-
-    @Override
-    public IPersonCondition getPersonCondition(Integer personId) {
-        if (personId == null) {
-            return PersonCondition.DIDNOT_CALL_ELEVATOR;
-        }
-        if (personsInLift.contains(personId)) {
-            return PersonCondition.STAND_IN_ELEVATOR;
-        }
-        if (contains(callElevatorPersons, personId)) {
-            return PersonCondition.CALLED_ELEVATOR;
-        }
-        if (contains(sendElevatorPersons, personId)) {
-            return PersonCondition.SENDED_ELEVATOR;
-        }
-        return PersonCondition.DIDNOT_CALL_ELEVATOR;
-    }
-
-    private Queue<Integer> getQueue(Map<Integer, Queue<Integer>> map, int floor) {
-        if (!map.containsKey(floor)) {
-            map.put(floor, new ConcurrentLinkedQueue<>());
-        }
-        return map.get(floor);
-    }
-
-    private synchronized void stop() {
-        Integer floor = elevatorCondition.getCurrentFloor();
-        this.personsInLift.addAll(getQueue(callElevatorPersons, floor));
-        getQueue(callElevatorPersons, floor).clear();
-        getQueue(sendElevatorPersons, floor).clear();
-    }
-
-    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        long serialVersionUID = stream.readLong();
-        counterPeopleId = (Integer) stream.readObject();
-        elevatorCondition = (T) stream.readObject();
-        sendElevatorPersons = (Map<Integer, Queue<Integer>>) stream.readObject();
-        callElevatorPersons = new ConcurrentHashMap<>();
-        personsInLift = new ConcurrentSkipListSet<>();
-        elevatorCondition.getElevatorAutomate().onStop(this::stop);
-    }
-
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        stream.writeLong(serialVersionUID);
-        stream.writeObject(counterPeopleId);
-        stream.writeObject(elevatorCondition);
-        stream.writeObject(sendElevatorPersons);
     }
 }

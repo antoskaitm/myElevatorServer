@@ -9,8 +9,6 @@ public class Person {
     private Integer callFloor;
     private Integer sendFloor;
 
-
-
     public Person(Integer id,Integer callFloor)
     {
         this.id = id;
