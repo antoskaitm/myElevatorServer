@@ -1,13 +1,11 @@
 package main.dao;
 
-import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IElevatorRoom;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 
 public interface IDaoObject<T extends Serializable> {
 
-    void save(T building) throws IOException;
+	void save(T building) throws IOException;
 
-    T load() throws IOException;
+	T load() throws IOException;
 }

@@ -1,11 +1,11 @@
 package main.helpers;
 
 public interface ISessionHelper {
-    void setPage(String page);
+	void setPage(String page);
 
-    String getPage();
+	String getPage();
 
-    void setPersonId(Integer id);
+	void setPersonId(Integer id);
 
-    Integer getPersonId();
+	Integer getPersonId();
 }

@@ -3,13 +3,13 @@ package main.entities.interfaces.primitive;
 import main.entities.interfaces.events.Action;
 
 public interface IElevatorAutomate {
-    void stop();
+	void stop();
 
-    Boolean stopNextFloor();
+	Boolean stopNextFloor();
 
-    void changeCurrentFloor();
+	void changeCurrentFloor();
 
-    Boolean canMove();
+	Boolean canMove();
 
-    void onStop(Action event);
+	void onStop(Action event);
 }

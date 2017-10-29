@@ -1,10 +1,10 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <context:component-scan base-package="main.*"/>
     <context:property-placeholder location="classpath:properties.properties"/>
@@ -14,7 +14,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean id="building" class="main.entities.primitive.Building" >
+    <bean id="building" class="main.entities.primitive.Building">
         <constructor-arg name="floorCount" value="${floorCount}"/>
         <constructor-arg name="lowerBorder" value="${groundFloor}"/>
         <constructor-arg name="buildingHeight">
@@ -23,19 +23,19 @@
         <constructor-arg name="elevators" ref="elevatorRoom"/>
     </bean>
 
-    <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls" >
+    <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls">
         <constructor-arg name="lowerBound" value="${groundFloor}"/>
         <constructor-arg name="length" value="${floorCount}"/>
     </bean>
 
-    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition" >
+    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition">
         <constructor-arg name="callPoints" ref="elevatorCalls"/>
     </bean>
 
-    <bean class="main.entities.primitive.Room" name="room" >
+    <bean class="main.entities.primitive.Room" name="room">
         <constructor-arg name="size" value="3"/>
     </bean>
-    <bean id="elevatorRoom" class="main.entities.ElevatorRoom" >
+    <bean id="elevatorRoom" class="main.entities.ElevatorRoom">
         <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
         <constructor-arg name="room" ref="room"/>
     </bean>
@@ -44,7 +44,7 @@
         <constructor-arg name="object" ref="building"/>
     </bean>
 
-    <bean class="main.emulator.panel.ElevatorGeneralController" id="generalServicePanel" >
+    <bean class="main.emulator.panel.ElevatorGeneralController" id="generalServicePanel">
         <constructor-arg name="dao" ref="dao"/>
     </bean>
 

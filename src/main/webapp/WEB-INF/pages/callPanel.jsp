@@ -11,17 +11,18 @@
 <html>
 <body>
 <div>
-    <%@ include file="/WEB-INF/pages/display.jsp"%>
+    <%@ include file="/WEB-INF/pages/display.jsp" %>
 </div>
 <div>
     <h1>call up elevator on floor</h1>
     <form action="call" method="post">
-        <%@ include file="/WEB-INF/pages/buttons.jsp"%>
+        <%@ include file="/WEB-INF/pages/buttons.jsp" %>
     </form>
 </div>
 </body>
 </html>
-<% }catch(Throwable ex){ex.printStackTrace();
+<% } catch (Throwable ex) {
+    ex.printStackTrace();
     out.println("Error.Sorry!!");
 } %>
 

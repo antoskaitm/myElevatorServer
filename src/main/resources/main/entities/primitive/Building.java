@@ -94,7 +94,7 @@ public class Building implements IBuilding, Serializable {
 		lowerBorder = (Integer) stream.readObject();
 		upperBorder = (Integer) stream.readObject();
 		floorHeight = (Integer) stream.readObject();
-		floorCount=this.upperBorder+1- lowerBorder;
+		floorCount = this.upperBorder + 1 - lowerBorder;
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {
