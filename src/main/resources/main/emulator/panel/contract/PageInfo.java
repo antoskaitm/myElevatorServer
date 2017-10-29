@@ -1,19 +1,21 @@
 package main.emulator.panel.contract;
 
-public class PageInfo {
-    private ServerInfo serverInfo;
-    private PersonInfo personInfo;
+import java.io.Serializable;
 
-    public PageInfo() {
-        personInfo = new PersonInfo();
-        serverInfo = new ServerInfo();
-    }
+public class PageInfo implements Serializable {
+	private ServerInfo serverInfo;
+	private PersonInfo personInfo;
 
-    public PersonInfo getPersonInfo() {
-        return personInfo;
-    }
+	public PageInfo() {
+		personInfo = new PersonInfo();
+		serverInfo = new ServerInfo();
+	}
 
-    public ServerInfo getServerInfo() {
-        return serverInfo;
-    }
+	public PersonInfo getPersonInfo() {
+		return personInfo;
+	}
+
+	public ServerInfo getServerInfo() {
+		return serverInfo;
+	}
 }

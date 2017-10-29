@@ -1,31 +1,33 @@
 package main.emulator.panel.contract;
 
-public class PersonInfo {
-    private String personConditionMessage;
-    private Integer personId;
-    private String errorMessage;
+import java.io.Serializable;
 
-    public String getPersonConditionMessage() {
-        return personConditionMessage;
-    }
+public class PersonInfo implements Serializable {
+	private String personConditionMessage;
+	private Integer personId;
+	private String errorMessage;
 
-    public void setPersonConditionMessage(String personConditionMessage) {
-        this.personConditionMessage = personConditionMessage;
-    }
+	public String getPersonConditionMessage() {
+		return personConditionMessage;
+	}
 
-    public Integer getPersonId() {
-        return personId;
-    }
+	public void setPersonConditionMessage(String personConditionMessage) {
+		this.personConditionMessage = personConditionMessage;
+	}
 
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-    }
+	public Integer getPersonId() {
+		return personId;
+	}
 
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+	public void setPersonId(Integer personId) {
+		this.personId = personId;
+	}
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 }

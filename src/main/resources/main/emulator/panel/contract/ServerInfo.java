@@ -1,31 +1,33 @@
 package main.emulator.panel.contract;
 
-public class ServerInfo {
-    private Integer currentFloor;
-    private Integer lastFloor;
-    private Integer groundFloor;
+import java.io.Serializable;
 
-    public Integer getCurrentFloor() {
-        return currentFloor;
-    }
+public class ServerInfo implements Serializable {
+	private Integer currentFloor;
+	private Integer lastFloor;
+	private Integer groundFloor;
 
-    public void setCurrentFloor(Integer currentFloor) {
-        this.currentFloor = currentFloor;
-    }
+	public Integer getCurrentFloor() {
+		return currentFloor;
+	}
 
-    public Integer getLastFloor() {
-        return lastFloor;
-    }
+	public void setCurrentFloor(Integer currentFloor) {
+		this.currentFloor = currentFloor;
+	}
 
-    public void setLastFloor(Integer lastFloor) {
-        this.lastFloor = lastFloor;
-    }
+	public Integer getLastFloor() {
+		return lastFloor;
+	}
 
-    public Integer getGroundFloor() {
-        return groundFloor;
-    }
+	public void setLastFloor(Integer lastFloor) {
+		this.lastFloor = lastFloor;
+	}
 
-    public void setGroundFloor(Integer groundFloor) {
-        this.groundFloor = groundFloor;
-    }
+	public Integer getGroundFloor() {
+		return groundFloor;
+	}
+
+	public void setGroundFloor(Integer groundFloor) {
+		this.groundFloor = groundFloor;
+	}
 }
