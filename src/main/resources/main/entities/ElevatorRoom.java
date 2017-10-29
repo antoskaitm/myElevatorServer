@@ -4,7 +4,11 @@ import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.*;
 import main.entities.primitive.Person;
+import main.entities.primitive.general.BitSet;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +27,8 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 
 	private Integer counterPeopleId = 0;
 	private T elevatorCondition;
+	//не сохраняю т.к пока нет механизма чтобы выгнать из лифта если пользователь нехочет выходить
+	//чтобы не испортить объетк при загрузке из хранилища
 	private Map<Integer, Person> persons;
 	private IRoom room;
 
@@ -117,4 +123,19 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 
 	@Override
 	public IFloorsRange getFloorsRange() {return  elevatorCondition.getFloorsRange();}
+
+	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		long serialVersionUID = stream.readLong();
+		elevatorCondition = (T) stream.readObject();
+		counterPeopleId = (Integer) stream.readObject();
+		room = (IRoom) stream.readObject();
+	}
+
+	private void writeObject(ObjectOutputStream stream) throws IOException {
+		stream.writeLong(serialVersionUID);
+		stream.writeObject(elevatorCondition);
+		stream.writeObject(counterPeopleId);
+		stream.writeObject(room);
+		persons = new ConcurrentHashMap<>();
+	}
 }

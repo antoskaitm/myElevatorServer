@@ -126,6 +126,7 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 		moveToFloor = (Integer) stream.readObject();
 		currentFloor = (Integer) stream.readObject();
 		callPoints = (BitSet) stream.readObject();
+		floorsRange = (IFloorsRange) stream.readObject();
 		direction = (Integer) stream.readObject();
 	}
 
@@ -134,6 +135,7 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 		stream.writeObject(moveToFloor);
 		stream.writeObject(currentFloor);
 		stream.writeObject(callPoints);
+		stream.writeObject(floorsRange);
 		stream.writeObject(direction);
 	}
 }
