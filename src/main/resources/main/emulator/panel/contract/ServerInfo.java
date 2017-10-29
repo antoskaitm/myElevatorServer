@@ -1,4 +1,4 @@
-package main.emulator.panel;
+package main.emulator.panel.contract;
 
 public class ServerInfo {
     private Integer currentFloor;

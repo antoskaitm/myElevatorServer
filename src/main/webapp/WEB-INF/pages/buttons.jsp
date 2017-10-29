@@ -1,5 +1,5 @@
-<%@ page import="main.emulator.panel.PageInfo" %>
-<%@ page import="main.emulator.panel.ServerInfo" %>
+<%@ page import="main.emulator.panel.contract.PageInfo" %>
+<%@ page import="main.emulator.panel.contract.ServerInfo" %>
 <%--
   Created by IntelliJ IDEA.
   User: Антон

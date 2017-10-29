@@ -2,7 +2,7 @@ package main.servlets;
 
 
 import main.emulator.panel.ElevatorGeneralController;
-import main.emulator.panel.PageInfo;
+import main.emulator.panel.contract.PageInfo;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

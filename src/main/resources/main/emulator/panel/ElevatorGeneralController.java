@@ -2,6 +2,7 @@ package main.emulator.panel;
 
 import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
+import main.emulator.panel.contract.PageInfo;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorRoom;
 import main.entities.primitive.Building;

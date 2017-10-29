@@ -1,4 +1,4 @@
-<%--@elvariable id="condition" type="main.emulator.panel.PageInfo"--%>
+<%--@elvariable id="condition" type="main.emulator.panel.contract.PageInfo"--%>
 <%--
   Created by IntelliJ IDEA.
   User: Антон
