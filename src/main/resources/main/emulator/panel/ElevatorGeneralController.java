@@ -64,8 +64,6 @@ public class ElevatorGeneralController {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
             pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
-        } else if (room.getCurrentFloor().equals(floor)) {
-            pageInfo.getPersonInfo().setErrorMessage("Error!This is current floor");
         } else {
             Integer id = session.getPersonId();
             if (room.isInElevator(id)) {

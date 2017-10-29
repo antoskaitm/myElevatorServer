@@ -50,9 +50,6 @@ public class ElevatorRoom<T extends IElevatorUi &IElevatorAutomateble &Serializa
 
     @Override
     public synchronized Boolean sendElevator(int floor, int personId) {
-        if (elevatorCondition.getCurrentFloor().equals(floor)) {
-            return false;
-        }
         if (isCondition(personId, PersonsConditions.STAND_IN_ELEVATOR)
                 && elevatorCondition.callup(floor)) {
             Person person = persons.get(personId);
