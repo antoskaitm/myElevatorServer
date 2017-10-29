@@ -8,13 +8,13 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div>
-    <h2>${condition.errorMessage}</h2>
+    <h2>${condition.personInfo.errorMessage}</h2>
 </div>
 <div>
     <h1>current floor</h1>
     <h2>${condition.currentFloor}</h2>
-    <h2>person condition: ${condition.personConditionMessage}</h2>
-    <h2>person id: ${condition.personId}</h2>
+    <h2>person condition: ${condition.personInfo.personConditionMessage}</h2>
+    <h2>person id: ${condition.personInfo.personId}</h2>
     <form action="getInfo" method="post">
         <input type="submit" value="check condition">
     </form>

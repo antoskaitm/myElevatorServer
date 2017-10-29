@@ -4,9 +4,12 @@ public class PageInfo {
     private Integer currentFloor;
     private Integer lastFloor;
     private Integer groundFloor;
-    private String personConditionMessage;
-    private Integer personId;
-    private String errorMessage;
+    private PersonInfo personInfo;
+    public PageInfo()
+    {
+        personInfo = new PersonInfo();
+    }
+
 
     public Integer getCurrentFloor() {
         return currentFloor;
@@ -32,27 +35,7 @@ public class PageInfo {
         this.groundFloor = groundFloor;
     }
 
-    public String getPersonConditionMessage() {
-        return personConditionMessage;
-    }
-
-    public void setPersonConditionMessage(String personConditionMessage) {
-        this.personConditionMessage = personConditionMessage;
-    }
-
-    public Integer getPersonId() {
-        return personId;
-    }
-
-    public void setPersonId(Integer personId) {
-        this.personId = personId;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public PersonInfo getPersonInfo() {
+        return personInfo;
     }
 }

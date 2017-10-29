@@ -28,16 +28,16 @@ public class ElevatorGeneralController {
     public String callupElevator(Integer floor, PageInfo pageInfo, ISessionHelper helper) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            pageInfo.setErrorMessage("Error!This floor doesn't exist");
+            pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
         } else {
             Integer id = helper.getPersonId();
             if (room.isSendElevator(id) || id == null) {
                 id = room.callElevator(floor);
                 helper.setPersonId(id);
             } else if (room.isInElevator(id)) {
-                pageInfo.setErrorMessage("Error!You are in elevator");
+                pageInfo.getPersonInfo().setErrorMessage("Error!You are in elevator");
             } else if (room.isCallElevator(id)) {
-                pageInfo.setErrorMessage("Error!You are wait elevator");
+                pageInfo.getPersonInfo().setErrorMessage("Error!You are wait elevator");
             } else {
                 resultPage = "callPanel";
             }
@@ -62,16 +62,16 @@ public class ElevatorGeneralController {
     public String send(int floor, PageInfo pageInfo, ISessionHelper session) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            pageInfo.setErrorMessage("Error!This floor doesn't exist");
+            pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
         } else if (room.getCurrentFloor().equals(floor)) {
-            pageInfo.setErrorMessage("Error!This is current floor");
+            pageInfo.getPersonInfo().setErrorMessage("Error!This is current floor");
         } else {
             Integer id = session.getPersonId();
             if (room.isInElevator(id)) {
                 room.sendElevator(floor, id);
                 session.setPersonId(null);
             } else if (room.isCallElevator(id)) {
-                pageInfo.setErrorMessage("Error!You are not in elevator");
+                pageInfo.getPersonInfo().setErrorMessage("Error!You are not in elevator");
                 resultPage = "sendPanel";
             }
         }
@@ -85,7 +85,7 @@ public class ElevatorGeneralController {
         pageInfo.setCurrentFloor(room.getCurrentFloor());
         pageInfo.setLastFloor(building.getLastFloor());
         pageInfo.setGroundFloor(building.getGroundFloor());
-        pageInfo.setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
-        pageInfo.setPersonId(personId);
+        pageInfo.getPersonInfo().setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
+        pageInfo.getPersonInfo().setPersonId(personId);
     }
 }
