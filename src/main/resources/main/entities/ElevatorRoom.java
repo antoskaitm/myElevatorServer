@@ -129,6 +129,7 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 		elevatorCondition = (T) stream.readObject();
 		counterPeopleId = (Integer) stream.readObject();
 		room = (IRoom) stream.readObject();
+		persons = new ConcurrentHashMap<>();
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {
@@ -136,6 +137,6 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 		stream.writeObject(elevatorCondition);
 		stream.writeObject(counterPeopleId);
 		stream.writeObject(room);
-		persons = new ConcurrentHashMap<>();
+
 	}
 }
