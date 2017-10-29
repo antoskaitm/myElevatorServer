@@ -8,7 +8,6 @@ public class ServerCondition {
     private Integer personId;
     private String errorMessage;
 
-
     public Integer getCurrentFloor() {
         return currentFloor;
     }

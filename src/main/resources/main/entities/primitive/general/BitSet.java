@@ -1,8 +1,9 @@
 package main.entities.primitive.general;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class BitSet {
+public class BitSet implements Serializable {
     private Integer offset = 0;
     private Boolean[] bits;
 
