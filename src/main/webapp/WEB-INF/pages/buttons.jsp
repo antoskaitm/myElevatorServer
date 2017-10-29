@@ -1,4 +1,5 @@
 <%@ page import="main.emulator.panel.PageInfo" %>
+<%@ page import="main.emulator.panel.ServerInfo" %>
 <%--
   Created by IntelliJ IDEA.
   User: Антон
@@ -9,8 +10,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-        PageInfo condition = (PageInfo)request.getAttribute("condition");
-        for (int start = condition.getGroundFloor(); start <= condition.getLastFloor(); start++) {
-            out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
-        }
+    ServerInfo serverInfo = ((PageInfo) request.getAttribute("condition")).getServerInfo();
+    for (int start = serverInfo.getGroundFloor(); start <= serverInfo.getLastFloor(); start++) {
+        out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
+    }
 %>

@@ -82,9 +82,9 @@ public class ElevatorGeneralController {
     }
 
     private void flushPageInfo(PageInfo pageInfo, Integer personId) {
-        pageInfo.setCurrentFloor(room.getCurrentFloor());
-        pageInfo.setLastFloor(building.getLastFloor());
-        pageInfo.setGroundFloor(building.getGroundFloor());
+        pageInfo.getServerInfo().setCurrentFloor(room.getCurrentFloor());
+        pageInfo.getServerInfo().setLastFloor(building.getLastFloor());
+        pageInfo.getServerInfo().setGroundFloor(building.getGroundFloor());
         pageInfo.getPersonInfo().setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
         pageInfo.getPersonInfo().setPersonId(personId);
     }
