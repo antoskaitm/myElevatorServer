@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public interface IDaoObject<T extends Serializable> {
 
-	void save(T building) throws IOException;
+	void save(T object) throws IOException;
 
-	T load() throws IOException;
+	T load() throws IOException, ClassNotFoundException;
 }

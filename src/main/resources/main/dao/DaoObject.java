@@ -1,8 +1,6 @@
 package main.dao;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.nio.file.Paths;
 
 /**
@@ -10,35 +8,28 @@ import java.nio.file.Paths;
  */
 public class DaoObject<T extends Serializable> implements IDaoObject<T> {
 	private File file;
-	private T object;
+	private T defaultObject;
 
 	public DaoObject(T object) throws IOException {
-		this.object = object;
+		this.defaultObject = object;
 		file = CurrentDir();
 	}
 
 	@Override
 	public void save(T object) throws IOException {
-	   /*
-        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
-            stream.writeObject(building);
-        }
-        */
+		try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
+			stream.writeObject(object);
+		}
 	}
 
 	@Override
-	public T load() throws IOException {
-		return this.object;
-        /*
-        try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
-            try {
-                return (IBuilding) stream.readObject();
-            }
-            catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                throw new IllegalStateException(e);
-            }
-        }*/
+	public T load() throws IOException, ClassNotFoundException {
+		if(defaultObject == null) {
+			try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
+				defaultObject = (T) stream.readObject();
+			}
+		}
+		return  defaultObject;
 	}
 
 	private static File CurrentDir() throws IOException {
