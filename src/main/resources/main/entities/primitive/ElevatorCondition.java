@@ -94,6 +94,12 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 				public void onStop(Action action) {
 					this.actions.add(action);
 				}
+
+				@Override
+				public boolean isCalled()
+				{
+					return callPoints.findIndex(false)!=null;
+				}
 			};
 		}
 		return automate;

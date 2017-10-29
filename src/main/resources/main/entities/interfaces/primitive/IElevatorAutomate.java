@@ -12,4 +12,6 @@ public interface IElevatorAutomate {
 	Boolean canMove();
 
 	void onStop(Action event);
+
+	boolean isCalled();
 }
