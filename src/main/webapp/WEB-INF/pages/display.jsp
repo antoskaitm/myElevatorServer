@@ -1,4 +1,4 @@
-<%--@elvariable id="condition" type="main.servlets.ServerCondition"--%>
+<%--@elvariable id="condition" type="main.emulator.panel.PageInfo"--%>
 <%--
   Created by IntelliJ IDEA.
   User: Антон

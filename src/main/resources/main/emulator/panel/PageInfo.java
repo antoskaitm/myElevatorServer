@@ -1,6 +1,6 @@
-package main.servlets;
+package main.emulator.panel;
 
-public class ServerCondition {
+public class PageInfo {
     private Integer currentFloor;
     private Integer lastFloor;
     private Integer groundFloor;

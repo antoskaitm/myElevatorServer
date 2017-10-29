@@ -1,4 +1,4 @@
-package main.servlets;
+package main.emulator.panel;
 
 import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
@@ -7,7 +7,7 @@ import main.entities.interfaces.primitive.IElevatorRoom;
 import main.entities.primitive.Building;
 import main.helpers.ISessionHelper;
 
-/** all information for user send into ServerCondition
+/** all information for user send into PageInfo
  *
  */
 public class ElevatorGeneralController {
@@ -25,67 +25,67 @@ public class ElevatorGeneralController {
         }
     }
 
-    public String callupElevator(Integer floor, ServerCondition condition, ISessionHelper helper) {
+    public String callupElevator(Integer floor, PageInfo pageInfo, ISessionHelper helper) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            condition.setErrorMessage("Error!This floor doesn't exist");
+            pageInfo.setErrorMessage("Error!This floor doesn't exist");
         } else {
             Integer id = helper.getPersonId();
             if (room.isSendElevator(id) || id == null) {
                 id = room.callElevator(floor);
                 helper.setPersonId(id);
             } else if (room.isInElevator(id)) {
-                condition.setErrorMessage("Error!You are in elevator");
+                pageInfo.setErrorMessage("Error!You are in elevator");
             } else if (room.isCallElevator(id)) {
-                condition.setErrorMessage("Error!You are wait elevator");
+                pageInfo.setErrorMessage("Error!You are wait elevator");
             } else {
                 resultPage = "callPanel";
             }
         }
-        flushServerCondition(condition, helper.getPersonId());
+        flushPageInfo(pageInfo, helper.getPersonId());
         resultPage = (resultPage == null) ? "sendPanel" : resultPage;
         helper.setPage(resultPage);
         return resultPage;
     }
 
-    public String getInfo(ServerCondition condition, ISessionHelper session) {
-        flushServerCondition(condition, session.getPersonId());
+    public String getInfo(PageInfo pageInfo, ISessionHelper session) {
+        flushPageInfo(pageInfo, session.getPersonId());
         return session.getPage();
     }
 
-    public String begin(ServerCondition condition, ISessionHelper session) {
+    public String begin(PageInfo pageInfo, ISessionHelper session) {
         session.setPage("main");
-        flushServerCondition(condition, session.getPersonId());
+        flushPageInfo(pageInfo, session.getPersonId());
         return "main";
     }
 
-    public String send(int floor, ServerCondition condition, ISessionHelper session) {
+    public String send(int floor, PageInfo pageInfo, ISessionHelper session) {
         String resultPage = null;
         if (!building.hasFloor(floor)) {
-            condition.setErrorMessage("Error!This floor doesn't exist");
+            pageInfo.setErrorMessage("Error!This floor doesn't exist");
         } else if (room.getCurrentFloor().equals(floor)) {
-            condition.setErrorMessage("Error!This is current floor");
+            pageInfo.setErrorMessage("Error!This is current floor");
         } else {
             Integer id = session.getPersonId();
             if (room.isInElevator(id)) {
                 room.sendElevator(floor, id);
                 session.setPersonId(null);
             } else if (room.isCallElevator(id)) {
-                condition.setErrorMessage("Error!You are not in elevator");
+                pageInfo.setErrorMessage("Error!You are not in elevator");
                 resultPage = "sendPanel";
             }
         }
         resultPage = (resultPage == null) ? "callPanel" : resultPage;
         session.setPage(resultPage);
-        flushServerCondition(condition, session.getPersonId());
+        flushPageInfo(pageInfo, session.getPersonId());
         return resultPage;
     }
 
-    private void flushServerCondition(ServerCondition condition, Integer personId) {
-        condition.setCurrentFloor(room.getCurrentFloor());
-        condition.setLastFloor(building.getLastFloor());
-        condition.setGroundFloor(building.getGroundFloor());
-        condition.setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
-        condition.setPersonId(personId);
+    private void flushPageInfo(PageInfo pageInfo, Integer personId) {
+        pageInfo.setCurrentFloor(room.getCurrentFloor());
+        pageInfo.setLastFloor(building.getLastFloor());
+        pageInfo.setGroundFloor(building.getGroundFloor());
+        pageInfo.setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
+        pageInfo.setPersonId(personId);
     }
 }

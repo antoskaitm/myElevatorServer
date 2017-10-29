@@ -1,4 +1,5 @@
-<%@ page import="main.servlets.ServerCondition" %><%--
+<%@ page import="main.emulator.panel.PageInfo" %>
+<%--
   Created by IntelliJ IDEA.
   User: Антон
   Date: 26.10.2017
@@ -8,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-        ServerCondition condition = (ServerCondition)request.getAttribute("condition");
+        PageInfo condition = (PageInfo)request.getAttribute("condition");
         for (int start = condition.getGroundFloor(); start <= condition.getLastFloor(); start++) {
             out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
         }

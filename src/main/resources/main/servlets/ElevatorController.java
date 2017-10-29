@@ -1,6 +1,8 @@
 package main.servlets;
 
 
+import main.emulator.panel.ElevatorGeneralController;
+import main.emulator.panel.PageInfo;
 import main.helpers.SessionHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +39,8 @@ public class ElevatorController {
        return panel.send(floor,getCurrentCondition(model),new SessionHelper(session));
     }
 
-    private ServerCondition getCurrentCondition(Model model) {
-        ServerCondition condition = new ServerCondition();
+    private PageInfo getCurrentCondition(Model model) {
+        PageInfo condition = new PageInfo();
         model.addAttribute("condition", condition);
         return condition;
     }
