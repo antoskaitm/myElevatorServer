@@ -21,7 +21,7 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 	static final long serialVersionUID = -2000000000000L;
 
 	private Integer moveToFloor = null;
-	private Integer currentFloor = null;
+	private Integer currentFloor = 0;
 	private BitSet callPoints;
 	private Integer direction = 0;
 	private IFloorsRange floorsRange;

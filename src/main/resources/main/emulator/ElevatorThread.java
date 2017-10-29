@@ -4,33 +4,37 @@ import main.dao.IDaoObject;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorAutomate;
-import main.entities.primitive.Building;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class ElevatorThread {
+public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 	private boolean suspend = false;
-	private final IAutomobileElevatorRoom elevator;
-	private final IBuilding building;
-	private IDaoObject<Building> dao;
+	private IAutomobileElevatorRoom elevator;
+	private TBuilding building;
+	private IDaoObject<TBuilding> dao;
 
 	private final Double speed = 1.;
 	private final Double acceleration = 2.;
+	private final Integer elevatorNumber;
 
-	public ElevatorThread(IDaoObject<Building> dao, Integer elevatorNumber) throws IOException {
+	public ElevatorThread(IDaoObject<TBuilding> dao, Integer elevatorNumber) throws IOException {
 		this.dao = dao;
-		building = dao.load();
-		elevator = building.getElevator(elevatorNumber);
+		this.elevatorNumber =elevatorNumber;
 	}
 
 	public void run() {
 		Thread thread = new Thread(() -> {
 			try {
+				building = dao.load();
+				elevator = building.getElevator(elevatorNumber);
 				while (!suspend) {
-					if (getAutomate().isCalled()) {
+					if (getAutomate().isCalled())
+					{
+						building = dao.load();
 						move();
 						getAutomate().stop();
-//                        dao.save(elevator,building);
+						dao.save(building);
 					}
 					Thread.sleep(100);
 				}
