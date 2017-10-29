@@ -23,6 +23,7 @@
 </body>
 </html>
 <% } catch (Throwable ex) {
+    System.out.println(ex.getMessage());
     ex.printStackTrace();
     out.println("Error.Sorry!!");
 } %>
