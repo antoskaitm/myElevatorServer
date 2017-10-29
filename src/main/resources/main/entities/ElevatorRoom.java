@@ -130,6 +130,7 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 		counterPeopleId = (Integer) stream.readObject();
 		room = (IRoom) stream.readObject();
 		persons = new ConcurrentHashMap<>();
+		getElevatorAutomate().onStop(this::stop);
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {

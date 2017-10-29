@@ -31,7 +31,6 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 				while (!suspend) {
 					if (getAutomate().isCalled())
 					{
-						building = dao.load();
 						move();
 						getAutomate().stop();
 						dao.save(building);
