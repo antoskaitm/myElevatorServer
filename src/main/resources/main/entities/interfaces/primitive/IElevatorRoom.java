@@ -14,4 +14,6 @@ public interface IElevatorRoom {
 	boolean isSendElevator(Integer personId);
 
 	IConditionable getPersonCondition(Integer personId);
+
+	IFloorsRange getFloorsRange();
 }

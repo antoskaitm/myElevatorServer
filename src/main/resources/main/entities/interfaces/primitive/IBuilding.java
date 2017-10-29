@@ -4,15 +4,9 @@ import main.entities.interfaces.IAutomobileElevatorRoom;
 
 public interface IBuilding {
 
-	Boolean hasFloor(int floor);
+	IFloorsRange getFloorRange();
 
-	Integer getLastFloor();
-
-	Integer getFloorCount();
-
-	Integer getFloorHeight();
-
-	Integer getGroundFloor();
+	Integer getFloorsRange();
 
 	IAutomobileElevatorRoom getElevator(Integer elevatorNumber);
 }

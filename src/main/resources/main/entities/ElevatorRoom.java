@@ -69,7 +69,6 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 
 	@Override
 	public boolean isCallElevator(Integer personId) {
-
 		return isCondition(personId, PersonsConditions.CALLED_ELEVATOR);
 	}
 
@@ -115,4 +114,7 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 	public IElevatorAutomate getElevatorAutomate() {
 		return elevatorCondition.getElevatorAutomate();
 	}
+
+	@Override
+	public IFloorsRange getFloorsRange() {return  elevatorCondition.getFloorsRange();}
 }

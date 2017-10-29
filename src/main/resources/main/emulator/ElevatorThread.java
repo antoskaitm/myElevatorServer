@@ -43,7 +43,7 @@ public class ElevatorThread {
 
     private void move() throws InterruptedException {
         //расчет движения лифта с учетом физики
-        double path = building.getFloorHeight().doubleValue();
+        double path = building.getFloorsRange().doubleValue();
         double accelerationTime = speed / acceleration;
         double stopTime = accelerationTime;
         if (path / 2 < acceleration * accelerationTime * accelerationTime / 2) {

@@ -12,13 +12,11 @@ import main.helpers.ISessionHelper;
  * all information for user send into PageInfo
  */
 public class ElevatorGeneralController {
-	private IBuilding building;
 	private IElevatorRoom room;
 
 	public ElevatorGeneralController(IDaoObject<Building> dao) {
 		try {
-			this.building = dao.load();
-			this.room = building.getElevator(0);
+			this.room = dao.load().getElevator(0);
 			ElevatorThread emulation = new ElevatorThread(dao, 0);
 			emulation.run();
 		} catch (Throwable e) {
@@ -28,7 +26,7 @@ public class ElevatorGeneralController {
 
 	public String callupElevator(Integer floor, PageInfo pageInfo, ISessionHelper helper) {
 		String resultPage = null;
-		if (!building.hasFloor(floor)) {
+		if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
 			Integer id = helper.getPersonId();
@@ -62,7 +60,7 @@ public class ElevatorGeneralController {
 
 	public String send(int floor, PageInfo pageInfo, ISessionHelper session) {
 		String resultPage = null;
-		if (!building.hasFloor(floor)) {
+		if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
 			Integer id = session.getPersonId();
@@ -82,8 +80,8 @@ public class ElevatorGeneralController {
 
 	private void flushPageInfo(PageInfo pageInfo, Integer personId) {
 		pageInfo.getServerInfo().setCurrentFloor(room.getCurrentFloor());
-		pageInfo.getServerInfo().setLastFloor(building.getLastFloor());
-		pageInfo.getServerInfo().setGroundFloor(building.getGroundFloor());
+		pageInfo.getServerInfo().setLastFloor(room.getFloorsRange().getLastFloor());
+		pageInfo.getServerInfo().setGroundFloor(room.getFloorsRange().getGroundFloor());
 		pageInfo.getPersonInfo().setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
 		pageInfo.getPersonInfo().setPersonId(personId);
 	}

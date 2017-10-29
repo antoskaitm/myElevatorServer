@@ -14,13 +14,16 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+    <bean class="main.entities.primitive.FloorsRange" id="floorsRange">
+        <constructor-arg name="groundFloor" value="${groundFloor}"/>
+        <constructor-arg name="lastFloor" value="${lastFloor}"/>
+    </bean>
+
     <bean id="building" class="main.entities.primitive.Building">
-        <constructor-arg name="floorCount" value="${floorCount}"/>
-        <constructor-arg name="lowerBorder" value="${groundFloor}"/>
-        <constructor-arg name="buildingHeight">
-            <value>40</value>
+        <constructor-arg name="floorsRange" ref="floorsRange"/>
+        <constructor-arg name="buildingHeight" value="40"/>
+        <constructor-arg name="elevators" ref="elevatorRoom">
         </constructor-arg>
-        <constructor-arg name="elevators" ref="elevatorRoom"/>
     </bean>
 
     <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls">
@@ -28,8 +31,10 @@
         <constructor-arg name="length" value="${floorCount}"/>
     </bean>
 
+
     <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition">
         <constructor-arg name="callPoints" ref="elevatorCalls"/>
+        <constructor-arg name="floorsRange" ref="floorsRange"/>
     </bean>
 
     <bean class="main.entities.primitive.Room" name="room">

@@ -4,6 +4,7 @@ import main.entities.interfaces.events.Action;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.IElevatorAutomateble;
 import main.entities.interfaces.primitive.IElevatorUi;
+import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.primitive.general.BitSet;
 
 import java.io.IOException;
@@ -23,13 +24,15 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 	private Integer currentFloor = null;
 	private BitSet callPoints;
 	private Integer direction = 0;
+	private IFloorsRange floorsRange;
 	private IElevatorAutomate automate;
 
-	public ElevatorCondition(BitSet callPoints) {
-		Integer minFloorCount = 2;
-		if (callPoints.getSize() < minFloorCount) {
-			throw new IllegalArgumentException("Floor count must be " + minFloorCount + " or more");
+	public ElevatorCondition(BitSet callPoints, IFloorsRange floorsRange) {
+		if (floorsRange.getGroundFloor() != callPoints.getLowerBorder()
+				|| callPoints.getUpperBorder() != floorsRange.getLastFloor()) {
+			throw new ArithmeticException("Call points has different floor range");
 		}
+		this.floorsRange = floorsRange;
 		this.callPoints = callPoints;
 		this.currentFloor = 0;
 	}
@@ -41,14 +44,17 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 
 	@Override
 	public Boolean callup(Integer floor) {
-		if (!hasFloor(floor)) {
-			return false;
-		}
+		floorsRange.checkFloor(floor);
 		callPoints.set(floor);
 		if (moveToFloor == null || direction == 0) {
 			setLastFloor();
 		}
 		return callPoints.get(floor);
+	}
+
+	@Override
+	public IFloorsRange getFloorsRange() {
+		return floorsRange;
 	}
 
 	public IElevatorAutomate getElevatorAutomate() {
@@ -58,6 +64,7 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 
 				@Override
 				public Boolean stopNextFloor() {
+					floorsRange.checkFloor(currentFloor + direction);
 					return callPoints.get(currentFloor + direction);
 				}
 
@@ -74,33 +81,22 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 
 				@Override
 				public void changeCurrentFloor() {
+					floorsRange.checkFloor(currentFloor + direction);
 					currentFloor += direction;
 				}
 
 				@Override
 				public Boolean canMove() {
-					return canMoveUp() || canMoveDown();
+					return floorsRange.hasFloor(currentFloor + direction);
 				}
 
 				@Override
 				public void onStop(Action action) {
 					this.actions.add(action);
 				}
-
-				private Boolean canMoveUp() {
-					return direction > 0 && !currentFloor.equals(callPoints.getUpperBorder());
-				}
-
-				private Boolean canMoveDown() {
-					return direction < 0 && !currentFloor.equals(callPoints.getLowerBorder());
-				}
 			};
 		}
 		return automate;
-	}
-
-	private Boolean hasFloor(Integer floor) {
-		return floor >= callPoints.getLowerBorder() && floor <= callPoints.getUpperBorder();
 	}
 
 	private void setLastFloor() {
