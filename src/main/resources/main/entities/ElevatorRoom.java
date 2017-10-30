@@ -24,7 +24,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 
 	static final long serialVersionUID = -1000000000000L;
 
-	private Integer counterPeopleId = 0;
+	private Integer requestCounterId = 0;
 	private T elevatorCondition;
 	//не сохраняю т.к пока нет механизма чтобы выгнать из лифта если пользователь нехочет выходить
 	//чтобы не испортить объетк при загрузке из хранилища
@@ -41,7 +41,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	@Override
 	public synchronized Integer callElevator(int floor) {
 		if (elevatorCondition.callup(floor)) {
-			Integer requestId = counterPeopleId++;
+			Integer requestId = requestCounterId++;
 			Request request = new Request(requestId, floor);
 			request.setCondition(PersonsConditions.CALLED_ELEVATOR);
 			requests.put(requestId, request);
@@ -87,7 +87,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	}
 
 	@Override
-	public IConditionable getPersonCondition(Integer requestId) {
+	public IConditionable getRequestCondition(Integer requestId) {
 		if (requestId != null && requests.containsKey(requestId)) {
 			return requests.get(requestId).getCondition();
 		}
@@ -126,7 +126,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		long serialVersionUID = stream.readLong();
 		elevatorCondition = (T) stream.readObject();
-		counterPeopleId = (Integer) stream.readObject();
+		requestCounterId = (Integer) stream.readObject();
 		room = (IRoom) stream.readObject();
 		requests = new ConcurrentHashMap<>();
 		getElevatorAutomate().onStop(this::stop);
@@ -135,8 +135,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	private void writeObject(ObjectOutputStream stream) throws IOException {
 		stream.writeLong(serialVersionUID);
 		stream.writeObject(elevatorCondition);
-		stream.writeObject(counterPeopleId);
+		stream.writeObject(requestCounterId);
 		stream.writeObject(room);
-
 	}
 }

@@ -3,7 +3,7 @@ package main.emulator.panel;
 import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
 import main.emulator.panel.contract.PageInfo;
-import main.entities.interfaces.primitive.IElevatorRoom;
+import main.entities.interfaces.primitive.IElevator;
 import main.entities.primitive.Building;
 import main.helpers.ISessionHelper;
 
@@ -11,7 +11,7 @@ import main.helpers.ISessionHelper;
  * all information for user send into PageInfo
  */
 public class ElevatorGeneralController {
-	private IElevatorRoom room;
+	private IElevator room;
 
 	public ElevatorGeneralController(IDaoObject<Building> dao) {
 		try {
@@ -81,7 +81,7 @@ public class ElevatorGeneralController {
 		pageInfo.getServerInfo().setCurrentFloor(room.getCurrentFloor());
 		pageInfo.getServerInfo().setLastFloor(room.getFloorsRange().getLastFloor());
 		pageInfo.getServerInfo().setGroundFloor(room.getFloorsRange().getGroundFloor());
-		pageInfo.getPersonInfo().setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
+		pageInfo.getPersonInfo().setPersonConditionMessage(room.getRequestCondition(personId).getMessage());
 		pageInfo.getPersonInfo().setRequestId(personId);
 	}
 }

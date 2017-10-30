@@ -38,7 +38,7 @@ public abstract class AbstractElevatorRoomView implements IAutomobileElevatorRoo
 	}
 
 	@Override
-	public IConditionable getPersonCondition(Integer requestId) {
-		return elevatorRoom.getPersonCondition(requestId);
+	public IConditionable getRequestCondition(Integer requestId) {
+		return elevatorRoom.getRequestCondition(requestId);
 	}
 }

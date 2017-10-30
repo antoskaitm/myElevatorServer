@@ -1,10 +1,8 @@
 package main.entities.interfaces.primitive;
 
-public interface IElevatorController {
+public interface IElevatorController extends IFloorRanged{
 
 	Integer getCurrentFloor();
 
 	Boolean callup(Integer floor);
-
-	IFloorsRange getFloorsRange();
 }

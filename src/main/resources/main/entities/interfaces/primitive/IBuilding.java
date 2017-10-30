@@ -2,7 +2,7 @@ package main.entities.interfaces.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 
-public interface IBuilding {
+public interface IBuilding extends IFloorRanged {
 
 	IFloorsRange getFloorsRange();
 

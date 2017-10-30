@@ -60,6 +60,7 @@ class ElevatorCondition implements IElevatorController, IAutomobileElevator, Ser
 	public IElevatorAutomate getElevatorAutomate() {
 		if (automate == null) {
 			automate = new IElevatorAutomate() {
+
 				private List<Action> actions = new ArrayList<>();
 
 				@Override

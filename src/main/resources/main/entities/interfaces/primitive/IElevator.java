@@ -1,6 +1,6 @@
 package main.entities.interfaces.primitive;
 
-public interface IElevatorRoom {
+public interface IElevator extends IFloorRanged  {
 	Integer callElevator(int floor);
 
 	Integer getCurrentFloor();
@@ -13,7 +13,5 @@ public interface IElevatorRoom {
 
 	boolean isSendElevator(Integer requestId);
 
-	IConditionable getPersonCondition(Integer requestId);
-
-	IFloorsRange getFloorsRange();
+	IConditionable getRequestCondition(Integer requestId);
 }
