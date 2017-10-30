@@ -4,6 +4,7 @@ import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.interfaces.primitive.IPersonElevator;
+import main.entities.primitive.abstractclass.AbstractBuilding;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -13,14 +14,12 @@ import java.io.Serializable;
 /**
  * numbers of floors begin from 0
  */
-public class Building implements IBuilding, Serializable {
-	static final long serialVersionUID = -3000000000000L;
+public class Building extends AbstractBuilding {
+	private static final long serialVersionUID = 0;
 	private Integer floorHeight;
-	private IFloorsRange floorsRange;
-	private IPersonElevator[] elevators;
 
 	public Building(IFloorsRange floorsRange, int buildingHeight, IPersonElevator... elevators) {
-		this.elevators = elevators;
+		super(floorsRange,elevators);
 		Integer floorCount = floorsRange.getFloorCount();
 		Integer minFloorHeight = 3;
 		if (buildingHeight < floorCount * minFloorHeight) {
@@ -28,14 +27,6 @@ public class Building implements IBuilding, Serializable {
 					+ (floorCount * minFloorHeight));
 		}
 		this.floorHeight = buildingHeight / floorCount;
-		this.floorsRange = floorsRange;
-		checkFloorsRanges(elevators);
-		this.elevators = elevators;
-	}
-
-	@Override
-	public IFloorsRange getFloorsRange() {
-		return this.floorsRange;
 	}
 
 	@Override
@@ -43,30 +34,15 @@ public class Building implements IBuilding, Serializable {
 		return floorHeight;
 	}
 
-	@Override
-	public IPersonElevator getElevator(Integer elevatorNumber) {
-		return elevators[elevatorNumber];
-	}
-
-	private void checkFloorsRanges(IPersonElevator[] elevators) {
-		for (int index = 0; index < elevators.length; index++) {
-			if (!floorsRange.contains(elevators[index].getFloorsRange())) {
-				throw new IllegalStateException("Elevator by index " + index + " go out of building floors range");
-			}
-		}
-	}
-
-	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+	protected void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+		super.readObject(stream);
 		long serialVersionUID = stream.readLong();
-		floorsRange = (IFloorsRange) stream.readObject();
 		floorHeight = (Integer) stream.readObject();
-		elevators = (IPersonElevator[]) stream.readObject();
 	}
 
-	private void writeObject(ObjectOutputStream stream) throws IOException {
+	protected void writeObject(ObjectOutputStream stream) throws IOException {
+		super.writeObject(stream);
 		stream.writeLong(serialVersionUID);
-		stream.writeObject(floorsRange);
 		stream.writeObject(floorHeight);
-		stream.writeObject(elevators);
 	}
 }
