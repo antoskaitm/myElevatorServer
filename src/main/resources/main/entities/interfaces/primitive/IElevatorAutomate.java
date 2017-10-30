@@ -14,4 +14,6 @@ public interface IElevatorAutomate {
 	void onStop(Action event);
 
 	boolean isCalled();
+
+	Integer getCurrentFloor();
 }

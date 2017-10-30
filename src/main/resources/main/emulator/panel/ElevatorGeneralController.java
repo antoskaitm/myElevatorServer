@@ -3,7 +3,6 @@ package main.emulator.panel;
 import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
 import main.emulator.panel.contract.PageInfo;
-import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevatorRoom;
 import main.entities.primitive.Building;
 import main.helpers.ISessionHelper;
@@ -29,10 +28,10 @@ public class ElevatorGeneralController {
 		if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
-			Integer id = helper.getPersonId();
+			Integer id = helper.getRequestId();
 			if (room.isSendElevator(id) || id == null) {
 				id = room.callElevator(floor);
-				helper.setPersonId(id);
+				helper.setRequestId(id);
 			} else if (room.isInElevator(id)) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are in elevator");
 			} else if (room.isCallElevator(id)) {
@@ -41,20 +40,20 @@ public class ElevatorGeneralController {
 				resultPage = "callPanel";
 			}
 		}
-		flushPageInfo(pageInfo, helper.getPersonId());
+		flushPageInfo(pageInfo, helper.getRequestId());
 		resultPage = (resultPage == null) ? "sendPanel" : resultPage;
 		helper.setPage(resultPage);
 		return resultPage;
 	}
 
 	public String getInfo(PageInfo pageInfo, ISessionHelper session) {
-		flushPageInfo(pageInfo, session.getPersonId());
+		flushPageInfo(pageInfo, session.getRequestId());
 		return session.getPage();
 	}
 
 	public String begin(PageInfo pageInfo, ISessionHelper session) {
 		session.setPage("main");
-		flushPageInfo(pageInfo, session.getPersonId());
+		flushPageInfo(pageInfo, session.getRequestId());
 		return "main";
 	}
 
@@ -63,10 +62,10 @@ public class ElevatorGeneralController {
 		if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
-			Integer id = session.getPersonId();
+			Integer id = session.getRequestId();
 			if (room.isInElevator(id)) {
 				room.sendElevator(floor, id);
-				session.setPersonId(null);
+				session.setRequestId(null);
 			} else if (room.isCallElevator(id)) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are not in elevator");
 				resultPage = "sendPanel";
@@ -74,7 +73,7 @@ public class ElevatorGeneralController {
 		}
 		resultPage = (resultPage == null) ? "callPanel" : resultPage;
 		session.setPage(resultPage);
-		flushPageInfo(pageInfo, session.getPersonId());
+		flushPageInfo(pageInfo, session.getRequestId());
 		return resultPage;
 	}
 
@@ -83,6 +82,6 @@ public class ElevatorGeneralController {
 		pageInfo.getServerInfo().setLastFloor(room.getFloorsRange().getLastFloor());
 		pageInfo.getServerInfo().setGroundFloor(room.getFloorsRange().getGroundFloor());
 		pageInfo.getPersonInfo().setPersonConditionMessage(room.getPersonCondition(personId).getMessage());
-		pageInfo.getPersonInfo().setPersonId(personId);
+		pageInfo.getPersonInfo().setRequestId(personId);
 	}
 }

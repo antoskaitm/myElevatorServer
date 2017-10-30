@@ -5,15 +5,15 @@ public interface IElevatorRoom {
 
 	Integer getCurrentFloor();
 
-	Boolean sendElevator(int floor, int personId);
+	Boolean sendElevator(int floor, int requestId);
 
-	boolean isInElevator(Integer personId);
+	boolean isInElevator(Integer requestId);
 
-	boolean isCallElevator(Integer personId);
+	boolean isCallElevator(Integer requestId);
 
-	boolean isSendElevator(Integer personId);
+	boolean isSendElevator(Integer requestId);
 
-	IConditionable getPersonCondition(Integer personId);
+	IConditionable getPersonCondition(Integer requestId);
 
 	IFloorsRange getFloorsRange();
 }

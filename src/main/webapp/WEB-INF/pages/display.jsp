@@ -14,7 +14,7 @@
     <h1>current floor</h1>
     <h2>${condition.serverInfo.currentFloor}</h2>
     <h2>person condition: ${condition.personInfo.personConditionMessage}</h2>
-    <h2>person id: ${condition.personInfo.personId}</h2>
+    <h2>request id: ${condition.personInfo.requestId}</h2>
     <form action="getInfo" method="post">
         <input type="submit" value="check condition">
     </form>

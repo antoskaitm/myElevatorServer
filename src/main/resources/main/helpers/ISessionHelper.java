@@ -5,7 +5,7 @@ public interface ISessionHelper {
 
 	String getPage();
 
-	void setPersonId(Integer id);
+	void setRequestId(Integer id);
 
-	Integer getPersonId();
+	Integer getRequestId();
 }

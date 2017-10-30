@@ -1,6 +1,6 @@
 package main.entities.interfaces.primitive;
 
-public interface IElevatorUi {
+public interface IElevatorController {
 
 	Integer getCurrentFloor();
 

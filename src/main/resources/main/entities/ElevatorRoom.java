@@ -3,8 +3,7 @@ package main.entities;
 import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.*;
-import main.entities.primitive.Person;
-import main.entities.primitive.general.BitSet;
+import main.entities.primitive.Request;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,14 +13,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * view for object implementing IElevatorAutomateble,IElevatorUi
+ * view for object implementing IAutomobileElevator,IElevatorController
  * can work with basement floors
  * this class also keep information about people
  * all methods which change room state is synchronized
  *
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Serializable> implements IAutomobileElevatorRoom, Serializable {
+public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & Serializable> implements IAutomobileElevatorRoom, Serializable {
 
 	static final long serialVersionUID = -1000000000000L;
 
@@ -29,11 +28,11 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 	private T elevatorCondition;
 	//не сохраняю т.к пока нет механизма чтобы выгнать из лифта если пользователь нехочет выходить
 	//чтобы не испортить объетк при загрузке из хранилища
-	private Map<Integer, Person> persons;
+	private Map<Integer, Request> requests;
 	private IRoom room;
 
 	public ElevatorRoom(T elevatorCondition, IRoom room) {
-		persons = new ConcurrentHashMap<>();
+		requests = new ConcurrentHashMap<>();
 		this.room = room;
 		this.elevatorCondition = elevatorCondition;
 		this.elevatorCondition.getElevatorAutomate().onStop(this::stop);
@@ -42,11 +41,11 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 	@Override
 	public synchronized Integer callElevator(int floor) {
 		if (elevatorCondition.callup(floor)) {
-			Integer personId = counterPeopleId++;
-			Person person = new Person(personId, floor);
-			person.setCondition(PersonsConditions.CALLED_ELEVATOR);
-			persons.put(personId, person);
-			return personId;
+			Integer requestId = counterPeopleId++;
+			Request request = new Request(requestId, floor);
+			request.setCondition(PersonsConditions.CALLED_ELEVATOR);
+			requests.put(requestId, request);
+			return requestId;
 		}
 		return null;
 	}
@@ -57,59 +56,59 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 	}
 
 	@Override
-	public synchronized Boolean sendElevator(int floor, int personId) {
-		if (isCondition(personId, PersonsConditions.STAND_IN_ELEVATOR)
+	public synchronized Boolean sendElevator(int floor, int requestId) {
+		if (isCondition(requestId, PersonsConditions.STAND_IN_ELEVATOR)
 				&& elevatorCondition.callup(floor)) {
-			Person person = persons.get(personId);
-			person.setSendFloor(floor);
-			person.setCondition(PersonsConditions.SENDED_ELEVATOR);
+			Request request = requests.get(requestId);
+			request.setSendFloor(floor);
+			request.setCondition(PersonsConditions.SENDED_ELEVATOR);
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean isInElevator(Integer personId) {
-		return isCondition(personId, PersonsConditions.STAND_IN_ELEVATOR);
+	public boolean isInElevator(Integer requestId) {
+		return isCondition(requestId, PersonsConditions.STAND_IN_ELEVATOR);
 	}
 
 	@Override
-	public boolean isCallElevator(Integer personId) {
-		return isCondition(personId, PersonsConditions.CALLED_ELEVATOR);
+	public boolean isCallElevator(Integer requestId) {
+		return isCondition(requestId, PersonsConditions.CALLED_ELEVATOR);
 	}
 
 	@Override
-	public boolean isSendElevator(Integer personId) {
-		return isCondition(personId, PersonsConditions.SENDED_ELEVATOR);
+	public boolean isSendElevator(Integer requestId) {
+		return isCondition(requestId, PersonsConditions.SENDED_ELEVATOR);
 	}
 
-	private boolean isCondition(Integer personId, IConditionable condition) {
-		return personId != null && persons.containsKey(personId) && persons.get(personId).getCondition() == condition;
+	private boolean isCondition(Integer requestId, IConditionable condition) {
+		return requestId != null && requests.containsKey(requestId) && requests.get(requestId).getCondition() == condition;
 	}
 
 	@Override
-	public IConditionable getPersonCondition(Integer personId) {
-		if (personId != null && persons.containsKey(personId)) {
-			return persons.get(personId).getCondition();
+	public IConditionable getPersonCondition(Integer requestId) {
+		if (requestId != null && requests.containsKey(requestId)) {
+			return requests.get(requestId).getCondition();
 		}
 		return PersonsConditions.DIDNOT_CALL_ELEVATOR;
 	}
 
 	private synchronized void stop() {
 		Integer currentFloor = elevatorCondition.getCurrentFloor();
-		for (Person person : persons.values()) {
-			Integer personId = person.getId();
-			if (person.getSendFloor() == currentFloor) {
-				persons.remove(personId);
-				room.release(person);
-				person.setCondition(PersonsConditions.DIDNOT_CALL_ELEVATOR);
-			} else if (person.getCallFloor() == currentFloor && person.getCondition() == PersonsConditions.CALLED_ELEVATOR) {
-				if (room.admit(person)) {
-					person.setCondition(PersonsConditions.STAND_IN_ELEVATOR);
+		for (Request request : requests.values()) {
+			Integer requestId = request.getId();
+			if (request.getSendFloor() == currentFloor) {
+				requests.remove(requestId);
+				room.release(request);
+				request.setCondition(PersonsConditions.DIDNOT_CALL_ELEVATOR);
+			} else if (request.getCallFloor() == currentFloor && request.getCondition() == PersonsConditions.CALLED_ELEVATOR) {
+				if (room.admit(request)) {
+					request.setCondition(PersonsConditions.STAND_IN_ELEVATOR);
 				} else {
-					person.setCondition(PersonsConditions.TRY_CALL_AGAIN_ELEVATOR);
-					if (elevatorCondition.callup(person.getCallFloor())) {
-						person.setCondition(PersonsConditions.CALLED_ELEVATOR);
+					request.setCondition(PersonsConditions.TRY_CALL_AGAIN_ELEVATOR);
+					if (elevatorCondition.callup(request.getCallFloor())) {
+						request.setCondition(PersonsConditions.CALLED_ELEVATOR);
 					}
 				}
 			}
@@ -129,7 +128,7 @@ public class ElevatorRoom<T extends IElevatorUi & IElevatorAutomateble & Seriali
 		elevatorCondition = (T) stream.readObject();
 		counterPeopleId = (Integer) stream.readObject();
 		room = (IRoom) stream.readObject();
-		persons = new ConcurrentHashMap<>();
+		requests = new ConcurrentHashMap<>();
 		getElevatorAutomate().onStop(this::stop);
 	}
 

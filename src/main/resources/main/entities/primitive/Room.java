@@ -15,26 +15,26 @@ public class Room implements IRoom, Serializable {
 
 	private Integer size;
 	private Integer peopleCount = 0;
-	private transient List<Person> persons;
+	private transient List<Request> requests;
 
 	public Room(int size) {
 		this.size = size;
-		persons = new LinkedList<>();
+		requests = new LinkedList<>();
 	}
 
-	public boolean admit(Person person) {
-		return peopleCount < size && persons.add(person);
+	public boolean admit(Request request) {
+		return peopleCount < size && requests.add(request);
 	}
 
-	public boolean release(Person person) {
-		return persons.remove(person);
+	public boolean release(Request request) {
+		return requests.remove(request);
 	}
 
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		long serialVersionUID = stream.readLong();
 		size = (Integer) stream.readObject();
 		this.peopleCount = 0;
-		persons = new LinkedList<>();
+		requests = new LinkedList<>();
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {

@@ -3,13 +3,13 @@ package main.entities.primitive;
 import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.primitive.IConditionable;
 
-public class Person {
+public class Request {
 	private Integer id;
 	private IConditionable condition;
 	private Integer callFloor;
 	private Integer sendFloor;
 
-	public Person(Integer id, Integer callFloor) {
+	public Request(Integer id, Integer callFloor) {
 		this.id = id;
 		this.callFloor = callFloor;
 		condition = PersonsConditions.CALLED_ELEVATOR;

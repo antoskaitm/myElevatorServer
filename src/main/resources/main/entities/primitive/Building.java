@@ -33,11 +33,12 @@ public class Building implements IBuilding, Serializable {
 	}
 
 	@Override
-	public IFloorsRange getFloorRange() {
+	public IFloorsRange getFloorsRange() {
 		return this.floorsRange;
 	}
 
-	public Integer getFloorsRange() {
+	@Override
+	public Integer getFloorHeight(Integer floor) {
 		return floorHeight;
 	}
 

@@ -23,22 +23,22 @@ public abstract class AbstractElevatorRoomView implements IAutomobileElevatorRoo
 	}
 
 	@Override
-	public boolean isInElevator(Integer personId) {
-		return elevatorRoom.isInElevator(personId);
+	public boolean isInElevator(Integer requestId) {
+		return elevatorRoom.isInElevator(requestId);
 	}
 
 	@Override
-	public boolean isCallElevator(Integer personId) {
-		return elevatorRoom.isCallElevator(personId);
+	public boolean isCallElevator(Integer requestId) {
+		return elevatorRoom.isCallElevator(requestId);
 	}
 
 	@Override
-	public boolean isSendElevator(Integer personId) {
-		return elevatorRoom.isSendElevator(personId);
+	public boolean isSendElevator(Integer requestId) {
+		return elevatorRoom.isSendElevator(requestId);
 	}
 
 	@Override
-	public IConditionable getPersonCondition(Integer personId) {
-		return elevatorRoom.getPersonCondition(personId);
+	public IConditionable getPersonCondition(Integer requestId) {
+		return elevatorRoom.getPersonCondition(requestId);
 	}
 }

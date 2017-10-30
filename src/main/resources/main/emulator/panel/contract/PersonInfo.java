@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class PersonInfo implements Serializable {
 	private String personConditionMessage;
-	private Integer personId;
+	private Integer requestId;
 	private String errorMessage;
 
 	public String getPersonConditionMessage() {
@@ -15,12 +15,12 @@ public class PersonInfo implements Serializable {
 		this.personConditionMessage = personConditionMessage;
 	}
 
-	public Integer getPersonId() {
-		return personId;
+	public Integer getRequestId() {
+		return requestId;
 	}
 
-	public void setPersonId(Integer personId) {
-		this.personId = personId;
+	public void setRequestId(Integer requestId) {
+		this.requestId = requestId;
 	}
 
 	public String getErrorMessage() {

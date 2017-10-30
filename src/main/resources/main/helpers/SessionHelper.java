@@ -17,12 +17,11 @@ public class SessionHelper implements ISessionHelper {
 		return (String) session.getAttribute("page");
 	}
 
-	public void setPersonId(Integer id) {
+	public void setRequestId(Integer id) {
 		session.setAttribute("id", id);
 	}
 
-	public Integer getPersonId() {
+	public Integer getRequestId() {
 		return (Integer) session.getAttribute("id");
 	}
-
 }

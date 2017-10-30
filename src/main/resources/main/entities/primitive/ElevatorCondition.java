@@ -1,9 +1,9 @@
 package main.entities.primitive;
 
 import main.entities.interfaces.events.Action;
+import main.entities.interfaces.primitive.IAutomobileElevator;
 import main.entities.interfaces.primitive.IElevatorAutomate;
-import main.entities.interfaces.primitive.IElevatorAutomateble;
-import main.entities.interfaces.primitive.IElevatorUi;
+import main.entities.interfaces.primitive.IElevatorController;
 import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.primitive.general.BitSet;
 
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * numbers of floors begin from 0
  */
-class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializable {
+class ElevatorCondition implements IElevatorController, IAutomobileElevator, Serializable {
 	static final long serialVersionUID = -2000000000000L;
 
 	private Integer moveToFloor = null;
@@ -99,6 +99,11 @@ class ElevatorCondition implements IElevatorUi, IElevatorAutomateble, Serializab
 				public boolean isCalled()
 				{
 					return callPoints.findIndex(false)!=null;
+				}
+
+				@Override
+				public Integer getCurrentFloor() {
+					return currentFloor;
 				}
 			};
 		}
