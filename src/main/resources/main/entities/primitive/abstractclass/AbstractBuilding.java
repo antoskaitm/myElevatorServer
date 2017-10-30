@@ -7,8 +7,9 @@ import main.entities.interfaces.primitive.IPersonElevator;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public abstract class AbstractBuilding implements IBuilding{
+public abstract class AbstractBuilding implements IBuilding,Serializable{
 	private static final long serialVersionUID = 0;
 	private IFloorsRange floorsRange;
 	private IPersonElevator[] elevators;

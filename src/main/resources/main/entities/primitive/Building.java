@@ -14,7 +14,7 @@ import java.io.Serializable;
 /**
  * numbers of floors begin from 0
  */
-public class Building extends AbstractBuilding {
+public class Building extends AbstractBuilding{
 	private static final long serialVersionUID = 0;
 	private Integer floorHeight;
 
@@ -34,12 +34,14 @@ public class Building extends AbstractBuilding {
 		return floorHeight;
 	}
 
+	@Override
 	protected void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		super.readObject(stream);
 		long serialVersionUID = stream.readLong();
 		floorHeight = (Integer) stream.readObject();
 	}
 
+	@Override
 	protected void writeObject(ObjectOutputStream stream) throws IOException {
 		super.writeObject(stream);
 		stream.writeLong(serialVersionUID);
