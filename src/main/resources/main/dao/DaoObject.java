@@ -17,7 +17,7 @@ public class DaoObject<T extends Serializable> implements IDaoObject<T> {
 
 	@Override
 	public void save(T object) throws IOException {
-		try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(file))) {
+		try (ObjectOutputStream stream = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
 			stream.writeObject(object);
 		}
 	}
@@ -25,7 +25,7 @@ public class DaoObject<T extends Serializable> implements IDaoObject<T> {
 	@Override
 	public T load() throws IOException, ClassNotFoundException {
 		if(defaultObject == null) {
-			try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(file))) {
+			try (ObjectInputStream stream = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
 				defaultObject = (T) stream.readObject();
 			}
 		}
