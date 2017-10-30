@@ -1,5 +1,8 @@
 package main.entities.interfaces.primitive;
 
+/** floor range must be immutable
+ *
+ */
 public interface IFloorsRange {
 	int getGroundFloor();
 	int getLastFloor();
