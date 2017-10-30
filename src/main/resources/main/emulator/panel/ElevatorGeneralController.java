@@ -30,7 +30,7 @@ public class ElevatorGeneralController {
 		} else {
 			Integer id = helper.getRequestId();
 			if (room.isSendElevator(id) || id == null) {
-				id = room.callElevator(floor);
+				id = room.callElevator(floor).getId();
 				helper.setRequestId(id);
 			} else if (room.isInElevator(id)) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are in elevator");

@@ -1,7 +1,9 @@
 package main.entities.interfaces.primitive;
 
+import main.entities.primitive.Request;
+
 public interface IElevator extends IFloorRanged  {
-	Integer callElevator(int floor);
+	Request callElevator(int floor);
 
 	Integer getCurrentFloor();
 
