@@ -33,7 +33,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:4.0.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:4.0.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:4.0.3.RELEASE" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.springframework:spring-test:4.2.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:4.0.3.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.0.3.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: javax.servlet:servlet-api:2.5" level="project" />
