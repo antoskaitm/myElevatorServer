@@ -1,6 +1,6 @@
 package main.entities;
 
-import main.entities.constants.PersonsConditions;
+import main.entities.constants.RequestsConditions;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.*;
 import main.entities.primitive.Request;
@@ -39,13 +39,13 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	}
 
 	@Override
-	public synchronized Integer callElevator(int floor) {
+	public synchronized Request callElevator(int floor) {
 		if (elevatorCondition.callup(floor)) {
 			Integer requestId = requestCounterId++;
 			Request request = new Request(requestId, floor);
-			request.setCondition(PersonsConditions.CALLED_ELEVATOR);
+			request.setCondition(RequestsConditions.CALLED_ELEVATOR);
 			requests.put(requestId, request);
-			return requestId;
+			return request;
 		}
 		return null;
 	}
@@ -57,11 +57,11 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 
 	@Override
 	public synchronized Boolean sendElevator(int floor, int requestId) {
-		if (isCondition(requestId, PersonsConditions.STAND_IN_ELEVATOR)
+		if (isCondition(requestId, RequestsConditions.STAND_IN_ELEVATOR)
 				&& elevatorCondition.callup(floor)) {
 			Request request = requests.get(requestId);
 			request.setSendFloor(floor);
-			request.setCondition(PersonsConditions.SENDED_ELEVATOR);
+			request.setCondition(RequestsConditions.SENDED_ELEVATOR);
 			return true;
 		}
 		return false;
@@ -69,17 +69,17 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 
 	@Override
 	public boolean isInElevator(Integer requestId) {
-		return isCondition(requestId, PersonsConditions.STAND_IN_ELEVATOR);
+		return isCondition(requestId, RequestsConditions.STAND_IN_ELEVATOR);
 	}
 
 	@Override
 	public boolean isCallElevator(Integer requestId) {
-		return isCondition(requestId, PersonsConditions.CALLED_ELEVATOR);
+		return isCondition(requestId, RequestsConditions.CALLED_ELEVATOR);
 	}
 
 	@Override
 	public boolean isSendElevator(Integer requestId) {
-		return isCondition(requestId, PersonsConditions.SENDED_ELEVATOR);
+		return isCondition(requestId, RequestsConditions.SENDED_ELEVATOR);
 	}
 
 	private boolean isCondition(Integer requestId, IConditionable condition) {
@@ -91,7 +91,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 		if (requestId != null && requests.containsKey(requestId)) {
 			return requests.get(requestId).getCondition();
 		}
-		return PersonsConditions.DIDNOT_CALL_ELEVATOR;
+		return RequestsConditions.DIDNOT_CALL_ELEVATOR;
 	}
 
 	private synchronized void stop() {
@@ -101,15 +101,13 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 			if (request.getSendFloor() == currentFloor) {
 				requests.remove(requestId);
 				room.release(request);
-				request.setCondition(PersonsConditions.DIDNOT_CALL_ELEVATOR);
-			} else if (request.getCallFloor() == currentFloor && request.getCondition() == PersonsConditions.CALLED_ELEVATOR) {
+				request.setCondition(RequestsConditions.DIDNOT_CALL_ELEVATOR);
+			} else if (request.getCallFloor() == currentFloor && request.getCondition() == RequestsConditions.CALLED_ELEVATOR) {
 				if (room.admit(request)) {
-					request.setCondition(PersonsConditions.STAND_IN_ELEVATOR);
+					request.setCondition(RequestsConditions.STAND_IN_ELEVATOR);
 				} else {
-					request.setCondition(PersonsConditions.TRY_CALL_AGAIN_ELEVATOR);
-					if (elevatorCondition.callup(request.getCallFloor())) {
-						request.setCondition(PersonsConditions.CALLED_ELEVATOR);
-					}
+					request.setCondition(RequestsConditions.TRY_CALL_AGAIN_ELEVATOR);
+					requests.remove(requestId);
 				}
 			}
 		}

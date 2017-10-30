@@ -1,5 +1,7 @@
 package main.helpers;
 
+import main.entities.primitive.Person;
+
 import javax.servlet.http.HttpSession;
 
 public class SessionHelper implements ISessionHelper {
@@ -17,11 +19,11 @@ public class SessionHelper implements ISessionHelper {
 		return (String) session.getAttribute("page");
 	}
 
-	public void setRequestId(Integer id) {
-		session.setAttribute("id", id);
+	public void setPerson(Person person) {
+		session.setAttribute("person", person);
 	}
 
-	public Integer getRequestId() {
-		return (Integer) session.getAttribute("id");
+	public Person getPerson() {
+		return (Person) session.getAttribute("person");
 	}
 }

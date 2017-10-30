@@ -1,15 +1,10 @@
 package main.entities;
 
-import main.entities.constants.PersonsConditions;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.*;
-import main.entities.primitive.Request;
+import main.entities.primitive.Person;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PersonElevatorRoom implements IPersonElevator, Serializable {
 
@@ -22,12 +17,9 @@ public class PersonElevatorRoom implements IPersonElevator, Serializable {
 
 	@Override
 	public synchronized boolean callElevator(int floor,Person person) {
-		if (person.request != null) {
-			Request request = elevatorRoom.callElevator(floor);
-			if (request != null) {
-				person.request = request;
-				return true;
-			}
+		if (person.withoutState()){
+			person.request = elevatorRoom.callElevator(floor);
+			return true;
 		}
 		return false;
 	}
@@ -39,10 +31,8 @@ public class PersonElevatorRoom implements IPersonElevator, Serializable {
 
 	@Override
 	public synchronized Boolean sendElevator(int floor, Person person) {
-		if (person.request != null) {
-			if (elevatorRoom.isSendElevator(person.request.getId())) {
-				return elevatorRoom.sendElevator(floor, person.request.getId());
-			}
+		if (elevatorRoom.isInElevator(person.request.getId())) {
+			return elevatorRoom.sendElevator(floor, person.request.getId());
 		}
 		return false;
 	}

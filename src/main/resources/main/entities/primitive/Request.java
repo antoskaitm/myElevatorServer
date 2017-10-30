@@ -1,6 +1,6 @@
 package main.entities.primitive;
 
-import main.entities.constants.PersonsConditions;
+import main.entities.constants.RequestsConditions;
 import main.entities.interfaces.primitive.IConditionable;
 
 public class Request {
@@ -12,7 +12,7 @@ public class Request {
 	public Request(Integer id, Integer callFloor) {
 		this.id = id;
 		this.callFloor = callFloor;
-		condition = PersonsConditions.CALLED_ELEVATOR;
+		condition = RequestsConditions.CALLED_ELEVATOR;
 	}
 
 	public void setSendFloor(Integer sendFloor) {
@@ -39,20 +39,20 @@ public class Request {
 		if (condition == newCondition) {
 			return;
 		}
-		if ((condition == PersonsConditions.DIDNOT_CALL_ELEVATOR || condition == PersonsConditions.TRY_CALL_AGAIN_ELEVATOR)
-				&& newCondition == PersonsConditions.CALLED_ELEVATOR) {
+		if ((condition == RequestsConditions.DIDNOT_CALL_ELEVATOR || condition == RequestsConditions.TRY_CALL_AGAIN_ELEVATOR)
+				&& newCondition == RequestsConditions.CALLED_ELEVATOR) {
 			condition = newCondition;
-		} else if (condition == PersonsConditions.CALLED_ELEVATOR
-				&& newCondition == PersonsConditions.STAND_IN_ELEVATOR) {
+		} else if (condition == RequestsConditions.CALLED_ELEVATOR
+				&& newCondition == RequestsConditions.STAND_IN_ELEVATOR) {
 			condition = newCondition;
-		} else if (condition == PersonsConditions.CALLED_ELEVATOR
-				&& newCondition == PersonsConditions.TRY_CALL_AGAIN_ELEVATOR) {
+		} else if (condition == RequestsConditions.CALLED_ELEVATOR
+				&& newCondition == RequestsConditions.TRY_CALL_AGAIN_ELEVATOR) {
 			condition = newCondition;
-		} else if (condition == PersonsConditions.STAND_IN_ELEVATOR
-				&& newCondition == PersonsConditions.SENDED_ELEVATOR) {
+		} else if (condition == RequestsConditions.STAND_IN_ELEVATOR
+				&& newCondition == RequestsConditions.SENDED_ELEVATOR) {
 			condition = newCondition;
-		} else if (condition == PersonsConditions.SENDED_ELEVATOR
-				&& newCondition == PersonsConditions.DIDNOT_CALL_ELEVATOR) {
+		} else if (condition == RequestsConditions.SENDED_ELEVATOR
+				&& newCondition == RequestsConditions.DIDNOT_CALL_ELEVATOR) {
 			condition = newCondition;
 		} else {
 			throw new IllegalStateException("Incorrect new state:" + newCondition.getMessage() + ". Current state: " + condition.getMessage());

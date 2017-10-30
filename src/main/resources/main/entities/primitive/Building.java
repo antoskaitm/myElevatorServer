@@ -3,6 +3,7 @@ package main.entities.primitive;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IFloorsRange;
+import main.entities.interfaces.primitive.IPersonElevator;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,9 +17,9 @@ public class Building implements IBuilding, Serializable {
 	static final long serialVersionUID = -3000000000000L;
 	private Integer floorHeight;
 	private IFloorsRange floorsRange;
-	private IAutomobileElevatorRoom[] elevators;
+	private IPersonElevator[] elevators;
 
-	public Building(IFloorsRange floorsRange, int buildingHeight, IAutomobileElevatorRoom... elevators) {
+	public Building(IFloorsRange floorsRange, int buildingHeight, IPersonElevator... elevators) {
 		this.elevators = elevators;
 		Integer floorCount = floorsRange.getFloorCount();
 		Integer minFloorHeight = 3;
@@ -43,11 +44,11 @@ public class Building implements IBuilding, Serializable {
 	}
 
 	@Override
-	public IAutomobileElevatorRoom getElevator(Integer elevatorNumber) {
+	public IPersonElevator getElevator(Integer elevatorNumber) {
 		return elevators[elevatorNumber];
 	}
 
-	private void checkFloorsRanges(IAutomobileElevatorRoom[] elevators) {
+	private void checkFloorsRanges(IPersonElevator[] elevators) {
 		for (int index = 0; index < elevators.length; index++) {
 			if (!floorsRange.contains(elevators[index].getFloorsRange())) {
 				throw new IllegalStateException("Elevator by index " + index + " go out of building floors range");
@@ -59,7 +60,7 @@ public class Building implements IBuilding, Serializable {
 		long serialVersionUID = stream.readLong();
 		floorsRange = (IFloorsRange) stream.readObject();
 		floorHeight = (Integer) stream.readObject();
-		elevators = (IAutomobileElevatorRoom[]) stream.readObject();
+		elevators = (IPersonElevator[]) stream.readObject();
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {

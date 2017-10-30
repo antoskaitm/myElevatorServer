@@ -14,7 +14,7 @@
     <%@ include file="/WEB-INF/pages/display.jsp" %>
 </div>
 <div>
-    <h1>call up elevator on floor</h1>
+    <h1>call up automate on floor</h1>
     <form action="call" method="post">
         <%@ include file="/WEB-INF/pages/buttons.jsp" %>
     </form>

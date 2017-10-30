@@ -11,7 +11,7 @@ public class DaoObject<T extends Serializable> implements IDaoObject<T> {
 	private T defaultObject;
 
 	public DaoObject(T object) throws IOException {
-		this.defaultObject = object;
+		//this.defaultObject = object;
 		file = CurrentDir();
 	}
 

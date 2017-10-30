@@ -19,11 +19,14 @@
         <constructor-arg name="lastFloor" value="${lastFloor}"/>
     </bean>
 
+    <bean class="main.entities.PersonElevatorRoom" id ="personElevatorRoom">
+        <constructor-arg name="elevatorRoom" ref="elevatorRoom"/>
+    </bean>
+
     <bean id="building" class="main.entities.primitive.Building">
         <constructor-arg name="floorsRange" ref="floorsRange"/>
         <constructor-arg name="buildingHeight" value="40"/>
-        <constructor-arg name="elevators" ref="elevatorRoom">
-        </constructor-arg>
+        <constructor-arg name="elevators" ref="personElevatorRoom"/>
     </bean>
 
     <bean class="main.entities.primitive.general.BitSet" name="elevatorCalls">

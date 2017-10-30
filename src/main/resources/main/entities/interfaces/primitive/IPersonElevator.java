@@ -1,8 +1,6 @@
 package main.entities.interfaces.primitive;
 
-import main.entities.Person;
-import main.entities.interfaces.IAutomobileElevatorRoom;
-import main.entities.primitive.Request;
+import main.entities.primitive.Person;
 
 public interface IPersonElevator extends IAutomobileElevator,IFloorRanged {
 	boolean callElevator(int floor,Person person);

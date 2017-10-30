@@ -8,5 +8,5 @@ public interface IBuilding extends IFloorRanged {
 
 	Integer getFloorHeight(Integer floor);
 
-	IAutomobileElevatorRoom getElevator(Integer elevatorNumber);
+	IPersonElevator getElevator(Integer elevatorNumber);
 }
