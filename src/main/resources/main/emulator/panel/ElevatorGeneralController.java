@@ -88,9 +88,9 @@ public class ElevatorGeneralController {
 		pageInfo.getServerInfo().setCurrentFloor(room.getCurrentFloor());
 		pageInfo.getServerInfo().setLastFloor(room.getFloorsRange().getLastFloor());
 		pageInfo.getServerInfo().setGroundFloor(room.getFloorsRange().getGroundFloor());
-		if (person != null && person.request != null) {
-			pageInfo.getPersonInfo().setPersonConditionMessage(person.request.getCondition().getMessage());
-			pageInfo.getPersonInfo().setRequestId(person.request.getId());
+		if (person != null && person.getRequest() != null) {
+			pageInfo.getPersonInfo().setPersonConditionMessage(person.getRequest().getCondition().getMessage());
+			pageInfo.getPersonInfo().setRequestId(person.getRequest().getId());
 		}
 	}
 }

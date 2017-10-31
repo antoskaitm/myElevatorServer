@@ -13,14 +13,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * view for object implementing IAutomobileElevator,IElevatorController
+ * view for object implementing IAutomobileElevator,ICallable
  * can work with basement floors
  * this class also keep information about people
  * all methods which change room state is synchronized
  *
  * @param <T>
  */
-public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & Serializable> implements IAutomobileElevatorRoom, Serializable {
+public class ElevatorRoom<T extends ICallable & IAutomobileElevator & Serializable> implements IAutomobileElevatorRoom, Serializable {
 
 	static final long serialVersionUID = -1000000000000L;
 
@@ -40,7 +40,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 
 	@Override
 	public synchronized Request callElevator(int floor) {
-		if (elevatorCondition.callup(floor)) {
+		if (elevatorCondition.call(floor)) {
 			Integer requestId = requestCounterId++;
 			Request request = new Request(requestId, floor);
 			request.setCondition(RequestsConditions.CALLED_ELEVATOR);
@@ -58,7 +58,7 @@ public class ElevatorRoom<T extends IElevatorController & IAutomobileElevator & 
 	@Override
 	public synchronized Boolean sendElevator(int floor, int requestId) {
 		if (isCondition(requestId, RequestsConditions.STAND_IN_ELEVATOR)
-				&& elevatorCondition.callup(floor)) {
+				&& elevatorCondition.call(floor)) {
 			Request request = requests.get(requestId);
 			request.setSendFloor(floor);
 			request.setCondition(RequestsConditions.SENDED_ELEVATOR);

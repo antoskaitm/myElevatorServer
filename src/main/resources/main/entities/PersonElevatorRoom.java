@@ -18,7 +18,7 @@ public class PersonElevatorRoom implements IPersonElevator, Serializable {
 	@Override
 	public synchronized boolean callElevator(int floor,Person person) {
 		if (person.withoutState()){
-			person.request = elevatorRoom.callElevator(floor);
+			person.setRequest(elevatorRoom.callElevator(floor));
 			return true;
 		}
 		return false;
@@ -31,8 +31,8 @@ public class PersonElevatorRoom implements IPersonElevator, Serializable {
 
 	@Override
 	public synchronized Boolean sendElevator(int floor, Person person) {
-		if (elevatorRoom.isInElevator(person.request.getId())) {
-			return elevatorRoom.sendElevator(floor, person.request.getId());
+		if (elevatorRoom.isInElevator(person.getRequest().getId())) {
+			return elevatorRoom.sendElevator(floor, person.getRequest().getId());
 		}
 		return false;
 	}
