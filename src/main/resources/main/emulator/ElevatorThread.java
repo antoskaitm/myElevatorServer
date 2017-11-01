@@ -1,8 +1,8 @@
 package main.emulator;
 
 import main.dao.IDaoObject;
-import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IAutomate;
+import main.entities.interfaces.primitive.IBuilding;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,6 +15,8 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 
 	private final Double speed = 1.;
 	private final Double acceleration = 2.;
+	private final Double maxAccelerationTime = speed / acceleration;
+	private final Double maxStopPath = acceleration * maxAccelerationTime * maxAccelerationTime / 2;
 
 	public ElevatorThread(IDaoObject<TBuilding> dao, IAutomate automate, TBuilding building) throws IOException {
 		this.dao = dao;
@@ -27,6 +29,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 			try {
 				while (!suspend) {
 					if (automate.isCalled()) {
+						Thread.sleep(100);
 						move();
 						automate.stop();
 						dao.save(building);
@@ -44,41 +47,45 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 
 	private void move() throws InterruptedException {
 		//расчет движения лифта с учетом физики
-		double path = building.getFloorHeight(automate.getCurrentFloor()).doubleValue();
-		double accelerationTime = speed / acceleration;
-		double stopTime = accelerationTime;
-		if (path / 2 < acceleration * accelerationTime * accelerationTime / 2) {
-			stopTime = accelerationTime / 2;
-		}
-		double stopPath = stopTime * stopTime * acceleration / 2;
-		double constantSpeedPath = path - 2 * stopPath;
-		moveLift(stopTime);
-		Boolean isPathLong = true;
-		if (!automate.isStopNext() && stopTime != accelerationTime) {
-			moveLift(accelerationTime - stopTime);
-			isPathLong = false;
-			stopTime = accelerationTime;
-			stopPath = stopTime * stopTime * acceleration / 2;
-			constantSpeedPath = path - stopPath;
-		}
-		double constantSpeedTime = constantSpeedPath / speed;
-		moveLift(constantSpeedTime);
-		double moveTime = stopPath / speed;
-		while (automate.canChangeCurrentFloor() && !automate.isStopNext()) {
-			moveLift(moveTime);
-			automate.changeCurrentFloor();
-			if (isPathLong) {
-				moveLift(moveTime);
+		boolean isElevatorAccelerated = false;
+		double movingTime = 0.;
+		double remainingPath = 0.;
+		boolean stopNext = automate.isStopNext();
+		while (automate.canChangeCurrentFloor() && !stopNext) {
+			if (remainingPath > 0.1) {
+				moveLift(remainingPath / speed);
+				automate.changeCurrentFloor();
 			}
-			moveLift(constantSpeedTime);
+			remainingPath = building.getFloorHeight(automate.getCurrentFloor()).doubleValue();
+			if (isElevatorAccelerated) {
+				remainingPath -= maxStopPath;
+				moveLift(remainingPath / speed);
+			} else if (remainingPath < maxStopPath * 2) {
+				remainingPath /= 2;
+				movingTime = Math.sqrt(2 * remainingPath / acceleration);
+			} else {
+				movingTime = maxAccelerationTime;
+				remainingPath -= maxStopPath;
+				remainingPath -= maxStopPath;
+				movingTime += (remainingPath - maxStopPath) / speed;
+				isElevatorAccelerated = true;
+			}
+			moveLift(movingTime);
+			stopNext = automate.isStopNext();
+			if (!isElevatorAccelerated && !stopNext) {
+				remainingPath = remainingPath * 2 - maxStopPath;
+				moveLift(maxAccelerationTime - movingTime);
+				isElevatorAccelerated = true;
+			}
 		}
-		moveLift(stopTime);
-		if (automate.canChangeCurrentFloor()) {
-			automate.changeCurrentFloor();
-		}
+		moveLift(movingTime);
+		automate.changeCurrentFloor();
 	}
 
 	private void moveLift(double seconds) throws InterruptedException {
+		if (seconds < 0.001) {
+			return;
+		}
 		Thread.sleep((int) seconds * 100);
 	}
 }

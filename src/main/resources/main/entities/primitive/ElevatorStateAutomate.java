@@ -88,7 +88,7 @@ class ElevatorStateAutomate implements ICallablePanel, IAutomobileElevator, Seri
 
 				@Override
 				public Boolean canChangeCurrentFloor() {
-					return floorsRange.hasFloor(currentFloor + direction);
+					return direction!=0 && floorsRange.hasFloor(currentFloor + direction);
 				}
 
 				@Override
