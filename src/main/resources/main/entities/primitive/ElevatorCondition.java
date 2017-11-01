@@ -5,7 +5,7 @@ import main.entities.interfaces.primitive.IAutomobileElevator;
 import main.entities.interfaces.primitive.IElevatorAutomate;
 import main.entities.interfaces.primitive.ICallable;
 import main.entities.interfaces.primitive.IFloorsRange;
-import main.entities.primitive.general.BitSet;
+import main.entities.general.BitSet;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -64,7 +64,7 @@ class ElevatorCondition implements ICallable, IAutomobileElevator, Serializable 
 				private List<Action> actions = new ArrayList<>();
 
 				@Override
-				public Boolean stopNextFloor() {
+				public Boolean isStopNextFloor() {
 					floorsRange.checkFloor(currentFloor + direction);
 					return callPoints.get(currentFloor + direction);
 				}
@@ -87,7 +87,7 @@ class ElevatorCondition implements ICallable, IAutomobileElevator, Serializable 
 				}
 
 				@Override
-				public Boolean canMove() {
+				public Boolean canChangeCurrentFloor() {
 					return floorsRange.hasFloor(currentFloor + direction);
 				}
 

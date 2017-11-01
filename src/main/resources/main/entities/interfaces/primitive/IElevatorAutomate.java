@@ -5,11 +5,11 @@ import main.entities.interfaces.events.Action;
 public interface IElevatorAutomate {
 	void stop();
 
-	Boolean stopNextFloor();
+	Boolean isStopNextFloor();
 
 	void changeCurrentFloor();
 
-	Boolean canMove();
+	Boolean canChangeCurrentFloor();
 
 	void onStop(Action event);
 

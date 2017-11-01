@@ -54,7 +54,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 		double constantSpeedPath = path - 2 * stopPath;
 		moveLift(stopTime);
 		Boolean isPathLong = true;
-		if (!automate.stopNextFloor() && stopTime != accelerationTime) {
+		if (!automate.isStopNextFloor() && stopTime != accelerationTime) {
 			moveLift(accelerationTime - stopTime);
 			isPathLong = false;
 			stopTime = accelerationTime;
@@ -64,7 +64,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 		double constantSpeedTime = constantSpeedPath / speed;
 		moveLift(constantSpeedTime);
 		double moveTime = stopPath / speed;
-		while (automate.canMove() && !automate.stopNextFloor()) {
+		while (automate.canChangeCurrentFloor() && !automate.isStopNextFloor()) {
 			moveLift(moveTime);
 			automate.changeCurrentFloor();
 			if (isPathLong) {
@@ -73,7 +73,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 			moveLift(constantSpeedTime);
 		}
 		moveLift(stopTime);
-		if (automate.canMove()) {
+		if (automate.canChangeCurrentFloor()) {
 			automate.changeCurrentFloor();
 		}
 	}
