@@ -9,18 +9,21 @@ import main.entities.primitive.Building;
 import main.entities.primitive.ElevatorRequest;
 import main.entities.primitive.Person;
 import main.helpers.ISessionHelper;
+import sun.rmi.server.InactiveGroupException;
 
 /**
  * all information for user send into PageInfo
  */
 public class ElevatorGeneralController {
 	private IAutomobileElevatorRoom<Person> room;
+	private Integer defaultFloorNumber;
 
 	public ElevatorGeneralController(IDaoObject<Building> dao) {
 		try {
 			IBuilding building = dao.load();
 			room = (IAutomobileElevatorRoom<Person>) building.getElevator(0);
 			ElevatorThread emulation = new ElevatorThread(dao, room.getElevatorAutomate(), building);
+			defaultFloorNumber = Integer.max(0,room.getFloorsRange().getGroundFloor());
 			emulation.run();
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -28,31 +31,52 @@ public class ElevatorGeneralController {
 	}
 
 	public String callupElevator(Integer floor, PageInfo pageInfo, ISessionHelper session) {
-		String resultPage = null;
 		Person person = session.getPerson();
 		if (person == null) {
 			person = new Person();
 			session.setPerson(person);
 		}
-		if (!room.getFloorsRange().hasFloor(floor)) {
-			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
-		} else {
-			ElevatorRequest request = person.getRequest();
-			if (request == null || request.withoutState()) {
-				room.callElevator(floor, person);
-			} else if (request.isInElevator()) {
-				pageInfo.getPersonInfo().setErrorMessage("Error!You are in elevator");
-			} else if (request.isCallElevator()) {
-				pageInfo.getPersonInfo().setErrorMessage("Error!You are wait elevator");
-			} else {
-				resultPage = "callPanel";
-			}
+		ElevatorRequest request = person.getRequest();
+		String error = chackAtErrors(floor,request);
+		pageInfo.getPersonInfo().setErrorMessage(error);
+		if(error == null)
+		{
+			room.callElevator(floor, person);
 		}
 		flushPageInfo(pageInfo, person);
-		resultPage = (resultPage == null) ? "sendPanel" : resultPage;
+		String resultPage = (error == null) ? "sendPanel" : "callPanel";
 		session.setPage(resultPage);
 		return resultPage;
 	}
+
+	private String chackAtErrors(Integer floor, ElevatorRequest request) {
+		if (floor == null) {
+			return "Floor was not pointed";
+		}
+		if (!room.getFloorsRange().hasFloor(floor)) {
+			return "Error!This floor doesn't exist";
+		} else {
+			if (request == null) {
+				if (floor != defaultFloorNumber) {
+					return "Error!You are at floor number:" + defaultFloorNumber;
+				}
+			} else if (request.withoutState()) {
+				if (request.getSendFloor() != null) {
+					if (!request.getSendFloor().equals(floor)) {
+						return "Error!You are at floor number:" + request.getSendFloor();
+					}
+				} else if (!request.getCallFloor().equals(floor)) {
+					return "Error!You are at floor number:" + request.getCallFloor();
+				}
+			} else if (request.isInElevator()) {
+				return "Error!You are in elevator";
+			} else if (request.isCallElevator()) {
+				return "Error!You are wait elevator";
+			}
+		}
+		return null;
+	}
+
 
 	public String getInfo(PageInfo pageInfo, ISessionHelper session) {
 		flushPageInfo(pageInfo, session.getPerson());
