@@ -1,7 +1,7 @@
 package main.entities.primitive;
 
 import main.entities.constants.RequestsConditions;
-import main.entities.interfaces.primitive.IConditionable;
+import main.entities.general.IConditionable;
 import main.entities.interfaces.primitive.IRequestStatus;
 
 public class ElevatorRequest implements IRequestStatus {
@@ -49,15 +49,15 @@ public class ElevatorRequest implements IRequestStatus {
 				|| condition == RequestsConditions.TRY_CALL_AGAIN_ELEVATOR;
 	}
 
-	void setCallFloor(Integer floor) {
+	protected void setCallFloor(Integer floor) {
 		this.callFloor = floor;
 	}
 
-	void setSendFloor(Integer sendFloor) {
+	protected void setSendFloor(Integer sendFloor) {
 		this.sendFloor = sendFloor;
 	}
 
-	void setCondition(IConditionable newCondition) {
+	protected void setCondition(IConditionable newCondition) {
 		if (condition == newCondition) {
 			return;
 		}

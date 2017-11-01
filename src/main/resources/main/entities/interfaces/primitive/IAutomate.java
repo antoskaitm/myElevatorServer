@@ -1,11 +1,11 @@
 package main.entities.interfaces.primitive;
 
-import main.entities.interfaces.events.Action;
+import main.entities.general.events.Action;
 
-public interface IElevatorAutomate {
+public interface IAutomate {
 	void stop();
 
-	Boolean isStopNextFloor();
+	Boolean isStopNext();
 
 	void changeCurrentFloor();
 

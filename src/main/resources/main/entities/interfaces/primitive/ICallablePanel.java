@@ -1,6 +1,6 @@
 package main.entities.interfaces.primitive;
 
-public interface ICallable extends IFloorRanged{
+public interface ICallablePanel extends IFloorRanged{
 
 	Integer getCurrentFloor();
 

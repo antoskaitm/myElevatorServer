@@ -31,7 +31,7 @@
     </bean>
 
 
-    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorCondition">
+    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorStateAutomate">
         <constructor-arg name="callPoints" ref="elevatorCalls"/>
         <constructor-arg name="floorsRange" ref="floorsRange"/>
     </bean>
@@ -39,7 +39,7 @@
     <bean class="main.entities.primitive.Room" name="room">
         <constructor-arg name="size" value="3"/>
     </bean>
-    <bean id="elevatorRoom" class="main.entities.primitive.ElevatorRoom">
+    <bean id="elevatorRoom" class="main.entities.primitive.Elevator">
         <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
         <constructor-arg name="room" ref="room"/>
     </bean>

@@ -1,6 +1,6 @@
 package main.entities.constants;
 
-import main.entities.interfaces.primitive.IConditionable;
+import main.entities.general.IConditionable;
 
 public class RequestsConditions implements IConditionable {
 	private final String message;

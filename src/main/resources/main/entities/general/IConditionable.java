@@ -1,4 +1,4 @@
-package main.entities.interfaces.primitive;
+package main.entities.general;
 
 public interface IConditionable {
 	String getMessage();

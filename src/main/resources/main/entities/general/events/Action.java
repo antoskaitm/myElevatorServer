@@ -1,4 +1,4 @@
-package main.entities.interfaces.events;
+package main.entities.general.events;
 
 public interface Action {
 	void execute();

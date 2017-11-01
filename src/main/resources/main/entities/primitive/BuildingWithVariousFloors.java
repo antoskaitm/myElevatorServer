@@ -2,7 +2,6 @@ package main.entities.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IFloorsRange;
-import main.entities.interfaces.primitive.IPersonElevator;
 import main.entities.primitive.abstractclass.AbstractBuilding;
 
 import java.io.IOException;

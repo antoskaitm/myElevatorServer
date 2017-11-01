@@ -1,9 +1,9 @@
 package main.entities.primitive;
 
-import main.entities.interfaces.events.Action;
+import main.entities.general.events.Action;
 import main.entities.interfaces.primitive.IAutomobileElevator;
-import main.entities.interfaces.primitive.IElevatorAutomate;
-import main.entities.interfaces.primitive.ICallable;
+import main.entities.interfaces.primitive.IAutomate;
+import main.entities.interfaces.primitive.ICallablePanel;
 import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.general.BitSet;
 
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * numbers of floors begin from 0
  */
-class ElevatorCondition implements ICallable, IAutomobileElevator, Serializable {
+class ElevatorStateAutomate implements ICallablePanel, IAutomobileElevator, Serializable {
 	static final long serialVersionUID = -2000000000000L;
 
 	private Integer moveToFloor = null;
@@ -25,9 +25,9 @@ class ElevatorCondition implements ICallable, IAutomobileElevator, Serializable 
 	private BitSet callPoints;
 	private Integer direction = 0;
 	private IFloorsRange floorsRange;
-	private IElevatorAutomate automate;
+	private IAutomate automate;
 
-	public ElevatorCondition(BitSet callPoints, IFloorsRange floorsRange) {
+	public ElevatorStateAutomate(BitSet callPoints, IFloorsRange floorsRange) {
 		if (floorsRange.getGroundFloor() != callPoints.getLowerBorder()
 				|| callPoints.getUpperBorder() != floorsRange.getLastFloor()) {
 			throw new ArithmeticException("Call points has different floor range");
@@ -57,14 +57,14 @@ class ElevatorCondition implements ICallable, IAutomobileElevator, Serializable 
 		return floorsRange;
 	}
 
-	public IElevatorAutomate getElevatorAutomate() {
+	public IAutomate getElevatorAutomate() {
 		if (automate == null) {
-			automate = new IElevatorAutomate() {
+			automate = new IAutomate() {
 
 				private List<Action> actions = new ArrayList<>();
 
 				@Override
-				public Boolean isStopNextFloor() {
+				public Boolean isStopNext() {
 					floorsRange.checkFloor(currentFloor + direction);
 					return callPoints.get(currentFloor + direction);
 				}

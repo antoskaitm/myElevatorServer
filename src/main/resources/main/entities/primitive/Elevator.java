@@ -3,6 +3,7 @@ package main.entities.primitive;
 import main.entities.constants.RequestsConditions;
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.*;
+import org.omg.CORBA.Request;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -12,14 +13,14 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
- * view for object implementing IAutomobileElevator,ICallable
+ * view for object implementing IAutomobileElevator,ICallablePanel
  * can work with basement floors
  * this class also keep information about people
  * all methods which change room state is synchronized
  *
  * @param <T>
  */
-public class ElevatorRoom<T extends ICallable & IAutomobileElevator & Serializable,U extends IRequesting>
+public class Elevator<T extends ICallablePanel & IAutomobileElevator & Serializable,U extends IRequesting>
 		implements IAutomobileElevatorRoom<U>, Serializable {
 
 	static final long serialVersionUID = -1000000000000L;
@@ -31,7 +32,7 @@ public class ElevatorRoom<T extends ICallable & IAutomobileElevator & Serializab
 	private Set<U> expectants;
 	private IRoom<U> room;
 
-	public ElevatorRoom(T elevatorCondition, IRoom<U> room) {
+	public Elevator(T elevatorCondition, IRoom<U> room) {
 		expectants = new ConcurrentSkipListSet<>();
 		this.room = room;
 		this.elevatorCondition = elevatorCondition;
@@ -39,14 +40,15 @@ public class ElevatorRoom<T extends ICallable & IAutomobileElevator & Serializab
 	}
 
 	@Override
-	public Boolean callElevator(int floor, U expectant) {
-		if (elevatorCondition.call(floor)) {
+	public Boolean callElevator(int callFloor, U expectant) {
+		ElevatorRequest request = expectant.getRequest();
+		if ((request== null || request.withoutState()) && elevatorCondition.call(callFloor)) {
 			Integer requestId = requestCounterId++;
-			ElevatorRequest request = new ElevatorRequest(requestId, floor);
-			request.setCallFloor(floor);
-			request.setCondition(RequestsConditions.CALLED_ELEVATOR);
-			expectant.setRequest(request);
-			return expectants.add(expectant);
+			request = new ElevatorRequest(requestId, callFloor);
+			if (expectants.add(expectant)) {
+				expectant.setRequest(request);
+				return true;
+			}
 		}
 		return false;
 	}
@@ -90,7 +92,7 @@ public class ElevatorRoom<T extends ICallable & IAutomobileElevator & Serializab
 	}
 
 	@Override
-	public IElevatorAutomate getElevatorAutomate() {
+	public IAutomate getElevatorAutomate() {
 		return elevatorCondition.getElevatorAutomate();
 	}
 

@@ -1,16 +1,12 @@
 package main.entities.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
-import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IElevator;
 import main.entities.interfaces.primitive.IFloorsRange;
-import main.entities.interfaces.primitive.IPersonElevator;
 import main.entities.primitive.abstractclass.AbstractBuilding;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
 /**
  * numbers of floors begin from 0

@@ -2,21 +2,21 @@ package main.emulator;
 
 import main.dao.IDaoObject;
 import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IElevatorAutomate;
+import main.entities.interfaces.primitive.IAutomate;
 
 import java.io.IOException;
 import java.io.Serializable;
 
 public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 	private boolean suspend = false;
-	private IElevatorAutomate automate;
+	private IAutomate automate;
 	private TBuilding building;
 	private IDaoObject<TBuilding> dao;
 
 	private final Double speed = 1.;
 	private final Double acceleration = 2.;
 
-	public ElevatorThread(IDaoObject<TBuilding> dao, IElevatorAutomate automate, TBuilding building) throws IOException {
+	public ElevatorThread(IDaoObject<TBuilding> dao, IAutomate automate, TBuilding building) throws IOException {
 		this.dao = dao;
 		this.automate = automate;
 		this.building = building;
@@ -54,7 +54,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 		double constantSpeedPath = path - 2 * stopPath;
 		moveLift(stopTime);
 		Boolean isPathLong = true;
-		if (!automate.isStopNextFloor() && stopTime != accelerationTime) {
+		if (!automate.isStopNext() && stopTime != accelerationTime) {
 			moveLift(accelerationTime - stopTime);
 			isPathLong = false;
 			stopTime = accelerationTime;
@@ -64,7 +64,7 @@ public class ElevatorThread<TBuilding extends IBuilding & Serializable> {
 		double constantSpeedTime = constantSpeedPath / speed;
 		moveLift(constantSpeedTime);
 		double moveTime = stopPath / speed;
-		while (automate.canChangeCurrentFloor() && !automate.isStopNextFloor()) {
+		while (automate.canChangeCurrentFloor() && !automate.isStopNext()) {
 			moveLift(moveTime);
 			automate.changeCurrentFloor();
 			if (isPathLong) {
