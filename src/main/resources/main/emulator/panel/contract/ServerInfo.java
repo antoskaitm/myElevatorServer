@@ -4,30 +4,14 @@ import java.io.Serializable;
 
 public class ServerInfo implements Serializable {
 	private Integer currentFloor;
-	private Integer lastFloor;
-	private Integer groundFloor;
+	private ElevatorInfo[] elevators;
 
-	public Integer getCurrentFloor() {
-		return currentFloor;
+	public ElevatorInfo[] getElevators() {
+		return elevators;
 	}
 
-	public void setCurrentFloor(Integer currentFloor) {
-		this.currentFloor = currentFloor;
-	}
-
-	public Integer getLastFloor() {
-		return lastFloor;
-	}
-
-	public void setLastFloor(Integer lastFloor) {
-		this.lastFloor = lastFloor;
-	}
-
-	public Integer getGroundFloor() {
-		return groundFloor;
-	}
-
-	public void setGroundFloor(Integer groundFloor) {
-		this.groundFloor = groundFloor;
+	public void setElevatorsId(ElevatorInfo[] elevators)
+	{
+		this.elevators = elevators;
 	}
 }

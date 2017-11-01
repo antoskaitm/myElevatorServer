@@ -7,6 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="main.emulator.panel.contract.PageInfo" %>
+<%@ page import="main.emulator.panel.contract.ServerInfo" %>
 <% try { %>
 <html>
 <body>
@@ -16,7 +18,10 @@
 <div>
     <h1>call up automate on floor</h1>
     <form action="call" method="post">
-        <%@ include file="/WEB-INF/pages/buttons.jsp" %>
+        <!--%@ include file="/WEB-INF/pages/buttons.jsp" %-->
+        <c:forEach var="elevators" items="${condition.serverInfo.elevators}">
+            <input type="submit" value="${elevators.id}" name="elevatorId">
+        </c:forEach>
     </form>
 </div>
 </body>

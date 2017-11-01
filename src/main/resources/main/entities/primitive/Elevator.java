@@ -23,10 +23,12 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class Elevator<T extends ICallablePanel & IAutomobileElevator & Serializable,U extends IRequesting>
 		implements IAutomobileElevatorRoom<U>, Serializable {
 
-	static final long serialVersionUID = -1000000000000L;
-
+	private static final long serialVersionUID = -1000000000000L;
+	private static Integer elevatorsCount = 0;
 	private Integer requestCounterId = 0;
+
 	private T elevatorCondition;
+	private Integer id;
 	//не сохраняю т.к пока нет механизма чтобы выгнать из лифта если пользователь нехочет выходить
 	//чтобы не испортить объетк при загрузке из хранилища
 	private Set<U> expectants;
@@ -37,6 +39,7 @@ public class Elevator<T extends ICallablePanel & IAutomobileElevator & Serializa
 		this.room = room;
 		this.elevatorCondition = elevatorCondition;
 		this.elevatorCondition.getElevatorAutomate().onStop(this::stop);
+		this.id = elevatorsCount++;
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class Elevator<T extends ICallablePanel & IAutomobileElevator & Serializa
 		ElevatorRequest request = expectant.getRequest();
 		if ((request== null || request.withoutState()) && elevatorCondition.call(callFloor)) {
 			Integer requestId = requestCounterId++;
-			request = new ElevatorRequest(requestId, callFloor);
+			request = new ElevatorRequest(requestId, callFloor,id);
 			if (expectants.add(expectant)) {
 				expectant.setRequest(request);
 				return true;

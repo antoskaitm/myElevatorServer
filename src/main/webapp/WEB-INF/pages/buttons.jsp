@@ -1,5 +1,8 @@
 <%@ page import="main.emulator.panel.contract.PageInfo" %>
 <%@ page import="main.emulator.panel.contract.ServerInfo" %>
+<%@ page import="main.emulator.panel.contract.ElevatorInfo" %>
+<%@ page import="main.entities.primitive.Elevator" %>
+
 <%--
   Created by IntelliJ IDEA.
   User: Антон
@@ -10,8 +13,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
-    ServerInfo serverInfo = ((PageInfo) request.getAttribute("condition")).getServerInfo();
-    for (int start = serverInfo.getGroundFloor(); start <= serverInfo.getLastFloor(); start++) {
-        out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
+    ElevatorInfo[] elevators = ((PageInfo) request.getAttribute("condition")).getServerInfo().getElevators();
+    for(ElevatorInfo info: elevators) {
+        for (int start = info.getGroundFloor(); start <= info.getLastFloor(); start++) {
+            out.println("<input type=\"submit\" value=\"" + start + "\" name=\"floor\">");
+        }
     }
 %>

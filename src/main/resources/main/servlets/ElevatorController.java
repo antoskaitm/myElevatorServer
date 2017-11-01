@@ -19,9 +19,14 @@ public class ElevatorController {
 		this.panel = panel;
 	}
 
-	@RequestMapping(value = {"call"}, method = RequestMethod.POST)
+	/*@RequestMapping(value = {"call"}, method = RequestMethod.POST)
 	public String callupElevator(Integer floor, Model model, HttpSession session) {
 		return panel.callupElevator(floor, getCurrentCondition(model), new SessionHelper(session));
+	}*/
+
+	@RequestMapping(value = {"call"}, method = RequestMethod.POST)
+	public String callupElevator(Integer elevatorId, Model model, HttpSession session) {
+		return panel.callupElevatorNumber(elevatorId, getCurrentCondition(model), new SessionHelper(session));
 	}
 
 	@RequestMapping(value = {"getInfo"}, method = RequestMethod.POST)
@@ -36,7 +41,7 @@ public class ElevatorController {
 
 	@RequestMapping(value = {"send"}, method = RequestMethod.POST)
 	public String send(int floor, Model model, HttpSession session) {
-		return panel.send(floor, getCurrentCondition(model), new SessionHelper(session));
+		return panel.send(floor,0, getCurrentCondition(model), new SessionHelper(session));
 	}
 
 	private PageInfo getCurrentCondition(Model model) {

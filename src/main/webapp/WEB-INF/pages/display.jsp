@@ -11,8 +11,9 @@
     <h2>${condition.personInfo.errorMessage}</h2>
 </div>
 <div>
-    <h1>current floor</h1>
-    <h2>${condition.serverInfo.currentFloor}</h2>
+    <c:forEach items="${condition.serverInfo.elevators}" var="elevator">
+        <h1>elevator № ${elevator.id} current floor ${elevator.currentFloor}</h1>
+    </c:forEach>
     <h2>person condition: ${condition.personInfo.personConditionMessage}</h2>
     <h2>elevatorRequest id: ${condition.personInfo.requestId}</h2>
     <form action="getInfo" method="post">

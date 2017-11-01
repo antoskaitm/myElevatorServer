@@ -9,11 +9,13 @@ public class ElevatorRequest implements IRequestStatus {
 	private IConditionable condition;
 	private Integer callFloor;
 	private Integer sendFloor;
+	public Integer elevatorId;
 
-	public ElevatorRequest(Integer id, Integer callFloor) {
+	public ElevatorRequest(Integer id, Integer callFloor,Integer elevatorId) {
 		this.id = id;
 		this.callFloor = callFloor;
 		condition = RequestsConditions.CALLED_ELEVATOR;
+		this.elevatorId = elevatorId;
 	}
 
 	public Integer getId() {

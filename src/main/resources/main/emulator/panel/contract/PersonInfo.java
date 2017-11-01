@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class PersonInfo implements Serializable {
 	private String personConditionMessage;
+	private Integer currentFloor;
 	private Integer requestId;
 	private String errorMessage;
 

@@ -6,6 +6,11 @@ public class Person implements IRequesting,Comparable {
 	private Integer id;
 	private ElevatorRequest request;
 
+	public Person(Integer id)
+	{
+		this.id = id;
+	}
+
 	@Override
 	public ElevatorRequest getRequest() {
 		return request;
@@ -18,6 +23,6 @@ public class Person implements IRequesting,Comparable {
 
 	@Override
 	public int compareTo(Object o) {
-		return request.getId()-((Person)o).getRequest().getId();
+		return id - ((Person) o).id;
 	}
 }
