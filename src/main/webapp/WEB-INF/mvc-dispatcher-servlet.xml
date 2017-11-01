@@ -14,40 +14,61 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <bean class="main.entities.primitive.FloorsRange" id="floorsRange">
+    <bean class="main.entities.primitive.FloorsRange" id="floorsRangeLift1" scope="prototype">
         <constructor-arg name="groundFloor" value="${groundFloor}"/>
-        <constructor-arg name="lastFloor" value="${lastFloor}"/>
+        <constructor-arg name="lastFloor" value="1"/>
+    </bean>
+    <bean class="main.entities.primitive.FloorsRange" id="floorsRangeLift2" scope="prototype">
+        <constructor-arg name="groundFloor" value="-1"/>
+        <constructor-arg name="lastFloor" value="3"/>
+    </bean>
+    <bean class="main.entities.primitive.FloorsRange" id="floorsRangeBuilding" scope="prototype">
+        <constructor-arg name="groundFloor" value="-3"/>
+        <constructor-arg name="lastFloor" value="3"/>
     </bean>
 
     <bean id="building" class="main.entities.primitive.Building">
-        <constructor-arg name="floorsRange" ref="floorsRange"/>
+        <constructor-arg name="floorsRange" ref="floorsRangeBuilding"/>
         <constructor-arg name="buildingHeight" value="40"/>
         <constructor-arg name="elevators" >
             <array>
-                <ref bean="elevatorRoom"/>
-                <ref bean="elevatorRoom"/>
+                <ref bean="elevator1"/>
+                <ref bean="elevator2"/>
             </array>
         </constructor-arg>
     </bean>
 
-    <bean class="main.entities.general.BitSet" name="elevatorCalls">
+    <bean class="main.entities.general.BitSet" name="elevatorCalls1" scope="prototype">
         <constructor-arg name="lowerBound" value="${groundFloor}"/>
-        <constructor-arg name="length" value="${floorCount}"/>
+        <constructor-arg name="length" value="5"/>
+    </bean>
+    <bean class="main.entities.general.BitSet" name="elevatorCalls2" scope="prototype">
+        <constructor-arg name="lowerBound" value="-1"/>
+        <constructor-arg name="length" value="5"/>
     </bean>
 
 
-    <bean id="elevatorCondition" class="main.entities.primitive.ElevatorStateAutomate">
-        <constructor-arg name="callPoints" ref="elevatorCalls"/>
-        <constructor-arg name="floorsRange" ref="floorsRange"/>
+    <bean id="elevatorCondition1" class="main.entities.primitive.ElevatorStateAutomate" >
+        <constructor-arg name="callPoints" ref="elevatorCalls1"/>
+        <constructor-arg name="floorsRange" ref="floorsRangeLift1"/>
+    </bean>
+    <bean id="elevatorCondition2" class="main.entities.primitive.ElevatorStateAutomate" >
+        <constructor-arg name="callPoints" ref="elevatorCalls2"/>
+        <constructor-arg name="floorsRange" ref="floorsRangeLift2"/>
     </bean>
 
-    <bean class="main.entities.primitive.Room" name="room">
+    <bean class="main.entities.primitive.Room" name="room" scope="prototype">
         <constructor-arg name="size" value="3"/>
     </bean>
-    <bean id="elevatorRoom" class="main.entities.primitive.Elevator">
-        <constructor-arg name="elevatorCondition" ref="elevatorCondition"/>
+    <bean id="elevator1" class="main.entities.primitive.Elevator">
+        <constructor-arg name="elevatorCondition" ref="elevatorCondition1"/>
         <constructor-arg name="room" ref="room"/>
     </bean>
+    <bean id="elevator2" class="main.entities.primitive.Elevator">
+        <constructor-arg name="elevatorCondition" ref="elevatorCondition2"/>
+        <constructor-arg name="room" ref="room"/>
+    </bean>
+
 
     <bean id="dao" class="main.dao.DaoObject">
         <constructor-arg name="object" ref="building"/>

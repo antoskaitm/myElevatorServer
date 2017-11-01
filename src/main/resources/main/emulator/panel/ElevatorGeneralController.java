@@ -4,16 +4,12 @@ import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
 import main.emulator.panel.contract.ElevatorInfo;
 import main.emulator.panel.contract.PageInfo;
-import main.entities.interfaces.IAutomobileElevatorRoom;
-import main.entities.interfaces.primitive.IBuilding;
 import main.entities.interfaces.primitive.IElevator;
 import main.entities.primitive.Building;
-import main.entities.primitive.Elevator;
 import main.entities.primitive.ElevatorRequest;
 import main.entities.primitive.Person;
 import main.entities.primitive.abstractclass.AbstractBuilding;
 import main.helpers.ISessionHelper;
-import org.omg.CORBA.Request;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,10 +65,9 @@ public class ElevatorGeneralController {
 		if (error == null) {
 			building.getElevator(elevatorNumber).callElevator(floor, person);
 		}
-		if(error==null) {
+		if (error == null) {
 			flushPageInfo(pageInfo, person, elevatorNumber);
-		}else
-		{
+		} else {
 			flushPageInfo(pageInfo, person, null);
 		}
 
@@ -113,13 +108,11 @@ public class ElevatorGeneralController {
 	public String getInfo(PageInfo pageInfo, ISessionHelper session) {
 		Person person = session.getPerson();
 		Boolean isOneElevator = person != null && person.getRequest() != null
-				&& (!person.getRequest().isInElevator()||person.getRequest().isCallElevator());
-		if(isOneElevator) {
-			flushPageInfo(pageInfo, session.getPerson(), person.getRequest().elevatorId);
-		}
-		else
-		{
-			flushPageInfo(pageInfo, session.getPerson(), null);
+				&& (person.getRequest().isInElevator() || person.getRequest().isCallElevator());
+		if (isOneElevator) {
+			flushPageInfo(pageInfo, person, person.getRequest().elevatorId);
+		} else {
+			flushPageInfo(pageInfo, person, null);
 		}
 		return session.getPage();
 	}
@@ -149,23 +142,24 @@ public class ElevatorGeneralController {
 				resultPage = "sendPanel";
 			}
 		}
-		session.setPage(resultPage);
 		if (resultPage == null) {
 			flushPageInfo(pageInfo, session.getPerson(), null);
 		} else {
 			flushPageInfo(pageInfo, session.getPerson(), elevatorNumber);
 		}
 		resultPage = (resultPage == null) ? "callPanel" : resultPage;
-
+		session.setPage(resultPage);
 		return resultPage;
 	}
 
 	private void flushPageInfo(PageInfo pageInfo, Person person, Integer elevatorNumber) {
 		Integer floor = getCurrentFloor(person);
 		List<ElevatorInfo> elevators = new ArrayList<>();
-		if (elevatorNumber==null) {
+		if (elevatorNumber == null) {
 			for (Integer id = 0; id < elevatorsCount; id++) {
-				elevators.add(new ElevatorInfo(building.getElevator(id), id));
+				if(building.getElevator(id).getFloorsRange().hasFloor(floor)) {
+					elevators.add(new ElevatorInfo(building.getElevator(id), id));
+				}
 			}
 		} else {
 			elevators.add(new ElevatorInfo(building.getElevator(elevatorNumber), null));

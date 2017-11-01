@@ -28,7 +28,7 @@ class ElevatorStateAutomate implements ICallablePanel, IAutomobileElevator, Seri
 	private IAutomate automate;
 
 	public ElevatorStateAutomate(BitSet callPoints, IFloorsRange floorsRange) {
-		if (floorsRange.getGroundFloor() != callPoints.getLowerBorder()
+		if (floorsRange.getGroundFloor()!= callPoints.getLowerBorder()
 				|| callPoints.getUpperBorder() != floorsRange.getLastFloor()) {
 			throw new ArithmeticException("Call points has different floor range");
 		}
