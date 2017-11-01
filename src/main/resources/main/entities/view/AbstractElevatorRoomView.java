@@ -22,23 +22,5 @@ public abstract class AbstractElevatorRoomView implements IAutomobileElevatorRoo
 		return elevatorRoom.getCurrentFloor();
 	}
 
-	@Override
-	public boolean isInElevator(Integer requestId) {
-		return elevatorRoom.isInElevator(requestId);
-	}
-
-	@Override
-	public boolean isCallElevator(Integer requestId) {
-		return elevatorRoom.isCallElevator(requestId);
-	}
-
-	@Override
-	public boolean isSendElevator(Integer requestId) {
-		return elevatorRoom.isSendElevator(requestId);
-	}
-
-	@Override
-	public IConditionable getRequestCondition(Integer requestId) {
-		return elevatorRoom.getRequestCondition(requestId);
-	}
+	protected IAutomobileElevatorRoom getElevatorRoom(){return elevatorRoom;}
 }

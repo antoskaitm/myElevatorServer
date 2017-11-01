@@ -1,33 +1,23 @@
 package main.entities.primitive;
 
-import main.entities.constants.RequestsConditions;
+import main.entities.interfaces.primitive.IRequesting;
 
-public class Person {
-	private Request request;
+public class Person implements IRequesting,Comparable {
+	private Integer id;
+	private ElevatorRequest request;
 
-	public boolean isInElevator() {
-		return getRequest() != null && getRequest().getCondition() == RequestsConditions.STAND_IN_ELEVATOR;
-	}
-
-	public boolean isCallElevator() {
-		return getRequest() != null && getRequest().getCondition() == RequestsConditions.CALLED_ELEVATOR;
-	}
-
-	public boolean isSendElevator() {
-		return getRequest() != null && getRequest().getCondition() == RequestsConditions.SENDED_ELEVATOR;
-	}
-
-	public boolean withoutState() {
-		return getRequest() == null
-				|| getRequest().getCondition() == RequestsConditions.DIDNOT_CALL_ELEVATOR
-				|| getRequest().getCondition() == RequestsConditions.TRY_CALL_AGAIN_ELEVATOR;
-	}
-
-	public Request getRequest() {
+	@Override
+	public ElevatorRequest getRequest() {
 		return request;
 	}
 
-	public void setRequest(Request request) {
-		this.request = request;
+	@Override
+	public void setRequest(ElevatorRequest elevatorRequest) {
+			this.request = elevatorRequest;
+	}
+
+	@Override
+	public int compareTo(Object o) {
+		return request.getId()-((Person)o).getRequest().getId();
 	}
 }

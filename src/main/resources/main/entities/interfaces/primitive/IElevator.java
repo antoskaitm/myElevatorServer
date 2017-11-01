@@ -1,19 +1,9 @@
 package main.entities.interfaces.primitive;
 
-import main.entities.primitive.Request;
-
-public interface IElevator extends IFloorRanged  {
-	Request callElevator(int floor);
+public interface IElevator<Key extends IRequesting> extends IFloorRanged  {
+	Boolean callElevator(int floor,Key expectant);
 
 	Integer getCurrentFloor();
 
-	Boolean sendElevator(int floor, int requestId);
-
-	boolean isInElevator(Integer requestId);
-
-	boolean isCallElevator(Integer requestId);
-
-	boolean isSendElevator(Integer requestId);
-
-	IConditionable getRequestCondition(Integer requestId);
+	Boolean sendElevator(int floor, Key expectant);
 }

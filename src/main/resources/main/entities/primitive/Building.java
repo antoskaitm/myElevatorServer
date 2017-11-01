@@ -2,6 +2,7 @@ package main.entities.primitive;
 
 import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
+import main.entities.interfaces.primitive.IElevator;
 import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.interfaces.primitive.IPersonElevator;
 import main.entities.primitive.abstractclass.AbstractBuilding;
@@ -18,7 +19,7 @@ public class Building extends AbstractBuilding{
 	private static final long serialVersionUID = 0;
 	private Integer floorHeight;
 
-	public Building(IFloorsRange floorsRange, int buildingHeight, IPersonElevator... elevators) {
+	public Building(IFloorsRange floorsRange, int buildingHeight, IAutomobileElevatorRoom<Person>... elevators) {
 		super(floorsRange,elevators);
 		Integer floorCount = floorsRange.getFloorCount();
 		Integer minFloorHeight = 3;

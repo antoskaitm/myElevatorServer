@@ -9,32 +9,32 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Room implements IRoom, Serializable {
+public class Room<T> implements IRoom<T>, Serializable {
 
-	static final long serialVersionUID = -4000000000000L;
+	private static final long serialVersionUID = -4000000000000L;
 
 	private Integer size;
-	private Integer peopleCount = 0;
-	private transient List<Request> requests;
+	private Integer count = 0;
+	private transient List<T> pool;
 
 	public Room(int size) {
 		this.size = size;
-		requests = new LinkedList<>();
+		pool = new LinkedList<>();
 	}
 
-	public boolean admit(Request request) {
-		return peopleCount < size && requests.add(request);
+	public boolean admit(T request) {
+		return count < size && pool.add(request);
 	}
 
-	public boolean release(Request request) {
-		return requests.remove(request);
+	public boolean release(T request) {
+		return pool.remove(request);
 	}
 
 	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
 		long serialVersionUID = stream.readLong();
 		size = (Integer) stream.readObject();
-		this.peopleCount = 0;
-		requests = new LinkedList<>();
+		this.count = 0;
+		pool = new LinkedList<>();
 	}
 
 	private void writeObject(ObjectOutputStream stream) throws IOException {

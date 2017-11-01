@@ -1,5 +1,6 @@
 package main.entities.primitive;
 
+import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IFloorsRange;
 import main.entities.interfaces.primitive.IPersonElevator;
 import main.entities.primitive.abstractclass.AbstractBuilding;
@@ -13,7 +14,7 @@ public class BuildingWithVariousFloors extends AbstractBuilding {
 	private static final long serialVersionUID = 0;
 	private Integer[] floorsHeights;
 
-	public BuildingWithVariousFloors(IFloorsRange floorsRange, IPersonElevator... elevators) {
+	public BuildingWithVariousFloors(IFloorsRange floorsRange, IAutomobileElevatorRoom<Person>... elevators) {
 		super(floorsRange, elevators);
 		if (floorsHeights.length != floorsRange.getFloorCount()) {
 			throw new IllegalArgumentException("Wrong floor count");

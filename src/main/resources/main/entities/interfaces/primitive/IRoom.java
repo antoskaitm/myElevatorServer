@@ -1,9 +1,7 @@
 package main.entities.interfaces.primitive;
 
-import main.entities.primitive.Request;
+public interface IRoom<T> {
+	boolean admit(T request);
 
-public interface IRoom {
-	boolean admit(Request request);
-
-	boolean release(Request request);
+	boolean release(T request);
 }

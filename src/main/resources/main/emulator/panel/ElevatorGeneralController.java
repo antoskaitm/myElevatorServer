@@ -3,22 +3,23 @@ package main.emulator.panel;
 import main.dao.IDaoObject;
 import main.emulator.ElevatorThread;
 import main.emulator.panel.contract.PageInfo;
-import main.entities.primitive.Person;
+import main.entities.interfaces.IAutomobileElevatorRoom;
 import main.entities.interfaces.primitive.IBuilding;
-import main.entities.interfaces.primitive.IPersonElevator;
 import main.entities.primitive.Building;
+import main.entities.primitive.ElevatorRequest;
+import main.entities.primitive.Person;
 import main.helpers.ISessionHelper;
 
 /**
  * all information for user send into PageInfo
  */
 public class ElevatorGeneralController {
-	private IPersonElevator room;
+	private IAutomobileElevatorRoom<Person> room;
 
 	public ElevatorGeneralController(IDaoObject<Building> dao) {
 		try {
 			IBuilding building = dao.load();
-			room = building.getElevator(0);
+			room = (IAutomobileElevatorRoom<Person>) building.getElevator(0);
 			ElevatorThread emulation = new ElevatorThread(dao, room.getElevatorAutomate(), building);
 			emulation.run();
 		} catch (Throwable e) {
@@ -36,11 +37,12 @@ public class ElevatorGeneralController {
 		if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
-			if (person.withoutState()) {
+			ElevatorRequest request = person.getRequest();
+			if (request == null || request.withoutState()) {
 				room.callElevator(floor, person);
-			} else if (person.isInElevator()) {
+			} else if (request.isInElevator()) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are in elevator");
-			} else if (person.isCallElevator()) {
+			} else if (request.isCallElevator()) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are wait elevator");
 			} else {
 				resultPage = "callPanel";
@@ -66,14 +68,14 @@ public class ElevatorGeneralController {
 	public String send(int floor, PageInfo pageInfo, ISessionHelper session) {
 		String resultPage = null;
 		Person person = session.getPerson();
-		if (person == null || person.withoutState()) {
+		if (person == null || person.getRequest().withoutState()) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!Elevator wasn't called");
 		} else if (!room.getFloorsRange().hasFloor(floor)) {
 			pageInfo.getPersonInfo().setErrorMessage("Error!This floor doesn't exist");
 		} else {
-			if (person.isInElevator()) {
+			if (person.getRequest().isInElevator()) {
 				room.sendElevator(floor, person);
-			} else if (person.isCallElevator()) {
+			} else if (person.getRequest().isCallElevator()) {
 				pageInfo.getPersonInfo().setErrorMessage("Error!You are not in elevator");
 				resultPage = "sendPanel";
 			}

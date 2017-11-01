@@ -2,21 +2,18 @@ package main.entities.primitive;
 
 import main.entities.constants.RequestsConditions;
 import main.entities.interfaces.primitive.IConditionable;
+import main.entities.interfaces.primitive.IRequestStatus;
 
-public class Request {
+public class ElevatorRequest implements IRequestStatus {
 	private Integer id;
 	private IConditionable condition;
 	private Integer callFloor;
 	private Integer sendFloor;
 
-	public Request(Integer id, Integer callFloor) {
+	public ElevatorRequest(Integer id, Integer callFloor) {
 		this.id = id;
 		this.callFloor = callFloor;
 		condition = RequestsConditions.CALLED_ELEVATOR;
-	}
-
-	public void setSendFloor(Integer sendFloor) {
-		this.sendFloor = sendFloor;
 	}
 
 	public Integer getId() {
@@ -35,7 +32,32 @@ public class Request {
 		return condition;
 	}
 
-	public void setCondition(IConditionable newCondition) {
+	public boolean isInElevator() {
+		return condition == RequestsConditions.STAND_IN_ELEVATOR;
+	}
+
+	public boolean isCallElevator() {
+		return condition == RequestsConditions.CALLED_ELEVATOR;
+	}
+
+	public boolean isSendElevator() {
+		return condition == RequestsConditions.SENDED_ELEVATOR;
+	}
+
+	public boolean withoutState() {
+		return condition == RequestsConditions.DIDNOT_CALL_ELEVATOR
+				|| condition == RequestsConditions.TRY_CALL_AGAIN_ELEVATOR;
+	}
+
+	void setCallFloor(Integer floor) {
+		this.callFloor = floor;
+	}
+
+	void setSendFloor(Integer sendFloor) {
+		this.sendFloor = sendFloor;
+	}
+
+	void setCondition(IConditionable newCondition) {
 		if (condition == newCondition) {
 			return;
 		}

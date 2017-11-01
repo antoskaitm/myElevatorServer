@@ -1,4 +1,4 @@
-package main.entities.primitive.general;
+package main.entities.general;
 
 import java.io.Serializable;
 import java.util.Arrays;
